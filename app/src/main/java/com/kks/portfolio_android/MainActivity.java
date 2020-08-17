@@ -80,9 +80,7 @@ public class MainActivity extends AppCompatActivity {
 
                 login();
 
-                Intent i = new Intent(MainActivity.this,Home.class);
-                startActivity(i);
-                finish();
+
             }
         });
 
@@ -108,14 +106,15 @@ public class MainActivity extends AppCompatActivity {
                                         Toast.makeText(MainActivity.this, "문제있음", Toast.LENGTH_SHORT).show();
                                         return;
                                     }
-
                                     String token = response.getString("token");
                                     SharedPreferences sp = getSharedPreferences(Util.PREFERENCE_NAME,MODE_PRIVATE);
                                     SharedPreferences.Editor editor = sp.edit();
                                     editor.putString("token",token);
                                     editor.apply();
 
-
+                                    Intent i = new Intent(MainActivity.this,Home.class);
+                                    startActivity(i);
+                                    finish();
                                 } catch (Exception e) {
                                     e.printStackTrace();
                                 }
