@@ -65,7 +65,7 @@
                     android:layout_marginRight="30dp"
                     android:ems="10"
                     android:hint="비밀번호"
-                    android:inputType="textPersonName"
+                    android:inputType="textPassword"
                     android:textColor="#F4EDED" />
 
                 <CheckBox

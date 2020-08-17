@@ -89,6 +89,9 @@ public class Sign_up extends AppCompatActivity {
                     return;
                 }
                 signUpData();
+                Intent i = new Intent(Sign_up.this,MainActivity.class);
+                startActivity(i);
+                finish();
             }
         });
     }

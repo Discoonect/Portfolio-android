@@ -1,15 +1,34 @@
 package com.kks.portfolio_android;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.Toast;
+
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
+import com.kks.portfolio_android.util.Util;
+
+import org.json.JSONObject;
+
+import java.util.Map;
+import java.util.Set;
 
 public class MainActivity extends AppCompatActivity {
+
+    RequestQueue requestQueue;
 
     EditText main_edit_email;
     EditText main_edit_password;
@@ -19,6 +38,9 @@ public class MainActivity extends AppCompatActivity {
     Button main_btn_login;
     Button main_btn_regist;
     Button main_btn_guest;
+
+    String email;
+    String passwd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +66,61 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        main_btn_login.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                email = main_edit_email.getText().toString().trim();
+                passwd = main_edit_password.getText().toString().trim();
+
+                login();
 
 
+            }
+        });
+
+    }
+
+    private void login(){
+        JSONObject body = new JSONObject();
+        try{
+            body.put("user_email",email);
+            body.put("user_passwd",passwd);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        requestQueue = Volley.newRequestQueue(MainActivity.this);
+        JsonObjectRequest request =
+                new JsonObjectRequest(Request.Method.POST, Util.BASE_URL + "/api/v1/user/login",body,
+                        new Response.Listener<JSONObject>() {
+                            @Override
+                            public void onResponse(JSONObject response) {
+                                try{
+                                    boolean success = response.getBoolean("success");
+                                    if(success==false){
+                                        Toast.makeText(MainActivity.this, "문제있음", Toast.LENGTH_SHORT).show();
+                                        return;
+                                    }
+
+                                    String token = response.getString("token");
+                                    SharedPreferences sp = getSharedPreferences(Util.PREFERENCE_NAME,MODE_PRIVATE);
+                                    SharedPreferences.Editor editor = sp.edit();
+                                    editor.putString("token",token);
+                                    editor.apply();
+
+
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        },
+                        new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                Log.i("aaa",error.toString());
+                            }
+                        }
+                );
+        requestQueue.add(request);
     }
 }
