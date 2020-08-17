@@ -73,9 +73,16 @@ public class MainActivity extends AppCompatActivity {
                 email = main_edit_email.getText().toString().trim();
                 passwd = main_edit_password.getText().toString().trim();
 
+                if(email.isEmpty()||passwd.isEmpty()){
+                    Toast.makeText(MainActivity.this, "이메일 또는 비밀번호를 입력해주세요.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 login();
 
-
+                Intent i = new Intent(MainActivity.this,Home.class);
+                startActivity(i);
+                finish();
             }
         });
 
