@@ -88,17 +88,12 @@ public class Sign_up extends AppCompatActivity {
                             Toast.LENGTH_SHORT).show();
                     return;
                 }
-
                 signUpData();
-
             }
         });
     }
 
     private void signUpData(){
-
-
-
         JSONObject body = new JSONObject();
         try{
             body.put("user_email",email);
@@ -107,7 +102,6 @@ public class Sign_up extends AppCompatActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         requestQueue = Volley.newRequestQueue(Sign_up.this);
         JsonObjectRequest request =
                 new JsonObjectRequest(Request.Method.POST,Util.BASE_URL + "/api/v1/user",body,
@@ -127,6 +121,4 @@ public class Sign_up extends AppCompatActivity {
         );
         requestQueue.add(request);
     }
-
-
 }
