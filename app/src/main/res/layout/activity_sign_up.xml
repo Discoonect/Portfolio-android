@@ -31,6 +31,51 @@
             android:layout_marginTop="16dp"
             android:layout_marginBottom="16dp"
             android:orientation="vertical">
+
+            <EditText
+                android:id="@+id/signup_edit_email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="이메일"
+                android:inputType="textPersonName" />
+
+            <EditText
+                android:id="@+id/singup_edit_password1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="비밀번호"
+                android:inputType="textPassword" />
+
+            <EditText
+                android:id="@+id/singup_edit_password2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="비밀번호 재확인"
+                android:inputType="textPassword" />
+
+            <EditText
+                android:id="@+id/singup_edit_phone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="핸드폰번호 (- 생략)"
+                android:inputType="phone" />
+
+            <Button
+                android:id="@+id/signup_btn_signup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="회원가입 완료" />
+
+            <Button
+                android:id="@+id/signup_btn_cancle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="취소" />
+
         </LinearLayout>
         </ScrollView>
     </RelativeLayout>
