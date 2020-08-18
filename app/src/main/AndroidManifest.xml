@@ -14,7 +14,11 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".Under_toolbar"></activity>
+        <activity android:name=".fragment.Fragment_Setting"></activity>
+        <activity android:name=".fragment.Fragment_Favorite" />
+        <activity android:name=".fragment.Fragment_Write" />
+        <activity android:name=".fragment.Fragment_Search" />
+        <activity android:name=".fragment.Fragment_Home" />
         <activity android:name=".Home" />
         <activity android:name=".Sign_up" />
         <activity android:name=".MainActivity">

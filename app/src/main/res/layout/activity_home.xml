@@ -7,24 +7,76 @@
     android:layout_height="match_parent"
     tools:context=".Home"
     android:orientation="vertical"
+    android:background="@color/mainColor"
     >
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical">
 
-        <androidx.recyclerview.widget.RecyclerView
+        <FrameLayout
+            android:id="@+id/frameLayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent">
 
-        </androidx.recyclerview.widget.RecyclerView>
+        </FrameLayout>
+    </LinearLayout>
 
-        <include
-            layout="@layout/activity_under_toolbar"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_weight="16"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/btn_fragment_home"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_alignParentBottom="true"
-            android:layout_gravity="bottom" />
-    </RelativeLayout>
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            app:srcCompat="@drawable/ic_baseline_home_24"
+            android:onClick="clickHandler"
+            />
+
+        <ImageView
+            android:id="@+id/btn_fragment_search"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            app:srcCompat="@drawable/ic_baseline_search_24"
+            android:onClick="clickHandler"
+            />
+
+        <ImageView
+            android:id="@+id/btn_fragment_write"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            app:srcCompat="@drawable/ic_baseline_create_24"
+            android:onClick="clickHandler"
+            />
+
+        <ImageView
+            android:id="@+id/btn_fragment_favorite"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            app:srcCompat="@drawable/ic_baseline_favorite_border_24"
+            android:onClick="clickHandler"
+            />
+
+        <ImageView
+            android:id="@+id/btn_fragment_setting"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            app:srcCompat="@drawable/ic_baseline_format_align_justify_24"
+            android:onClick="clickHandler"
+            />
+    </LinearLayout>
 
 </LinearLayout>
