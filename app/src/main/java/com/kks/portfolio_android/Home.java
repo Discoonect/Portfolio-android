@@ -1,16 +1,21 @@
 package com.kks.portfolio_android;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 
 import com.kks.portfolio_android.fragment.Fragment_Favorite;
 import com.kks.portfolio_android.fragment.Fragment_Home;
 import com.kks.portfolio_android.fragment.Fragment_Search;
-import com.kks.portfolio_android.fragment.Fragment_Setting;
+import com.kks.portfolio_android.fragment.Fragment_User;
 import com.kks.portfolio_android.fragment.Fragment_Write;
 
 public class Home extends AppCompatActivity {
@@ -20,7 +25,7 @@ public class Home extends AppCompatActivity {
     private Fragment_Home fragment_home;
     private Fragment_Search fragment_search;
     private Fragment_Write fragment_write;
-    private Fragment_Setting fragment_setting;
+    private Fragment_User fragment_user;
     private Fragment_Favorite fragment_favorite;
 
     private FragmentTransaction transaction;
@@ -30,16 +35,42 @@ public class Home extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
+        Toolbar toolbar = findViewById(R.id.app_toolbar);
+        setSupportActionBar(toolbar);
+
+
+
+
         fragmentManager = getSupportFragmentManager();
 
         fragment_home = new Fragment_Home();
         fragment_search = new Fragment_Search();
         fragment_write = new Fragment_Write();
-        fragment_setting = new Fragment_Setting();
+        fragment_user = new Fragment_User();
         fragment_favorite = new Fragment_Favorite();
 
         transaction = fragmentManager.beginTransaction();
         transaction.replace(R.id.frameLayout,fragment_home).commitAllowingStateLoss();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+
+        int id = item.getItemId();
+
+        if(id==R.id.action_settings){
+            Intent i = new Intent(Home.this,Setting.class);
+            startActivity(i);
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     public void clickHandler(View view){
@@ -64,7 +95,7 @@ public class Home extends AppCompatActivity {
                 break;
 
             case R.id.btn_fragment_setting:
-                transaction.replace(R.id.frameLayout,fragment_setting).commitAllowingStateLoss();
+                transaction.replace(R.id.frameLayout, fragment_user).commitAllowingStateLoss();
                 break;
         }
 

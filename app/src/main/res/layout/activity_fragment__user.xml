@@ -5,13 +5,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#AF71BA"
-    tools:context=".fragment.Fragment_Setting">
+    tools:context=".fragment.Fragment_User">
 
     <TextView
         android:id="@+id/textView3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="세팅 프래그먼트 테스트"
+        android:text="개인유저 탭 프래그먼트 테스트"
         android:textSize="50sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"

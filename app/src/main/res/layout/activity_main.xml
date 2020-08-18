@@ -41,8 +41,9 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="30dp"
                     android:gravity="center"
-                    android:text="NAMELESS"
-                    android:textColor="#352626" />
+                    android:text="WASSUP Login"
+                    android:textColor="#352626"
+                    android:textSize="40sp" />
 
                 <EditText
                     android:id="@+id/main_edit_email"
