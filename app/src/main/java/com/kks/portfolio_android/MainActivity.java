@@ -68,7 +68,6 @@ public class MainActivity extends AppCompatActivity {
         token = sharedPreferences.getString("token",null);
 
         Log.i("aaa",auto);
-        Log.i("aaa",token);
 
         if(auto.equals("on")){
             Intent i = new Intent(MainActivity.this,Home.class);
