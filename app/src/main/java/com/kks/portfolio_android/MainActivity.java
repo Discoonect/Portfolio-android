@@ -13,6 +13,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -23,6 +24,7 @@ import com.kks.portfolio_android.util.Util;
 
 import org.json.JSONObject;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -42,6 +44,8 @@ public class MainActivity extends AppCompatActivity {
     String email;
     String passwd;
 
+    String auto="0";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,6 +59,20 @@ public class MainActivity extends AppCompatActivity {
         main_edit_password = findViewById(R.id.main_edit_password);
 
         auto_login_check = findViewById(R.id.auto_login_check);
+
+
+
+        SharedPreferences sharedPreferences =
+                getSharedPreferences(Util.PREFERENCE_NAME,MODE_PRIVATE);
+        auto = sharedPreferences.getString("auto",null);
+
+        if(auto=="1"){
+            Intent i = new Intent(MainActivity.this,Home.class);
+            startActivity(i);
+            finish();
+        }
+
+        Log.i("aaa",auto);
 
         main_btn_regist.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -83,9 +101,7 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-
     }
-
     private void login(){
         JSONObject body = new JSONObject();
         try{
@@ -111,6 +127,14 @@ public class MainActivity extends AppCompatActivity {
                                     SharedPreferences.Editor editor = sp.edit();
                                     editor.putString("token",token);
                                     editor.apply();
+
+                                    if(auto_login_check.isChecked()==true){
+                                        editor.putString("auto","1");
+                                        editor.apply();
+                                    }else{
+                                        editor.putString("auto","0");
+                                        editor.apply();
+                                    }
 
                                     Intent i = new Intent(MainActivity.this,Home.class);
                                     startActivity(i);
