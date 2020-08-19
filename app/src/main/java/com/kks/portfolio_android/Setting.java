@@ -66,6 +66,7 @@ public class Setting extends AppCompatActivity {
                         SharedPreferences sharedPreferences = getSharedPreferences(Util.PREFERENCE_NAME,MODE_PRIVATE);
                         SharedPreferences.Editor editor = sharedPreferences.edit();
                         editor.putString("token",null);
+                        editor.putString("auto","off");
                         editor.apply();
 
                         Log.i("aaa",token);

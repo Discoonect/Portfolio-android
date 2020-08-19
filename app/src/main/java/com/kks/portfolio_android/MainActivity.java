@@ -46,6 +46,8 @@ public class MainActivity extends AppCompatActivity {
 
     String auto="0";
 
+    String token;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,19 +62,20 @@ public class MainActivity extends AppCompatActivity {
 
         auto_login_check = findViewById(R.id.auto_login_check);
 
-
-
         SharedPreferences sharedPreferences =
                 getSharedPreferences(Util.PREFERENCE_NAME,MODE_PRIVATE);
         auto = sharedPreferences.getString("auto",null);
+        token = sharedPreferences.getString("token",null);
 
-        if(auto=="1"){
+        Log.i("aaa",auto);
+        Log.i("aaa",token);
+
+        if(auto.equals("on")){
             Intent i = new Intent(MainActivity.this,Home.class);
             startActivity(i);
             finish();
+            return;
         }
-
-        Log.i("aaa",auto);
 
         main_btn_regist.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -129,10 +132,10 @@ public class MainActivity extends AppCompatActivity {
                                     editor.apply();
 
                                     if(auto_login_check.isChecked()==true){
-                                        editor.putString("auto","1");
+                                        editor.putString("auto","on");
                                         editor.apply();
                                     }else{
-                                        editor.putString("auto","0");
+                                        editor.putString("auto","off");
                                         editor.apply();
                                     }
 
