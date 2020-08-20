@@ -97,10 +97,7 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(MainActivity.this, "이메일 또는 비밀번호를 입력해주세요.", Toast.LENGTH_SHORT).show();
                     return;
                 }
-
                 login();
-
-
             }
         });
     }

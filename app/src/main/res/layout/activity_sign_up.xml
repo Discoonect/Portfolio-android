@@ -33,14 +33,26 @@
             android:orientation="vertical">
 
 
-
-            <EditText
-                android:id="@+id/signup_edit_email"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:hint="이메일"
-                android:inputType="textPersonName" />
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/signup_edit_nickname"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:hint="아이디"
+                    android:inputType="textPersonName" />
+
+                <Button
+                    android:id="@+id/signup_btn_checkNickname"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="아이디 중복체크" />
+            </LinearLayout>
 
             <EditText
                 android:id="@+id/singup_edit_password1"
@@ -65,27 +77,6 @@
                 android:ems="10"
                 android:hint="핸드폰번호 (- 생략)"
                 android:inputType="phone" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal">
-
-                <EditText
-                    android:id="@+id/editTextTextPersonName"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:ems="10"
-                    android:hint="닉네임"
-                    android:inputType="textPersonName" />
-
-                <Button
-                    android:id="@+id/button2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="닉네임 중복체크" />
-            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"

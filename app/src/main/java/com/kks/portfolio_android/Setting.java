@@ -53,6 +53,18 @@ public class Setting extends AppCompatActivity {
                 userLogout();
             }
         });
+
+        setting_btn_leaveMember.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SharedPreferences sharedPreferences =
+                        getSharedPreferences(Util.PREFERENCE_NAME,MODE_PRIVATE);
+                token = sharedPreferences.getString("token",null);
+
+                alertDialog_adios("회원 탈퇴","정말로 탈퇴하시겠습니까?");
+
+            }
+        });
     }
 
     private void userLogout() {
@@ -92,6 +104,46 @@ public class Setting extends AppCompatActivity {
         requestQueue.add(jsonObjectRequest);
     }
 
+    private void userAdios(){
+        requestQueue = Volley.newRequestQueue(Setting.this);
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.DELETE,
+                Util.BASE_URL + "/api/v1/user/adios",
+                null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        SharedPreferences sharedPreferences = getSharedPreferences(Util.PREFERENCE_NAME,MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putString("token",null);
+                        editor.putString("auto","off");
+                        editor.apply();
+
+                        Log.i("aaa",token);
+
+                        Intent i = new Intent(Setting.this,MainActivity.class);
+                        startActivity(i);
+                        finish();
+
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+
+                    }
+                }
+        )
+        {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> stringStringMap = new HashMap<String, String>();
+                stringStringMap.put("Authorization","Bearer "+token);
+                return stringStringMap;
+            }
+        };
+        requestQueue.add(jsonObjectRequest);
+    }
+
     void alertDialog(String title, String message){
 
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(Setting.this,R.style.myDialogTheme);
@@ -106,6 +158,39 @@ public class Setting extends AppCompatActivity {
                         finish();
                     }
                 });
+        final AlertDialog dialog = alertDialog.create();
+        dialog.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface dialogInterface) {
+                dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.BLACK);
+            }
+        });
+        alertDialog .setCancelable(false);
+        alertDialog .show();
+    }
+
+    void alertDialog_adios(String title, String message){
+
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(Setting.this,R.style.myDialogTheme);
+        alertDialog .setTitle(title);
+        alertDialog .setMessage(message);
+        alertDialog .setPositiveButton
+                ("네", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        userAdios();
+
+
+                    }
+                });
+        alertDialog .setNegativeButton("아니요", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+
         final AlertDialog dialog = alertDialog.create();
         dialog.setOnShowListener(new DialogInterface.OnShowListener() {
             @Override

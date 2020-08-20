@@ -41,7 +41,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="30dp"
                     android:gravity="center"
-                    android:text="WASSUP Login"
+                    android:text="WASSUP?"
                     android:textColor="#352626"
                     android:textSize="40sp" />
 
@@ -55,7 +55,7 @@
                     android:ems="10"
                     android:hint="이메일"
                     android:inputType="textPersonName"
-                    android:textColor="#F4EDED" />
+                    android:textColor="#000000" />
 
                 <EditText
                     android:id="@+id/main_edit_password"
@@ -67,7 +67,7 @@
                     android:ems="10"
                     android:hint="비밀번호"
                     android:inputType="textPassword"
-                    android:textColor="#F4EDED" />
+                    android:textColor="#000000" />
 
                 <CheckBox
                     android:id="@+id/auto_login_check"
