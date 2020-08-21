@@ -1,6 +1,5 @@
 package com.kks.portfolio_android;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -13,7 +12,6 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -24,15 +22,11 @@ import com.kks.portfolio_android.util.Util;
 
 import org.json.JSONObject;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-
 public class MainActivity extends AppCompatActivity {
 
     RequestQueue requestQueue;
 
-    EditText main_edit_email;
+    EditText main_edit_name;
     EditText main_edit_password;
 
     CheckBox auto_login_check;
@@ -41,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
     Button main_btn_regist;
     Button main_btn_guest;
 
-    String email;
+    String name;
     String passwd;
 
     String auto="0";
@@ -57,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
         main_btn_login = findViewById(R.id.main_btn_login);
         main_btn_regist = findViewById(R.id.main_btn_regist);
 
-        main_edit_email = findViewById(R.id.main_edit_email);
+        main_edit_name = findViewById(R.id.main_edit_name);
         main_edit_password = findViewById(R.id.main_edit_password);
 
         auto_login_check = findViewById(R.id.auto_login_check);
@@ -90,10 +84,10 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                email = main_edit_email.getText().toString().trim();
+                name = main_edit_name.getText().toString().trim();
                 passwd = main_edit_password.getText().toString().trim();
 
-                if(email.isEmpty()||passwd.isEmpty()){
+                if(name.isEmpty()||passwd.isEmpty()){
                     Toast.makeText(MainActivity.this, "이메일 또는 비밀번호를 입력해주세요.", Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -104,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
     private void login(){
         JSONObject body = new JSONObject();
         try{
-            body.put("user_email",email);
+            body.put("user_name",name);
             body.put("user_passwd",passwd);
         } catch (Exception e) {
             e.printStackTrace();

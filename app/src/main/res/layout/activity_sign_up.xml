@@ -39,7 +39,7 @@
                 android:orientation="horizontal">
 
                 <EditText
-                    android:id="@+id/signup_edit_nickname"
+                    android:id="@+id/signup_edit_id"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:ems="10"
@@ -47,7 +47,7 @@
                     android:inputType="textPersonName" />
 
                 <Button
-                    android:id="@+id/signup_btn_checkNickname"
+                    android:id="@+id/signup_btn_checkId"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"

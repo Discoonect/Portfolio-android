@@ -28,39 +28,39 @@ public class Sign_up extends AppCompatActivity {
 
     RequestQueue requestQueue;
 
-    EditText signup_edit_email;
+
     EditText signup_edit_password1;
     EditText signup_edit_password2;
     EditText signup_edit_phone;
-    EditText signup_edit_nickname;
+    EditText signup_edit_id;
 
     Button signup_btn_signup;
     Button signup_btn_cancle;
-    Button signup_btn_checkNickname;
+    Button signup_btn_checkId;
 
     int offset;
-    String email;
+    String name;
     String password1;
     String password2;
     String phone;
-    String nickname;
 
-    boolean check_nickname=true;
+
+    boolean check_id=true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
 
-        signup_edit_email = findViewById(R.id.signup_edit_email);
+
         signup_edit_password1 = findViewById(R.id.singup_edit_password1);
         signup_edit_password2 = findViewById(R.id.singup_edit_password2);
         signup_edit_phone = findViewById(R.id.singup_edit_phone);
-        signup_edit_nickname = findViewById(R.id.signup_edit_nickname);
+        signup_edit_id = findViewById(R.id.signup_edit_id);
 
         signup_btn_cancle = findViewById(R.id.signup_btn_cancle);
         signup_btn_signup = findViewById(R.id.signup_btn_signup);
-        signup_btn_checkNickname = findViewById(R.id.signup_btn_checkNickname);
+        signup_btn_checkId = findViewById(R.id.signup_btn_checkId);
 
 
         signup_btn_cancle.setOnClickListener(new View.OnClickListener() {
@@ -73,30 +73,24 @@ public class Sign_up extends AppCompatActivity {
             }
         });
 
-        signup_btn_checkNickname.setOnClickListener(new View.OnClickListener() {
+        signup_btn_checkId.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                checkNicknameData();
+                checkIdData();
             }
         });
 
         signup_btn_signup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                email = signup_edit_email.getText().toString().trim();
+
                 password1 = signup_edit_password1.getText().toString().trim();
                 password2 = signup_edit_password2.getText().toString().trim();
                 phone = signup_edit_phone.getText().toString().trim();
-                nickname = signup_edit_nickname.getText().toString().trim();
+                name= signup_edit_id.getText().toString().trim();
 
-                if (!check_nickname) {
-                    Toast.makeText(Sign_up.this, "닉네임 중복체크를 해주세요.", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                if (email.contains("@") == false) {
-                    Toast.makeText(Sign_up.this, "이메일 형식이 올바르지 않습니다.",
-                            Toast.LENGTH_SHORT).show();
+                if (!check_id) {
+                    Toast.makeText(Sign_up.this, "아이디 중복체크를 해주세요.", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
@@ -112,12 +106,11 @@ public class Sign_up extends AppCompatActivity {
                     return;
                 }
 
-                if(check_nickname==false) {
+                if(check_id==false) {
                     Toast.makeText(Sign_up.this, "닉네임 확인해주세요.", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
-                Log.i("aaa","닉네임  "+check_nickname);
                 signUpData();
             }
         });
@@ -126,10 +119,9 @@ public class Sign_up extends AppCompatActivity {
     private void signUpData() {
         JSONObject body = new JSONObject();
         try {
-            body.put("user_email", email);
+            body.put("user_name", name);
             body.put("user_passwd", password1);
             body.put("user_phone", phone);
-            body.put("user_nickname", nickname);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -156,18 +148,18 @@ public class Sign_up extends AppCompatActivity {
         requestQueue.add(request);
     }
 
-    private void checkNicknameData() {
-        nickname = signup_edit_nickname.getText().toString().trim();
+    private void checkIdData() {
+        name = signup_edit_id.getText().toString().trim();
         JSONObject body = new JSONObject();
         try {
-            body.put("user_nickname", nickname);
+            body.put("user_name", name);
         } catch (Exception e) {
             e.printStackTrace();
         }
         requestQueue = Volley.newRequestQueue(Sign_up.this);
         JsonObjectRequest request =
                 new JsonObjectRequest(Request.Method.POST,
-                        Util.BASE_URL + "/api/v1/user/checknickname", body,
+                        Util.BASE_URL + "/api/v1/user/checkid", body,
                         new Response.Listener<JSONObject>() {
                             @Override
                             public void onResponse(JSONObject response) {
@@ -179,9 +171,9 @@ public class Sign_up extends AppCompatActivity {
                                     } else {
                                         alertDialog_Unchecked(message);
                                     }
-                                    check_nickname=success;
+                                    check_id=success;
                                     Log.i("aaa","success  "+success);
-                                    Log.i("aaa","닉네임  "+check_nickname);
+                                    Log.i("aaa","닉네임  "+check_id);
                                     return;
                                 } catch (JSONException e) {
                                     e.printStackTrace();
@@ -200,13 +192,13 @@ public class Sign_up extends AppCompatActivity {
 
     void alertDialog_checked(String message) {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(Sign_up.this, R.style.myDialogTheme);
-        alertDialog.setTitle("닉네임 중복체크");
+        alertDialog.setTitle("아이디 중복체크");
         alertDialog.setMessage(message);
         alertDialog.setPositiveButton
                 ("확인", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        check_nickname = true;
+                        check_id = true;
                     }
                 });
         final AlertDialog dialog = alertDialog.create();
@@ -222,13 +214,13 @@ public class Sign_up extends AppCompatActivity {
 
     void alertDialog_Unchecked(String message) {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(Sign_up.this, R.style.myDialogTheme);
-        alertDialog.setTitle("닉네임 중복체크");
+        alertDialog.setTitle("아이디 중복체크");
         alertDialog.setMessage(message);
         alertDialog.setPositiveButton
                 ("확인", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        check_nickname = false;
+                        check_id = false;
                     }
                 });
         final AlertDialog dialog = alertDialog.create();
