@@ -38,9 +38,6 @@ public class Home extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.app_toolbar);
         setSupportActionBar(toolbar);
 
-
-
-
         fragmentManager = getSupportFragmentManager();
 
         fragment_home = new Fragment_Home();
@@ -67,16 +64,14 @@ public class Home extends AppCompatActivity {
         if(id==R.id.action_settings){
             Intent i = new Intent(Home.this,Setting.class);
             startActivity(i);
+            finish();
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
     public void clickHandler(View view){
-
         transaction = fragmentManager.beginTransaction();
-
         switch (view.getId()){
             case R.id.btn_fragment_home:
                 transaction.replace(R.id.frameLayout,fragment_home).commitAllowingStateLoss();
@@ -98,6 +93,5 @@ public class Home extends AppCompatActivity {
                 transaction.replace(R.id.frameLayout, fragment_user).commitAllowingStateLoss();
                 break;
         }
-
     }
 }

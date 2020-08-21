@@ -2,19 +2,28 @@ package com.kks.portfolio_android.model;
 
 public class Posting {
     private int id;
-    private int user_id;
+    private String user_name;
     private String photo_url;
     private String content;
     private String createdAt;
     private int postlike;
 
-    public Posting(int id, int user_id, String photo_url, String content, String createdAt, int postlike) {
+    public Posting(int id, String user_name, String photo_url, String content, String createdAt, int postlike) {
         this.id = id;
-        this.user_id = user_id;
+        this.user_name = user_name;
         this.photo_url = photo_url;
         this.content = content;
         this.createdAt = createdAt;
         this.postlike = postlike;
+    }
+
+    public Posting(int id, String user_name, String content, String createdAt,String photo_url) {
+        this.id = id;
+        this.user_name = user_name;
+        this.content = content;
+        this.createdAt = createdAt;
+        this.photo_url = photo_url;
+
     }
 
     public Posting(){
@@ -29,12 +38,12 @@ public class Posting {
         this.id = id;
     }
 
-    public int getUser_id() {
-        return user_id;
+    public String getUser_name() {
+        return user_name;
     }
 
-    public void setUser_id(int user_id) {
-        this.user_id = user_id;
+    public void setUser_name(String user_name) {
+        this.user_name = user_name;
     }
 
     public String getPhoto_url() {

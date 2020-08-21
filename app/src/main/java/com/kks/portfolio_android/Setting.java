@@ -77,8 +77,7 @@ public class Setting extends AppCompatActivity {
                     public void onResponse(JSONObject response) {
                         SharedPreferences sharedPreferences = getSharedPreferences(Util.PREFERENCE_NAME,MODE_PRIVATE);
                         SharedPreferences.Editor editor = sharedPreferences.edit();
-                        editor.putString("token",null);
-                        editor.putString("auto","off");
+                        editor.clear();
                         editor.apply();
 
                         Log.i("aaa",token);
@@ -114,11 +113,11 @@ public class Setting extends AppCompatActivity {
                     public void onResponse(JSONObject response) {
                         SharedPreferences sharedPreferences = getSharedPreferences(Util.PREFERENCE_NAME,MODE_PRIVATE);
                         SharedPreferences.Editor editor = sharedPreferences.edit();
-                        editor.putString("token",null);
-                        editor.putString("auto","off");
+                        editor.clear();
                         editor.apply();
 
                         Log.i("aaa",token);
+                        Log.i("aaa",sharedPreferences.getString("auto",null));
 
                         Intent i = new Intent(Setting.this,MainActivity.class);
                         startActivity(i);

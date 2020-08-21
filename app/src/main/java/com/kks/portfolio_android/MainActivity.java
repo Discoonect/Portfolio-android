@@ -38,9 +38,8 @@ public class MainActivity extends AppCompatActivity {
     String name;
     String passwd;
 
-    String auto="0";
-
-    String token;
+    String token="";
+    String auto;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,18 +55,20 @@ public class MainActivity extends AppCompatActivity {
 
         auto_login_check = findViewById(R.id.auto_login_check);
 
+
+
         SharedPreferences sharedPreferences =
                 getSharedPreferences(Util.PREFERENCE_NAME,MODE_PRIVATE);
-        auto = sharedPreferences.getString("auto",null);
+        String auto = sharedPreferences.getString("auto",null);
         token = sharedPreferences.getString("token",null);
 
-        Log.i("aaa",auto);
-
-        if(auto.equals("on")){
-            Intent i = new Intent(MainActivity.this,Home.class);
-            startActivity(i);
-            finish();
-            return;
+        if(auto!=null){
+            if(auto.equals("on")){
+                Intent i = new Intent(MainActivity.this, Home.class);
+                startActivity(i);
+                finish();
+                return;
+            }
         }
 
         main_btn_regist.setOnClickListener(new View.OnClickListener() {
@@ -83,7 +84,6 @@ public class MainActivity extends AppCompatActivity {
         main_btn_login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 name = main_edit_name.getText().toString().trim();
                 passwd = main_edit_password.getText().toString().trim();
 
@@ -128,6 +128,8 @@ public class MainActivity extends AppCompatActivity {
                                         editor.putString("auto","off");
                                         editor.apply();
                                     }
+
+                                    Log.i("aaa",sp.getString("auto",null));
 
                                     Intent i = new Intent(MainActivity.this,Home.class);
                                     startActivity(i);
