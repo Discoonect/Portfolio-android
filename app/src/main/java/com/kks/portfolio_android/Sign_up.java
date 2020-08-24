@@ -128,7 +128,7 @@ public class Sign_up extends AppCompatActivity {
         Log.i("aaa","회원가입 body  : "+body.toString());
         requestQueue = Volley.newRequestQueue(Sign_up.this);
         JsonObjectRequest request =
-                new JsonObjectRequest(Request.Method.POST, Util.BASE_URL + "/api/v1/user", body,
+                new JsonObjectRequest(Request.Method.POST, Util.BASE_URL + "/api/v1/user/signup", body,
                         new Response.Listener<JSONObject>() {
                             @Override
                             public void onResponse(JSONObject response) {
