@@ -47,8 +47,8 @@
 
                 <ImageView
                     android:id="@+id/fh_img_postPhoto"
-                    android:layout_width="match_parent"
-                    android:layout_height="200dp"
+                    android:layout_width="370dp"
+                    android:layout_height="260dp"
                     android:layout_marginTop="10dp"
                     android:layout_marginBottom="10dp"
                     app:srcCompat="@drawable/sunset" />
@@ -85,7 +85,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:layout_marginBottom="10dp"
-                    android:text="난..가끔 눈물을 흘린다.."
                     android:textSize="16sp" />
 
                 <TextView

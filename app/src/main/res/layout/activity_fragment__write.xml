@@ -26,7 +26,7 @@
             android:textSize="20sp" />
 
         <Button
-            android:id="@+id/button3"
+            android:id="@+id/fw_btn_upload"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -51,8 +51,8 @@
 
             <ImageView
                 android:id="@+id/fw_img_img"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="370dp"
+                android:layout_height="260dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_weight="5"
                 android:src="@drawable/upload_plz" />
@@ -65,7 +65,7 @@
                 android:text="업로드" />
 
             <EditText
-                android:id="@+id/editTextTextPersonName"
+                android:id="@+id/fw_edit_content"
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
                 android:layout_marginTop="20dp"

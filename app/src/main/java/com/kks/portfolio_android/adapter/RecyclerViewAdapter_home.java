@@ -1,10 +1,8 @@
 package com.kks.portfolio_android.adapter;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
-import android.util.Log;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,12 +13,12 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.kks.portfolio_android.MainActivity;
 import com.kks.portfolio_android.R;
+import com.kks.portfolio_android.fragment.Fragment_Home;
 import com.kks.portfolio_android.model.Posting;
+import com.kks.portfolio_android.util.Util;
 
-import java.io.BufferedInputStream;
-import java.net.URL;
-import java.net.URLConnection;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -74,9 +72,7 @@ public class RecyclerViewAdapter_home extends RecyclerView.Adapter<RecyclerViewA
         }else {
             holder.fh_img_like.setImageResource(R.drawable.ic_baseline_favorite_border_24);
         }
-
         Glide.with(context).load(posting.getPhoto_url()).into(holder.fh_img_postPhoto);
-
     }
 
     @Override
@@ -102,9 +98,21 @@ public class RecyclerViewAdapter_home extends RecyclerView.Adapter<RecyclerViewA
             fh_img_comment = itemView.findViewById(R.id.fh_img_comment);
             fh_txt_content = itemView.findViewById(R.id.fh_txt_content);
             fh_txt_created = itemView.findViewById(R.id.fh_txt_created);
+
+            fh_img_like.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    int position = getAdapterPosition();
+                    int is_like = postArrayList.get(position).getPostlike();
+
+                    if(is_like==1){
+
+                    }else{
+
+                    }
+                }
+            });
+
         }
     }
-
-
-
 }
