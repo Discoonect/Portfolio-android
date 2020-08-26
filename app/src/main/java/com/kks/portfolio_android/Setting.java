@@ -179,8 +179,6 @@ public class Setting extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int which) {
 
                         userAdios();
-
-
                     }
                 });
         alertDialog .setNegativeButton("아니요", new DialogInterface.OnClickListener() {
