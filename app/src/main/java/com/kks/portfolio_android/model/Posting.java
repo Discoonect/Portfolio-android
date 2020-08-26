@@ -7,6 +7,8 @@ public class Posting {
     private String content;
     private String createdAt;
     private int postlike;
+    private int cnt_comment;
+    private int cnt_favorite;
 
     public Posting(int id, String user_name, String photo_url, String content, String createdAt, int postlike) {
         this.id = id;
@@ -17,12 +19,14 @@ public class Posting {
         this.postlike = postlike;
     }
 
-    public Posting(int id, String user_name, String content, String createdAt,String photo_url) {
+    public Posting(int id, String user_name, String content, String createdAt,String photo_url,int cnt_comment,int cnt_favorite) {
         this.id = id;
         this.user_name = user_name;
         this.content = content;
         this.createdAt = createdAt;
         this.photo_url = photo_url;
+        this.cnt_comment = cnt_comment;
+        this.cnt_favorite = cnt_favorite;
 
     }
 
@@ -76,5 +80,21 @@ public class Posting {
 
     public void setPostlike(int postlike) {
         this.postlike = postlike;
+    }
+
+    public int getCnt_comment() {
+        return cnt_comment;
+    }
+
+    public void setCnt_comment(int cnt_comment) {
+        this.cnt_comment = cnt_comment;
+    }
+
+    public int getCnt_favorite() {
+        return cnt_favorite;
+    }
+
+    public void setCnt_favorite(int cnt_favorite) {
+        this.cnt_favorite = cnt_favorite;
     }
 }

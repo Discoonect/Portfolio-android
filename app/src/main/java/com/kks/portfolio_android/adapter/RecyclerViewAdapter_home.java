@@ -50,6 +50,8 @@ public class RecyclerViewAdapter_home extends RecyclerView.Adapter<RecyclerViewA
         holder.fh_txt_userId.setText(posting.getUser_name());
         holder.fh_txt_content.setText(posting.getContent());
         holder.fh_txt_created.setText(posting.getCreatedAt());
+        holder.fh_txt_cntFavorite.setText("댓글 "+posting.getCnt_favorite()+"개");
+        holder.fh_txt_cntComment.setText(""+posting.getCnt_comment()+"명이 좋아요를 눌렀습니다.");
 
         //시간 맞추기
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
@@ -88,6 +90,8 @@ public class RecyclerViewAdapter_home extends RecyclerView.Adapter<RecyclerViewA
         ImageView fh_img_comment;
         TextView fh_txt_content;
         TextView fh_txt_created;
+        TextView fh_txt_cntComment;
+        TextView fh_txt_cntFavorite;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -98,6 +102,8 @@ public class RecyclerViewAdapter_home extends RecyclerView.Adapter<RecyclerViewA
             fh_img_comment = itemView.findViewById(R.id.fh_img_comment);
             fh_txt_content = itemView.findViewById(R.id.fh_txt_content);
             fh_txt_created = itemView.findViewById(R.id.fh_txt_created);
+            fh_txt_cntComment = itemView.findViewById(R.id.fh_txt_cntComment);
+            fh_txt_cntFavorite = itemView.findViewById(R.id.fh_txt_cntFavorite);
 
             fh_img_like.setOnClickListener(new View.OnClickListener() {
                 @Override

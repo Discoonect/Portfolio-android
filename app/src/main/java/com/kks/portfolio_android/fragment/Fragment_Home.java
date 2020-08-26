@@ -117,10 +117,13 @@ public class Fragment_Home extends Fragment {
                                 String user_name = jsonObject.getString("user_name");
                                 String content = jsonObject.getString("content");
                                 String created_at = jsonObject.getString("created_at");
+                                int like_cnt = jsonObject.getInt("like_cnt");
+                                int comment_cnt = jsonObject.getInt("comment_cnt");
+
                                 String photo = jsonObject.getString("photo_url");
                                 String photo_url = Util.BASE_URL+"/public/uploads/"+photo;
 
-                                Posting posting = new Posting(post_id,user_name,content,created_at,photo_url);
+                                Posting posting = new Posting(post_id,user_name,content,created_at,photo_url,comment_cnt,like_cnt);
                                 postArrayList.add(posting);
 
                             }
@@ -173,12 +176,15 @@ public class Fragment_Home extends Fragment {
                                 String user_name = jsonObject.getString("user_name");
                                 String content = jsonObject.getString("content");
                                 String created_at = jsonObject.getString("created_at");
+                                int like_cnt = jsonObject.getInt("like_cnt");
+                                int comment_cnt = jsonObject.getInt("comment_cnt");
+
                                 String photo = jsonObject.getString("photo_url");
                                 String photo_url = Util.BASE_URL+"/public/uploads/"+photo;
 
-                                Posting posting = new Posting(post_id,user_name,content,created_at,photo_url);
-                                postArrayList.add(posting);
 
+                                Posting posting = new Posting(post_id,user_name,content,created_at,photo_url,comment_cnt,like_cnt);
+                                postArrayList.add(posting);
                             }
                             adapter_home = new RecyclerViewAdapter_home(getActivity(), postArrayList);
                             recyclerView.setAdapter(adapter_home);
@@ -206,6 +212,4 @@ public class Fragment_Home extends Fragment {
         };
         requestQueue.add(request);
     }
-
-
 }
