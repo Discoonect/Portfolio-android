@@ -3,6 +3,7 @@ package com.kks.portfolio_android.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,24 +13,40 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
+import com.google.gson.JsonObject;
 import com.kks.portfolio_android.MainActivity;
 import com.kks.portfolio_android.R;
 import com.kks.portfolio_android.fragment.Fragment_Home;
 import com.kks.portfolio_android.model.Posting;
 import com.kks.portfolio_android.util.Util;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 import java.util.TimeZone;
+
+import static android.content.Context.MODE_PRIVATE;
 
 public class RecyclerViewAdapter_home extends RecyclerView.Adapter<RecyclerViewAdapter_home.ViewHolder> {
 
     Context context;
     ArrayList<Posting> postArrayList;
+
 
     public RecyclerViewAdapter_home(Context context, ArrayList<Posting> postArrayList) {
         this.context = context;
@@ -50,8 +67,8 @@ public class RecyclerViewAdapter_home extends RecyclerView.Adapter<RecyclerViewA
         holder.fh_txt_userId.setText(posting.getUser_name());
         holder.fh_txt_content.setText(posting.getContent());
         holder.fh_txt_created.setText(posting.getCreatedAt());
-        holder.fh_txt_cntFavorite.setText("댓글 "+posting.getCnt_favorite()+"개");
-        holder.fh_txt_cntComment.setText(""+posting.getCnt_comment()+"명이 좋아요를 눌렀습니다.");
+        holder.fh_txt_cntFavorite.setText(""+posting.getCnt_favorite()+"명이 좋아합니다");
+        holder.fh_txt_cntComment.setText("댓글 "+posting.getCnt_comment()+"개");
 
         //시간 맞추기
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
@@ -108,13 +125,162 @@ public class RecyclerViewAdapter_home extends RecyclerView.Adapter<RecyclerViewA
             fh_img_like.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+
                     int position = getAdapterPosition();
+                    Posting post = postArrayList.get(position);
                     int is_like = postArrayList.get(position).getPostlike();
+                    int cnt_like_postid = postArrayList.get(position).getId();
+                    Log.i("aaa",""+cnt_like_postid);
+
+                    String token;
+
+                    SharedPreferences sp = context.getSharedPreferences(Util.PREFERENCE_NAME, MODE_PRIVATE);
+                    token = sp.getString("token", null);
+
 
                     if(is_like==1){
+                        Posting posting = postArrayList.get(position);
+                        int posting_id = posting.getId();
+                        JSONObject body = new JSONObject();
+                        try {
+                            body.put("post_id", posting_id);
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                        JsonObjectRequest request = new JsonObjectRequest(
+                                Request.Method.POST,
+                                Util.BASE_URL + "/api/v1/like/deletelikepost",
+                                body,
+                                new Response.Listener<JSONObject>() {
+                                    @Override
+                                    public void onResponse(JSONObject response) {
+                                        // 어레이리스트의 값을 변경시켜줘야 한다.
+                                        Posting post = postArrayList.get(position);
+                                        post.setPostlike(0);
+
+                                        Log.i("aaa",post.toString());
+
+                                        notifyDataSetChanged();
+                                        JsonObjectRequest request1 = new JsonObjectRequest(
+                                                Request.Method.GET, Util.BASE_URL + "/api/v1/like/countlikepost/" + cnt_like_postid,
+                                                null,
+                                                new Response.Listener<JSONObject>() {
+                                                    @Override
+                                                    public void onResponse(JSONObject response) {
+                                                        try {
+                                                            int likecnt = response.getInt("cnt");
+
+                                                            post.setCnt_favorite(likecnt);
+                                                            Log.i("aaa",""+post.getCnt_favorite());
+                                                            notifyDataSetChanged();
+
+                                                        } catch (JSONException e) {
+                                                            e.printStackTrace();
+                                                        }
+                                                    }
+                                                },
+                                                new Response.ErrorListener() {
+                                                    @Override
+                                                    public void onErrorResponse(VolleyError error) {
+
+                                                    }
+                                                }
+                                        );
+                                        Volley.newRequestQueue(context).add(request1);
+
+                                    }
+                                },
+                                new Response.ErrorListener() {
+                                    @Override
+                                    public void onErrorResponse(VolleyError error) {
+                                        Log.i("aaa",error.toString());
+                                    }
+                                }
+                        )  {
+                            @Override
+                            public Map<String, String> getHeaders() throws AuthFailureError {
+
+
+
+                                Map<String, String> params = new HashMap<>();
+                                params.put("Authorization", "Bearer " + token);
+                                Log.i("aaa",token);
+                                return params;
+                            }
+                        } ;
+                        Volley.newRequestQueue(context).add(request);
 
                     }else{
+                        Posting posting = postArrayList.get(position);
+                        int posting_id = posting.getId();
+                        JSONObject body = new JSONObject();
+                        try {
+                            body.put("post_id", posting_id);
 
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                        JsonObjectRequest request = new JsonObjectRequest(
+                                Request.Method.POST,
+                                Util.BASE_URL + "/api/v1/like/likepost",
+                                body,
+                                new Response.Listener<JSONObject>() {
+                                    @Override
+                                    public void onResponse(JSONObject response) {
+                                        // 어레이리스트의 값을 변경시켜줘야 한다.
+                                        Posting post = postArrayList.get(position);
+                                        Log.i("aaa",post.toString());
+                                        post.setPostlike(1);
+                                        notifyDataSetChanged();
+
+
+
+                                        JsonObjectRequest request1 = new JsonObjectRequest(
+                                                Request.Method.GET, Util.BASE_URL + "/api/v1/like/countlikepost/" + cnt_like_postid,
+                                                null,
+                                                new Response.Listener<JSONObject>() {
+                                                    @Override
+                                                    public void onResponse(JSONObject response) {
+                                                        try {
+                                                            int likecnt = response.getInt("cnt");
+                                                            Log.i("aaa",""+likecnt);
+
+                                                            post.setCnt_favorite(likecnt);
+                                                            notifyDataSetChanged();
+
+                                                        } catch (JSONException e) {
+                                                            e.printStackTrace();
+                                                        }
+                                                    }
+                                                },
+                                                new Response.ErrorListener() {
+                                                    @Override
+                                                    public void onErrorResponse(VolleyError error) {
+
+                                                    }
+                                                }
+                                        );
+                                        Volley.newRequestQueue(context).add(request1);
+                                    }
+                                },
+                                new Response.ErrorListener() {
+                                    @Override
+                                    public void onErrorResponse(VolleyError error) {
+                                    }
+                                }
+                        )  {
+                            @Override
+                            public Map<String, String> getHeaders() throws AuthFailureError {
+                                Map<String, String> params = new HashMap<>();
+                                params.put("Authorization", "Bearer " + token);
+                                Log.i("aaa",token);
+                                return params;
+                            }
+                        } ;
+                        Volley.newRequestQueue(context).add(request);
                     }
                 }
             });
