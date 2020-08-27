@@ -5,8 +5,8 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -17,7 +17,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".Setting"></activity>
+        <activity android:name=".Comment"></activity>
+        <activity android:name=".Setting" />
         <activity android:name=".Home" />
         <activity android:name=".Sign_up" />
         <activity android:name=".MainActivity">
@@ -28,7 +29,9 @@
             </intent-filter>
         </activity>
 
-        <uses-library android:name="org.apache.http.legacy" android:required="false"/>
+        <uses-library
+            android:name="org.apache.http.legacy"
+            android:required="false" />
     </application>
 
 </manifest>

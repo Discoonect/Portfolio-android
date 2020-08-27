@@ -142,9 +142,13 @@ public class MainActivity extends AppCompatActivity {
                                         return;
                                     }
                                     String token = response.getString("token");
+                                    int user_id = response.getInt("user_id");
+
                                     SharedPreferences sp = getSharedPreferences(Util.PREFERENCE_NAME,MODE_PRIVATE);
                                     SharedPreferences.Editor editor = sp.edit();
                                     editor.putString("token",token);
+                                    editor.putInt("user_id",user_id);
+                                    Log.i("aaa",""+user_id);
                                     editor.apply();
 
                                     if(auto_login_check.isChecked()==true){

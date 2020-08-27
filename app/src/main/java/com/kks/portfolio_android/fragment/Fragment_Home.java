@@ -92,6 +92,9 @@ public class Fragment_Home extends Fragment {
         requestQueue = Volley.newRequestQueue(getActivity());
 
         getPostingData(getContext(),token);
+
+
+
     }
 
     private void addNetworkData() {
@@ -114,6 +117,7 @@ public class Fragment_Home extends Fragment {
                                 jsonObject = items.getJSONObject(i);
 
                                 int post_id = jsonObject.getInt("post_id");
+                                int user_id = jsonObject.getInt("user_id");
                                 String user_name = jsonObject.getString("user_name");
                                 String content = jsonObject.getString("content");
                                 String created_at = jsonObject.getString("created_at");
@@ -124,7 +128,7 @@ public class Fragment_Home extends Fragment {
                                 String photo = jsonObject.getString("photo_url");
                                 String photo_url = Util.BASE_URL+"/public/uploads/"+photo;
 
-                                Posting posting = new Posting(post_id,user_name,content,created_at,photo_url,comment_cnt,like_cnt,postlike);
+                                Posting posting = new Posting(post_id,user_id,user_name,content,created_at,photo_url,comment_cnt,like_cnt,postlike);
                                 postArrayList.add(posting);
 
                             }
@@ -174,6 +178,7 @@ public class Fragment_Home extends Fragment {
                                 jsonObject = items.getJSONObject(i);
 
                                 int post_id = jsonObject.getInt("post_id");
+                                int user_id = jsonObject.getInt("user_id");
                                 String user_name = jsonObject.getString("user_name");
                                 String content = jsonObject.getString("content");
                                 String created_at = jsonObject.getString("created_at");
@@ -185,7 +190,10 @@ public class Fragment_Home extends Fragment {
                                 String photo_url = Util.BASE_URL+"/public/uploads/"+photo;
 
 
-                                Posting posting = new Posting(post_id,user_name,content,created_at,photo_url,comment_cnt,like_cnt,postlike);
+                                Posting posting = new Posting(post_id,user_id,user_name,content,created_at,photo_url,comment_cnt,like_cnt,postlike);
+
+                                Log.i("aaa",posting.toString());
+
                                 postArrayList.add(posting);
                             }
                             adapter_home = new RecyclerViewAdapter_home(getActivity(), postArrayList);
@@ -214,9 +222,4 @@ public class Fragment_Home extends Fragment {
         };
         Volley.newRequestQueue(context).add(request);
     }
-
-
-
-
-
 }

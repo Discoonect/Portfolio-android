@@ -49,8 +49,10 @@
                     android:id="@+id/fh_img_postPhoto"
                     android:layout_width="370dp"
                     android:layout_height="260dp"
+                    android:layout_gravity="center"
                     android:layout_marginTop="10dp"
                     android:layout_marginBottom="10dp"
+                    android:scaleType="centerCrop"
                     app:srcCompat="@drawable/sunset" />
 
             </LinearLayout>
@@ -74,7 +76,7 @@
                     app:srcCompat="@drawable/ic_outline_mode_comment_24" />
 
                 <TextView
-                    android:id="@+id/fh_txt_cntFavorite"
+                    android:id="@+id/fh_txt_cntComment"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_marginLeft="40dp"
@@ -83,12 +85,13 @@
                     android:text="TextView" />
 
                 <TextView
-                    android:id="@+id/fh_txt_cntComment"
+                    android:id="@+id/fh_txt_cntFavorite"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
                     android:layout_weight="1"
-                    android:gravity="center|start"
+                    android:gravity="center|end"
                     android:text="TextView" />
 
             </LinearLayout>

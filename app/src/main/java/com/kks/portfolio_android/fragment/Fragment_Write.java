@@ -124,6 +124,8 @@ public class Fragment_Write extends Fragment {
                         if(response.isSuccessful()){
                             if(response.body().isSuccess()){
                                 Toast.makeText(getContext(), "업로드성공", Toast.LENGTH_SHORT).show();
+                                fw_edit_content.setText("");
+
                             }
                         }
                     }
