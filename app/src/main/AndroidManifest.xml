@@ -17,10 +17,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".Comment"></activity>
-        <activity android:name=".Setting" />
-        <activity android:name=".Home" />
-        <activity android:name=".Sign_up" />
+        <activity android:name=".CommentActivity"></activity>
+        <activity android:name=".SettingActivity" />
+        <activity android:name=".HomeActivity" />
+        <activity android:name=".Sign_upActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

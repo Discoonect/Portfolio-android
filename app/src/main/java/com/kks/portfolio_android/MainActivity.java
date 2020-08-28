@@ -1,22 +1,10 @@
 package com.kks.portfolio_android;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.core.content.FileProvider;
 
-import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -35,9 +23,6 @@ import com.kks.portfolio_android.util.Util;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -83,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
 
         if(auto!=null){
             if(auto.equals("on")){
-                Intent i = new Intent(MainActivity.this, Home.class);
+                Intent i = new Intent(MainActivity.this, HomeActivity.class);
                 startActivity(i);
                 finish();
                 return;
@@ -96,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
         main_btn_regist.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(MainActivity.this,Sign_up.class);
+                Intent i = new Intent(MainActivity.this, Sign_upActivity.class);
                 startActivity(i);
                 finish();
                 return;
@@ -161,7 +146,7 @@ public class MainActivity extends AppCompatActivity {
 
                                     Log.i("aaa",sp.getString("auto",null));
 
-                                    Intent i = new Intent(MainActivity.this,Home.class);
+                                    Intent i = new Intent(MainActivity.this, HomeActivity.class);
                                     startActivity(i);
                                     finish();
                                 } catch (Exception e) {

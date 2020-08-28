@@ -5,26 +5,60 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/mainColor"
-    tools:context=".Comment">
-
-    <ImageView
-        android:id="@+id/comment_btn_back"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        app:srcCompat="@drawable/ic_baseline_arrow_back_ios_24" />
-
-    <TextView
-        android:id="@+id/comment_txt"
-        android:layout_width="wrap_content"
-        android:layout_height="50dp"
-        android:layout_alignParentTop="true"
-        android:layout_centerInParent="true"
-        android:gravity="center"
-        android:text="TextView"
-        android:textSize="30sp" />
+    tools:context=".CommentActivity">
 
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/cm_recyclerview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/comment_txt" />
+        android:layout_above="@id/layout"
+        android:layout_below="@id/relative1" />
+
+    <RelativeLayout
+        android:id="@+id/relative1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/cm_txt_cnt"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:text="TextView"
+            android:textSize="30sp" />
+
+        <ImageView
+            android:id="@+id/cm_btn_back"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="5dp"
+            app:srcCompat="@drawable/ic_baseline_arrow_back_ios_24" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/cm_edit_comment"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="100"
+            android:background="#FFFFFF"
+            android:ems="10"
+            android:inputType="textPersonName" />
+
+        <Button
+            android:id="@+id/cm_btn_complete"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="0.1"
+            android:text="확인" />
+
+    </LinearLayout>
 </RelativeLayout>

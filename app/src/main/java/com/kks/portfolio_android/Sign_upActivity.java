@@ -24,7 +24,7 @@ import com.kks.portfolio_android.util.Util;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class Sign_up extends AppCompatActivity {
+public class Sign_upActivity extends AppCompatActivity {
 
     RequestQueue requestQueue;
 
@@ -66,7 +66,7 @@ public class Sign_up extends AppCompatActivity {
         signup_btn_cancle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(Sign_up.this, MainActivity.class);
+                Intent i = new Intent(Sign_upActivity.this, MainActivity.class);
                 startActivity(i);
                 finish();
                 return;
@@ -90,24 +90,24 @@ public class Sign_up extends AppCompatActivity {
                 name= signup_edit_id.getText().toString().trim();
 
                 if (!check_id) {
-                    Toast.makeText(Sign_up.this, "아이디 중복체크를 해주세요.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Sign_upActivity.this, "아이디 중복체크를 해주세요.", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
                 if (password1.length() < 4 || password1.length() > 12) {
-                    Toast.makeText(Sign_up.this, "비밀번호 길이는 4자리 이상,12자리 이하입니다.",
+                    Toast.makeText(Sign_upActivity.this, "비밀번호 길이는 4자리 이상,12자리 이하입니다.",
                             Toast.LENGTH_SHORT).show();
                     return;
                 }
 
                 if (password1.equalsIgnoreCase(password2) == false) {
-                    Toast.makeText(Sign_up.this, "비밀번호가 일치하지 않습니다.",
+                    Toast.makeText(Sign_upActivity.this, "비밀번호가 일치하지 않습니다.",
                             Toast.LENGTH_SHORT).show();
                     return;
                 }
 
                 if(check_id==false) {
-                    Toast.makeText(Sign_up.this, "닉네임 확인해주세요.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Sign_upActivity.this, "닉네임 확인해주세요.", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
@@ -126,14 +126,14 @@ public class Sign_up extends AppCompatActivity {
             e.printStackTrace();
         }
         Log.i("aaa","회원가입 body  : "+body.toString());
-        requestQueue = Volley.newRequestQueue(Sign_up.this);
+        requestQueue = Volley.newRequestQueue(Sign_upActivity.this);
         JsonObjectRequest request =
                 new JsonObjectRequest(Request.Method.POST, Util.BASE_URL + "/api/v1/user/signup",body,
                         new Response.Listener<JSONObject>() {
                             @Override
                             public void onResponse(JSONObject response) {
-                                Toast.makeText(Sign_up.this, "회원가입 성공", Toast.LENGTH_SHORT).show();
-                                Intent i = new Intent(Sign_up.this, MainActivity.class);
+                                Toast.makeText(Sign_upActivity.this, "회원가입 성공", Toast.LENGTH_SHORT).show();
+                                Intent i = new Intent(Sign_upActivity.this, MainActivity.class);
                                 startActivity(i);
                                 finish();
                             }
@@ -156,7 +156,7 @@ public class Sign_up extends AppCompatActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        requestQueue = Volley.newRequestQueue(Sign_up.this);
+        requestQueue = Volley.newRequestQueue(Sign_upActivity.this);
         JsonObjectRequest request =
                 new JsonObjectRequest(Request.Method.POST,
                         Util.BASE_URL + "/api/v1/user/checkid", body,
@@ -191,7 +191,7 @@ public class Sign_up extends AppCompatActivity {
     }
 
     void alertDialog_checked(String message) {
-        AlertDialog.Builder alertDialog = new AlertDialog.Builder(Sign_up.this, R.style.myDialogTheme);
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(Sign_upActivity.this, R.style.myDialogTheme);
         alertDialog.setTitle("아이디 중복체크");
         alertDialog.setMessage(message);
         alertDialog.setPositiveButton
@@ -213,7 +213,7 @@ public class Sign_up extends AppCompatActivity {
     }
 
     void alertDialog_Unchecked(String message) {
-        AlertDialog.Builder alertDialog = new AlertDialog.Builder(Sign_up.this, R.style.myDialogTheme);
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(Sign_upActivity.this, R.style.myDialogTheme);
         alertDialog.setTitle("아이디 중복체크");
         alertDialog.setMessage(message);
         alertDialog.setPositiveButton

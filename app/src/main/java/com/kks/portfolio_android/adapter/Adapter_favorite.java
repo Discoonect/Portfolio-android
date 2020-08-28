@@ -13,25 +13,25 @@ import com.kks.portfolio_android.model.Posting;
 
 import java.util.ArrayList;
 
-public class RecyclerViewAdapter_favorite extends RecyclerView.Adapter<RecyclerViewAdapter_favorite.ViewHolder> {
+public class Adapter_favorite extends RecyclerView.Adapter<Adapter_favorite.ViewHolder> {
 
     Context context;
     ArrayList<Posting> postArrayList;
 
-    public RecyclerViewAdapter_favorite(Context context, ArrayList<Posting> postArrayList) {
+    public Adapter_favorite(Context context, ArrayList<Posting> postArrayList) {
         this.context = context;
         this.postArrayList = postArrayList;
     }
     @NonNull
     @Override
-    public RecyclerViewAdapter_favorite.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public Adapter_favorite.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.favorite_row, parent, false);
-        return new RecyclerViewAdapter_favorite.ViewHolder(view);
+        return new Adapter_favorite.ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecyclerViewAdapter_favorite.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull Adapter_favorite.ViewHolder holder, int position) {
 
 
     }
@@ -40,7 +40,9 @@ public class RecyclerViewAdapter_favorite extends RecyclerView.Adapter<RecyclerV
     public int getItemCount() {
         return postArrayList.size();
     }
+
     public class ViewHolder extends RecyclerView.ViewHolder{
+
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);

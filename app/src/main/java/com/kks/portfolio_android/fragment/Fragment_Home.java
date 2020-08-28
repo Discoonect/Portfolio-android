@@ -23,12 +23,11 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.kks.portfolio_android.R;
-import com.kks.portfolio_android.adapter.RecyclerViewAdapter_home;
+import com.kks.portfolio_android.adapter.Adapter_home;
 import com.kks.portfolio_android.model.Posting;
 import com.kks.portfolio_android.util.Util;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -40,7 +39,7 @@ import static android.content.Context.MODE_PRIVATE;
 public class Fragment_Home extends Fragment {
 
     RecyclerView recyclerView;
-    RecyclerViewAdapter_home adapter_home;
+    Adapter_home adapter_home;
 
     JSONObject jsonObject = new JSONObject();
     ArrayList<Posting> postArrayList = new ArrayList<>();
@@ -65,7 +64,7 @@ public class Fragment_Home extends Fragment {
 
         postArrayList.clear();
 
-        recyclerView = getView().findViewById(R.id.recyclerview);
+        recyclerView = getView().findViewById(R.id.fh_recyclerview);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
@@ -92,9 +91,6 @@ public class Fragment_Home extends Fragment {
         requestQueue = Volley.newRequestQueue(getActivity());
 
         getPostingData(getContext(),token);
-
-
-
     }
 
     private void addNetworkData() {
@@ -192,11 +188,9 @@ public class Fragment_Home extends Fragment {
 
                                 Posting posting = new Posting(post_id,user_id,user_name,content,created_at,photo_url,comment_cnt,like_cnt,postlike);
 
-                                Log.i("aaa",posting.toString());
-
                                 postArrayList.add(posting);
                             }
-                            adapter_home = new RecyclerViewAdapter_home(getActivity(), postArrayList);
+                            adapter_home = new Adapter_home(getActivity(), postArrayList);
                             recyclerView.setAdapter(adapter_home);
 
                             offset = offset + response.getInt("count");

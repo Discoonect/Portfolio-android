@@ -18,7 +18,7 @@ import com.kks.portfolio_android.fragment.Fragment_Search;
 import com.kks.portfolio_android.fragment.Fragment_User;
 import com.kks.portfolio_android.fragment.Fragment_Write;
 
-public class Home extends AppCompatActivity {
+public class HomeActivity extends AppCompatActivity {
 
     private FragmentManager fragmentManager;
 
@@ -62,7 +62,7 @@ public class Home extends AppCompatActivity {
         int id = item.getItemId();
 
         if(id==R.id.action_settings){
-            Intent i = new Intent(Home.this,Setting.class);
+            Intent i = new Intent(HomeActivity.this, SettingActivity.class);
             startActivity(i);
             finish();
             return true;

@@ -13,25 +13,25 @@ import com.kks.portfolio_android.model.Posting;
 
 import java.util.ArrayList;
 
-public class RecyclerViewAdapter_search extends RecyclerView.Adapter<RecyclerViewAdapter_search.ViewHolder> {
+public class Adapter_search extends RecyclerView.Adapter<Adapter_search.ViewHolder> {
 
     Context context;
     ArrayList<Posting> postArrayList;
 
-    public RecyclerViewAdapter_search(Context context, ArrayList<Posting> postArrayList) {
+    public Adapter_search(Context context, ArrayList<Posting> postArrayList) {
         this.context = context;
         this.postArrayList = postArrayList;
     }
     @NonNull
     @Override
-    public RecyclerViewAdapter_search.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public Adapter_search.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.search_row, parent, false);
-        return new RecyclerViewAdapter_search.ViewHolder(view);
+        return new Adapter_search.ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecyclerViewAdapter_search.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull Adapter_search.ViewHolder holder, int position) {
 
 
     }

@@ -26,7 +26,7 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Setting extends AppCompatActivity {
+public class SettingActivity extends AppCompatActivity {
 
     Button setting_btn_leaveMember;
     Button setting_btn_logout;
@@ -68,7 +68,7 @@ public class Setting extends AppCompatActivity {
     }
 
     private void userLogout() {
-        requestQueue = Volley.newRequestQueue(Setting.this);
+        requestQueue = Volley.newRequestQueue(SettingActivity.this);
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.DELETE,
                 Util.BASE_URL + "/api/v1/user/logout",
                 null,
@@ -104,7 +104,7 @@ public class Setting extends AppCompatActivity {
     }
 
     private void userAdios(){
-        requestQueue = Volley.newRequestQueue(Setting.this);
+        requestQueue = Volley.newRequestQueue(SettingActivity.this);
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.DELETE,
                 Util.BASE_URL + "/api/v1/user/adios",
                 null,
@@ -119,7 +119,7 @@ public class Setting extends AppCompatActivity {
                         Log.i("aaa",token);
                         Log.i("aaa",sharedPreferences.getString("auto",null));
 
-                        Intent i = new Intent(Setting.this,MainActivity.class);
+                        Intent i = new Intent(SettingActivity.this,MainActivity.class);
                         startActivity(i);
                         finish();
 
@@ -145,14 +145,14 @@ public class Setting extends AppCompatActivity {
 
     void alertDialog(String title, String message){
 
-        AlertDialog.Builder alertDialog = new AlertDialog.Builder(Setting.this,R.style.myDialogTheme);
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(SettingActivity.this,R.style.myDialogTheme);
         alertDialog .setTitle(title);
         alertDialog .setMessage(message);
         alertDialog .setPositiveButton
                 ("확인", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Intent i = new Intent(Setting.this,MainActivity.class);
+                        Intent i = new Intent(SettingActivity.this,MainActivity.class);
                         startActivity(i);
                         finish();
                     }
@@ -170,7 +170,7 @@ public class Setting extends AppCompatActivity {
 
     void alertDialog_adios(String title, String message){
 
-        AlertDialog.Builder alertDialog = new AlertDialog.Builder(Setting.this,R.style.myDialogTheme);
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(SettingActivity.this,R.style.myDialogTheme);
         alertDialog .setTitle(title);
         alertDialog .setMessage(message);
         alertDialog .setPositiveButton

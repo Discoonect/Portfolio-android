@@ -20,14 +20,11 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
-import com.google.gson.JsonObject;
-import com.kks.portfolio_android.MainActivity;
+import com.kks.portfolio_android.CommentActivity;
 import com.kks.portfolio_android.R;
-import com.kks.portfolio_android.fragment.Fragment_Home;
 import com.kks.portfolio_android.model.Posting;
 import com.kks.portfolio_android.util.Util;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -42,16 +39,16 @@ import java.util.TimeZone;
 
 import static android.content.Context.MODE_PRIVATE;
 
-public class RecyclerViewAdapter_home extends RecyclerView.Adapter<RecyclerViewAdapter_home.ViewHolder> {
+public class Adapter_home extends RecyclerView.Adapter<Adapter_home.ViewHolder> {
 
     Context context;
     ArrayList<Posting> postArrayList;
 
-
-    public RecyclerViewAdapter_home(Context context, ArrayList<Posting> postArrayList) {
+    public Adapter_home(Context context, ArrayList<Posting> postArrayList) {
         this.context = context;
         this.postArrayList = postArrayList;
     }
+
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -69,6 +66,7 @@ public class RecyclerViewAdapter_home extends RecyclerView.Adapter<RecyclerViewA
         holder.fh_txt_created.setText(posting.getCreatedAt());
         holder.fh_txt_cntFavorite.setText(""+posting.getCnt_favorite()+"명이 좋아합니다");
         holder.fh_txt_cntComment.setText("댓글 "+posting.getCnt_comment()+"개");
+
 
         //시간 맞추기
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
@@ -110,6 +108,7 @@ public class RecyclerViewAdapter_home extends RecyclerView.Adapter<RecyclerViewA
         TextView fh_txt_cntComment;
         TextView fh_txt_cntFavorite;
 
+
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             fh_img_profilePhoto = itemView.findViewById(R.id.fh_img_profilePhoto);
@@ -127,7 +126,6 @@ public class RecyclerViewAdapter_home extends RecyclerView.Adapter<RecyclerViewA
                 public void onClick(View view) {
 
                     int position = getAdapterPosition();
-
                     int is_like = postArrayList.get(position).getPostlike();
                     String token;
 
@@ -138,9 +136,38 @@ public class RecyclerViewAdapter_home extends RecyclerView.Adapter<RecyclerViewA
                     }else{
                         clickDislike(position,token);
                     }
+
+                }
+            });
+
+            fh_img_comment.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    int position = getAdapterPosition();
+                    Posting posting = postArrayList.get(position);
+                    int post_id = posting.getId();
+
+                    Intent i = new Intent(context, CommentActivity.class);
+                    i.putExtra("post_id",post_id);
+
+                    context.startActivity(i);
+                }
+            });
+
+            fh_txt_cntComment.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    int position = getAdapterPosition();
+                    Posting posting = postArrayList.get(position);
+                    int post_id = posting.getId();
+
+                    Intent i = new Intent(context,CommentActivity.class);
+                    i.putExtra("post_id",post_id);
+                    context.startActivity(i);
                 }
             });
         }
+
         private void clickDislike(int position,String token) {
 
             Posting posting = postArrayList.get(position);
@@ -178,22 +205,21 @@ public class RecyclerViewAdapter_home extends RecyclerView.Adapter<RecyclerViewA
                 public Map<String, String> getHeaders() throws AuthFailureError {
                     Map<String, String> params = new HashMap<>();
                     params.put("Authorization", "Bearer " + token);
-                    Log.i("aaa",token);
                     return params;
                 }
             } ;
             Volley.newRequestQueue(context).add(request);
 
         }
-        private void clickLike(int position,String token) {
 
+        private void clickLike(int position,String token) {
             int cnt_like_postid = postArrayList.get(position).getId();
             Posting posting = postArrayList.get(position);
             int posting_id = posting.getId();
+
             JSONObject body = new JSONObject();
             try {
                 body.put("post_id", posting_id);
-
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -221,18 +247,15 @@ public class RecyclerViewAdapter_home extends RecyclerView.Adapter<RecyclerViewA
             )  {
                 @Override
                 public Map<String, String> getHeaders() throws AuthFailureError {
-
-
-
                     Map<String, String> params = new HashMap<>();
                     params.put("Authorization", "Bearer " + token);
-                    Log.i("aaa",token);
                     return params;
                 }
             } ;
             Volley.newRequestQueue(context).add(request);
 
         }
+
         private void getLikeCntData(Posting post,int cnt_like_postid) {
                 int position = getAdapterPosition();
 
@@ -244,7 +267,6 @@ public class RecyclerViewAdapter_home extends RecyclerView.Adapter<RecyclerViewA
                             public void onResponse(JSONObject response) {
                                 try {
                                     int likecnt = response.getInt("cnt");
-                                    Log.i("aaa", "" + likecnt);
 
                                     post.setCnt_favorite(likecnt);
                                     notifyDataSetChanged();
@@ -262,7 +284,6 @@ public class RecyclerViewAdapter_home extends RecyclerView.Adapter<RecyclerViewA
                         }
                 );
                 Volley.newRequestQueue(context).add(request1);
-
         }
     }
 }
