@@ -62,8 +62,6 @@ public class Fragment_Home extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        postArrayList.clear();
-
         recyclerView = getView().findViewById(R.id.fh_recyclerview);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -86,11 +84,19 @@ public class Fragment_Home extends Fragment {
         SharedPreferences sharedPreferences =
                 getActivity().getSharedPreferences(Util.PREFERENCE_NAME,MODE_PRIVATE);
         token = sharedPreferences.getString("token",null);
-        Log.i("aaa",token);
 
         requestQueue = Volley.newRequestQueue(getActivity());
 
+        postArrayList.clear();
         getPostingData(getContext(),token);
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+
     }
 
     private void addNetworkData() {
@@ -153,7 +159,6 @@ public class Fragment_Home extends Fragment {
         requestQueue.add(request);
     }
 
-
     public void getPostingData(Context context,String token) {
         JsonObjectRequest request = new JsonObjectRequest(
                 Request.Method.GET,
@@ -184,7 +189,6 @@ public class Fragment_Home extends Fragment {
 
                                 String photo = jsonObject.getString("photo_url");
                                 String photo_url = Util.BASE_URL+"/public/uploads/"+photo;
-
 
                                 Posting posting = new Posting(post_id,user_id,user_name,content,created_at,photo_url,comment_cnt,like_cnt,postlike);
 

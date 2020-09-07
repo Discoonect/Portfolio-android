@@ -11,6 +11,10 @@ public class Posting {
     private int cnt_comment;
     private int cnt_favorite;
 
+    public Posting(int id, String photo_url) {
+        this.id = id;
+        this.photo_url = photo_url;
+    }
 
     public Posting(int id, String user_name, String photo_url, String content, String createdAt, int postlike) {
         this.id = id;

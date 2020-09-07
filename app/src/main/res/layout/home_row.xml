@@ -17,28 +17,39 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal">
+                android:layout_height="match_parent">
 
                 <ImageView
                     android:id="@+id/fh_img_profilePhoto"
                     android:layout_width="35dp"
                     android:layout_height="35dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentTop="true"
                     app:srcCompat="@drawable/ic_baseline_account_circle_24" />
 
                 <TextView
                     android:id="@+id/fh_txt_userId"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="35dp"
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="10dp"
+                    android:layout_toRightOf="@id/fh_img_profilePhoto"
                     android:layout_weight="1"
+                    android:gravity="center"
                     android:text="user_id"
                     android:textSize="18sp" />
 
-            </LinearLayout>
+                <ImageView
+                    android:id="@+id/fh_img_menu"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_weight="1"
+                    app:srcCompat="@drawable/ic_baseline_menu_24" />
+            </RelativeLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"

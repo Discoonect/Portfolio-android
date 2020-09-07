@@ -5,10 +5,13 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -52,8 +55,7 @@ public class Adapter_home extends RecyclerView.Adapter<Adapter_home.ViewHolder> 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.home_row, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.home_row, parent, false);
         return new ViewHolder(view);
     }
 
@@ -66,7 +68,6 @@ public class Adapter_home extends RecyclerView.Adapter<Adapter_home.ViewHolder> 
         holder.fh_txt_created.setText(posting.getCreatedAt());
         holder.fh_txt_cntFavorite.setText(""+posting.getCnt_favorite()+"명이 좋아합니다");
         holder.fh_txt_cntComment.setText("댓글 "+posting.getCnt_comment()+"개");
-
 
         //시간 맞추기
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
@@ -89,13 +90,86 @@ public class Adapter_home extends RecyclerView.Adapter<Adapter_home.ViewHolder> 
         }else {
             holder.fh_img_like.setImageResource(R.drawable.ic_baseline_favorite_border_24);
         }
+
         Glide.with(context).load(posting.getPhoto_url()).into(holder.fh_img_postPhoto);
+
+        SharedPreferences sharedPreferences =
+                context.getSharedPreferences(Util.PREFERENCE_NAME,MODE_PRIVATE);
+        int sp_user_id = sharedPreferences.getInt("user_id",0);
+        String token = sharedPreferences.getString("token",null);
+
+        if(sp_user_id!=posting.getUser_id()){
+            holder.fh_img_menu.setVisibility(View.INVISIBLE);
+        }
+
+        holder.fh_img_menu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                PopupMenu popupMenu = new PopupMenu(context,holder.fh_img_menu);
+                popupMenu.inflate(R.menu.fh_post_menu);
+
+                int post_id = postArrayList.get(position).getId();
+
+                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem menuItem) {
+                        switch (menuItem.getItemId()){
+                            case R.id.fh_menu_edit:
+                                Toast.makeText(context, "수정", Toast.LENGTH_SHORT).show();
+                                return true;
+
+                            case R.id.fh_menu_delete:
+                                deletePosting(post_id,token);
+                                return true;
+
+                            default:
+                                return false;
+                        }
+                    }
+                });
+                popupMenu.show();
+            }
+
+            private void deletePosting(int post_id,String token) {
+                JsonObjectRequest request = new JsonObjectRequest(
+                        Request.Method.POST, Util.BASE_URL + "/api/v1/post/deletepost/"+post_id,
+                        null,
+                        new Response.Listener<JSONObject>() {
+                            @Override
+                            public void onResponse(JSONObject response) {
+                                Toast.makeText(context, "포스팅 삭제 성공", Toast.LENGTH_SHORT).show();
+                                notifyDataSetChanged();
+                            }
+                        },
+                        new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+
+                            }
+                        }
+                )
+                {
+                    @Override
+                    public Map<String, String> getHeaders() throws AuthFailureError {
+                        Map<String, String> stringStringMap = new HashMap<String, String>();
+                        stringStringMap.put("Authorization","Bearer "+token);
+                        return stringStringMap;
+                    }
+                };
+                Volley.newRequestQueue(context).add(request);
+            }
+
+        });
     }
+
+
 
     @Override
     public int getItemCount() {
         return postArrayList.size();
     }
+
     public class ViewHolder extends RecyclerView.ViewHolder{
 
         ImageView fh_img_profilePhoto;
@@ -107,6 +181,7 @@ public class Adapter_home extends RecyclerView.Adapter<Adapter_home.ViewHolder> 
         TextView fh_txt_created;
         TextView fh_txt_cntComment;
         TextView fh_txt_cntFavorite;
+        ImageView fh_img_menu;
 
 
         public ViewHolder(@NonNull View itemView) {
@@ -120,6 +195,9 @@ public class Adapter_home extends RecyclerView.Adapter<Adapter_home.ViewHolder> 
             fh_txt_created = itemView.findViewById(R.id.fh_txt_created);
             fh_txt_cntComment = itemView.findViewById(R.id.fh_txt_cntComment);
             fh_txt_cntFavorite = itemView.findViewById(R.id.fh_txt_cntFavorite);
+            fh_img_menu = itemView.findViewById(R.id.fh_img_menu);
+
+
 
             fh_img_like.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -150,7 +228,12 @@ public class Adapter_home extends RecyclerView.Adapter<Adapter_home.ViewHolder> 
                     Intent i = new Intent(context, CommentActivity.class);
                     i.putExtra("post_id",post_id);
 
+                    Intent j = new Intent(context,Adapter_comment.class);
+                    j.putExtra("post_id",post_id);
+
                     context.startActivity(i);
+
+
                 }
             });
 
@@ -163,10 +246,13 @@ public class Adapter_home extends RecyclerView.Adapter<Adapter_home.ViewHolder> 
 
                     Intent i = new Intent(context,CommentActivity.class);
                     i.putExtra("post_id",post_id);
+
                     context.startActivity(i);
                 }
             });
         }
+
+
 
         private void clickDislike(int position,String token) {
 
@@ -257,35 +343,39 @@ public class Adapter_home extends RecyclerView.Adapter<Adapter_home.ViewHolder> 
         }
 
         private void getLikeCntData(Posting post,int cnt_like_postid) {
-                int position = getAdapterPosition();
+            int position = getAdapterPosition();
 
-                JsonObjectRequest request1 = new JsonObjectRequest(
-                        Request.Method.GET, Util.BASE_URL + "/api/v1/like/countlikepost/" + cnt_like_postid,
-                        null,
-                        new Response.Listener<JSONObject>() {
-                            @Override
-                            public void onResponse(JSONObject response) {
-                                try {
-                                    int likecnt = response.getInt("cnt");
+            JsonObjectRequest request1 = new JsonObjectRequest(
+                    Request.Method.GET, Util.BASE_URL + "/api/v1/like/countlikepost/" + cnt_like_postid,
+                    null,
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            try {
+                                int likecnt = response.getInt("cnt");
 
-                                    post.setCnt_favorite(likecnt);
-                                    notifyDataSetChanged();
+                                post.setCnt_favorite(likecnt);
+                                notifyDataSetChanged();
 
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        },
-                        new Response.ErrorListener() {
-                            @Override
-                            public void onErrorResponse(VolleyError error) {
-
+                            } catch (JSONException e) {
+                                e.printStackTrace();
                             }
                         }
-                );
-                Volley.newRequestQueue(context).add(request1);
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+
+                        }
+                    }
+            );
+            Volley.newRequestQueue(context).add(request1);
         }
     }
+
+
+
+
 }
 
 
