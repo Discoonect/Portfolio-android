@@ -87,15 +87,15 @@ public class Fragment_Home extends Fragment {
 
         requestQueue = Volley.newRequestQueue(getActivity());
 
-        postArrayList.clear();
-        getPostingData(getContext(),token);
+
 
     }
 
     @Override
     public void onResume() {
         super.onResume();
-
+        postArrayList.clear();
+        getPostingData(getContext(),token);
 
     }
 
@@ -166,6 +166,7 @@ public class Fragment_Home extends Fragment {
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
+                        Log.i("aaa",response.toString());
                         try{
                             boolean success = response.getBoolean("success");
                             if (success == false) {

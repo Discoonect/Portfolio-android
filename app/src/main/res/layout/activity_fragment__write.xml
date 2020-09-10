@@ -31,7 +31,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@color/mainColor"
-            android:text="업로드"
+            android:text="업로드하기"
             android:textSize="18sp" />
 
     </LinearLayout>

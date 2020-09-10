@@ -4,10 +4,13 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.kks.portfolio_android.R;
 import com.kks.portfolio_android.model.Posting;
 
@@ -32,18 +35,29 @@ public class Adapter_search extends RecyclerView.Adapter<Adapter_search.ViewHold
 
     @Override
     public void onBindViewHolder(@NonNull Adapter_search.ViewHolder holder, int position) {
+        Posting posting = postArrayList.get(position);
 
+        Glide.with(context).load(posting.getPhoto_url()).into(holder.fs_img_posting);
 
+        holder.fs_img_likeCnt.setText(""+posting.getCnt_favorite());
     }
 
     @Override
     public int getItemCount() {
         return postArrayList.size();
     }
+
+
     public class ViewHolder extends RecyclerView.ViewHolder{
+
+        ImageView fs_img_posting;
+        TextView fs_img_likeCnt;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
+
+            fs_img_posting = itemView.findViewById(R.id.fs_img_posting);
+            fs_img_likeCnt = itemView.findViewById(R.id.fs_img_likeCnt);
         }
     }
 }

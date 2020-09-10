@@ -38,6 +38,12 @@ public class Posting {
         this.postlike = postlike;
     }
 
+    public Posting(int id, String photo_url, int cnt_favorite) {
+        this.id = id;
+        this.photo_url = photo_url;
+        this.cnt_favorite = cnt_favorite;
+    }
+
     public Posting(){}
 
     public int getId() {

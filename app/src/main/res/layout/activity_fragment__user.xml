@@ -51,14 +51,16 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="게시물" />
+                    android:text="게시물"
+                    android:textSize="16sp" />
 
                 <TextView
                     android:id="@+id/fu_txt_postingCnt"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:gravity="center" />
+                    android:gravity="center"
+                    android:textSize="20sp" />
             </LinearLayout>
 
             <LinearLayout
@@ -73,14 +75,16 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="팔로워" />
+                    android:text="팔로워"
+                    android:textSize="16sp" />
 
                 <TextView
                     android:id="@+id/fu_txt_followerCnt"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:gravity="center" />
+                    android:gravity="center"
+                    android:textSize="20sp" />
             </LinearLayout>
 
             <LinearLayout
@@ -95,14 +99,16 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="팔로잉" />
+                    android:text="팔로잉"
+                    android:textSize="16sp" />
 
                 <TextView
                     android:id="@+id/fu_txt_followingCnt"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:gravity="center" />
+                    android:gravity="center"
+                    android:textSize="20sp" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

@@ -30,7 +30,7 @@
             android:inputType="textPersonName" />
 
         <ImageButton
-            android:id="@+id/fs_btn_search"
+            android:id="@+id/fs_img_search"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"

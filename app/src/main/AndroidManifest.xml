@@ -17,7 +17,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".CommentActivity"></activity>
+        <activity android:name=".fragment.Fragment_SearchResult"></activity>
+        <activity android:name=".PostingActivity" />
+        <activity android:name=".CommentActivity" />
         <activity android:name=".SettingActivity" />
         <activity android:name=".HomeActivity" />
         <activity android:name=".Sign_upActivity" />

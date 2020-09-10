@@ -11,10 +11,12 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 
 import com.kks.portfolio_android.fragment.Fragment_Favorite;
 import com.kks.portfolio_android.fragment.Fragment_Home;
 import com.kks.portfolio_android.fragment.Fragment_Search;
+import com.kks.portfolio_android.fragment.Fragment_SearchResult;
 import com.kks.portfolio_android.fragment.Fragment_User;
 import com.kks.portfolio_android.fragment.Fragment_Write;
 
@@ -27,6 +29,8 @@ public class HomeActivity extends AppCompatActivity {
     private Fragment_Write fragment_write;
     private Fragment_User fragment_user;
     private Fragment_Favorite fragment_favorite;
+    private Fragment_SearchResult fragment_searchResult;
+    private ImageView fs_img_search;
 
     private FragmentTransaction transaction;
 
@@ -45,6 +49,8 @@ public class HomeActivity extends AppCompatActivity {
         fragment_write = new Fragment_Write();
         fragment_user = new Fragment_User();
         fragment_favorite = new Fragment_Favorite();
+        fragment_searchResult = new Fragment_SearchResult();
+
 
         transaction = fragmentManager.beginTransaction();
         transaction.replace(R.id.frameLayout,fragment_home).commitAllowingStateLoss();
@@ -64,13 +70,13 @@ public class HomeActivity extends AppCompatActivity {
         if(id==R.id.action_settings){
             Intent i = new Intent(HomeActivity.this, SettingActivity.class);
             startActivity(i);
-            finish();
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
     public void clickHandler(View view){
+
         transaction = fragmentManager.beginTransaction();
         switch (view.getId()){
             case R.id.btn_fragment_home:
@@ -90,7 +96,7 @@ public class HomeActivity extends AppCompatActivity {
                 break;
 
             case R.id.btn_fragment_setting:
-                transaction.replace(R.id.frameLayout, fragment_user).commitAllowingStateLoss();
+                transaction.replace(R.id.frameLayout,fragment_user).commitAllowingStateLoss();
                 break;
         }
     }
