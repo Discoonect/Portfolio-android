@@ -1,6 +1,7 @@
 package com.kks.portfolio_android.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.kks.portfolio_android.PostingActivity;
 import com.kks.portfolio_android.R;
 import com.kks.portfolio_android.model.Posting;
 
@@ -58,6 +60,15 @@ public class Adapter_search extends RecyclerView.Adapter<Adapter_search.ViewHold
 
             fs_img_posting = itemView.findViewById(R.id.fs_img_posting);
             fs_img_likeCnt = itemView.findViewById(R.id.fs_img_likeCnt);
+
+            fs_img_posting.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent i = new Intent(context, PostingActivity.class);
+                    i.putExtra("post_id",postArrayList.get(getAdapterPosition()).getId());
+                    context.startActivity(i);
+                }
+            });
         }
     }
 }

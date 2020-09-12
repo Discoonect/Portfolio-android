@@ -3,15 +3,11 @@ package com.kks.portfolio_android.fragment;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,16 +15,15 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 import com.kks.portfolio_android.R;
+import com.kks.portfolio_android.search.Search_PostingResult;
+import com.kks.portfolio_android.search.Search_UserResult;
 import com.kks.portfolio_android.adapter.Adapter_search;
 import com.kks.portfolio_android.model.Posting;
 import com.kks.portfolio_android.util.Util;
@@ -38,8 +33,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 public class Fragment_Search extends Fragment {
 
@@ -76,6 +69,26 @@ public class Fragment_Search extends Fragment {
         fs_edit_search = getView().findViewById(R.id.fs_edit_search);
 
         getFamousPosting();
+
+        fs_img_search.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(getContext(), Search_PostingResult.class);
+                Intent j = new Intent(getContext(), Search_UserResult.class );
+
+                String keyword = fs_edit_search.getText().toString().trim();
+                String keyword_search = keyword.substring(0,1);
+
+                if(keyword_search == "@"){
+                    i.putExtra("keyword",keyword);
+                    getContext().startActivity(i);
+                }else{
+                    j.putExtra("keyword",keyword);
+                    getContext().startActivity(j);
+                }
+                fs_edit_search.setText("");
+            }
+        });
     }
 
     private void getFamousPosting() {
@@ -86,7 +99,7 @@ public class Fragment_Search extends Fragment {
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        Log.i("aaa",response.toString());
+
                         try {
                             boolean success = response.getBoolean("success");
                             if (success == false) {
@@ -128,35 +141,4 @@ public class Fragment_Search extends Fragment {
         requestQueue.add(jsonObjectRequest);
     }
 
-
-    private void getSearchResult(String keyword, Context context) {
-            JsonObjectRequest request = new JsonObjectRequest(
-                    Request.Method.GET,
-                    Util.BASE_URL + "/api/v1/search/search?keyword="+keyword+"&offset=" + offset + "&limit=25", null,
-                    new Response.Listener<JSONObject>() {
-                        @Override
-                        public void onResponse(JSONObject response) {
-                            try{
-                                boolean success = response.getBoolean("success");
-                                if (success == false) {
-                                    Toast.makeText(getActivity(), "떙", Toast.LENGTH_SHORT).show();
-                                    return;
-                                }
-
-                                JSONArray items = response.getJSONArray("items");
-                                Log.i("aaa",items.toString());
-
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    },
-                    new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                        }
-                    }
-            );
-            Volley.newRequestQueue(context).add(request);
-    }
 }

@@ -24,6 +24,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.kks.portfolio_android.CommentActivity;
+import com.kks.portfolio_android.PostingActivity;
 import com.kks.portfolio_android.R;
 import com.kks.portfolio_android.model.Posting;
 import com.kks.portfolio_android.util.Util;
@@ -183,7 +184,6 @@ public class Adapter_home extends RecyclerView.Adapter<Adapter_home.ViewHolder> 
         TextView fh_txt_cntFavorite;
         ImageView fh_img_menu;
 
-
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             fh_img_profilePhoto = itemView.findViewById(R.id.fh_img_profilePhoto);
@@ -196,8 +196,6 @@ public class Adapter_home extends RecyclerView.Adapter<Adapter_home.ViewHolder> 
             fh_txt_cntComment = itemView.findViewById(R.id.fh_txt_cntComment);
             fh_txt_cntFavorite = itemView.findViewById(R.id.fh_txt_cntFavorite);
             fh_img_menu = itemView.findViewById(R.id.fh_img_menu);
-
-
 
             fh_img_like.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -250,9 +248,16 @@ public class Adapter_home extends RecyclerView.Adapter<Adapter_home.ViewHolder> 
                     context.startActivity(i);
                 }
             });
+
+            fh_img_postPhoto.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent i = new Intent(context, PostingActivity.class);
+                    i.putExtra("post_id",postArrayList.get(getAdapterPosition()).getId());
+                    context.startActivity(i);
+                }
+            });
         }
-
-
 
         private void clickDislike(int position,String token) {
 
@@ -372,10 +377,6 @@ public class Adapter_home extends RecyclerView.Adapter<Adapter_home.ViewHolder> 
             Volley.newRequestQueue(context).add(request1);
         }
     }
-
-
-
-
 }
 
 

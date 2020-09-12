@@ -70,13 +70,17 @@ public class PostingActivity extends AppCompatActivity {
         po_txt_created = findViewById(R.id.po_txt_created);
         po_txt_cntFavorite = findViewById(R.id.po_txt_cntFavorite);
 
+        SharedPreferences sharedPreferences =
+                getSharedPreferences(Util.PREFERENCE_NAME,MODE_PRIVATE);
+        String token = sharedPreferences.getString("token",null);
+
         int post_id = getIntent().getIntExtra("post_id",0);
 
-        getPostData(post_id);
+        getPostData(post_id,token);
 
     }
 
-    private void getPostData(int post_id) {
+    private void getPostData(int post_id,String token) {
         JsonObjectRequest request = new JsonObjectRequest(
                 Request.Method.GET,
                 Util.BASE_URL + "/api/v1/post/getonepost/"+post_id, null,
@@ -154,7 +158,16 @@ public class PostingActivity extends AppCompatActivity {
                     public void onErrorResponse(VolleyError error) {
                     }
                 }
-        );
+        )
+        {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+
+                Map<String, String> stringStringMap = new HashMap<String, String>();
+                stringStringMap.put("Authorization","Bearer "+token);
+                return stringStringMap;
+            }
+        };
         Volley.newRequestQueue(PostingActivity.this).add(request);
     }
 }

@@ -16,7 +16,6 @@ import android.widget.ImageView;
 import com.kks.portfolio_android.fragment.Fragment_Favorite;
 import com.kks.portfolio_android.fragment.Fragment_Home;
 import com.kks.portfolio_android.fragment.Fragment_Search;
-import com.kks.portfolio_android.fragment.Fragment_SearchResult;
 import com.kks.portfolio_android.fragment.Fragment_User;
 import com.kks.portfolio_android.fragment.Fragment_Write;
 
@@ -29,7 +28,7 @@ public class HomeActivity extends AppCompatActivity {
     private Fragment_Write fragment_write;
     private Fragment_User fragment_user;
     private Fragment_Favorite fragment_favorite;
-    private Fragment_SearchResult fragment_searchResult;
+
     private ImageView fs_img_search;
 
     private FragmentTransaction transaction;
@@ -49,8 +48,6 @@ public class HomeActivity extends AppCompatActivity {
         fragment_write = new Fragment_Write();
         fragment_user = new Fragment_User();
         fragment_favorite = new Fragment_Favorite();
-        fragment_searchResult = new Fragment_SearchResult();
-
 
         transaction = fragmentManager.beginTransaction();
         transaction.replace(R.id.frameLayout,fragment_home).commitAllowingStateLoss();

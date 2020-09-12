@@ -87,8 +87,6 @@ public class Fragment_Home extends Fragment {
 
         requestQueue = Volley.newRequestQueue(getActivity());
 
-
-
     }
 
     @Override
@@ -166,7 +164,7 @@ public class Fragment_Home extends Fragment {
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        Log.i("aaa",response.toString());
+
                         try{
                             boolean success = response.getBoolean("success");
                             if (success == false) {

@@ -75,9 +75,6 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-
-
-
         main_btn_regist.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -102,10 +99,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-
-
-
-
     private void login(){
         JSONObject body = new JSONObject();
         try{

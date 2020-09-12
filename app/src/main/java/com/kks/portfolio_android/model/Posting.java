@@ -10,6 +10,7 @@ public class Posting {
     private int postlike;
     private int cnt_comment;
     private int cnt_favorite;
+    private String user_profilephoto;
 
     public Posting(int id, String photo_url) {
         this.id = id;
@@ -23,7 +24,6 @@ public class Posting {
         this.content = content;
         this.createdAt = createdAt;
         this.postlike = postlike;
-
     }
 
     public Posting(int id, int user_id,String user_name, String content, String createdAt,String photo_url,int cnt_comment,int cnt_favorite,int postlike) {
@@ -42,6 +42,12 @@ public class Posting {
         this.id = id;
         this.photo_url = photo_url;
         this.cnt_favorite = cnt_favorite;
+    }
+
+    public Posting(int user_id, String user_name, String user_profilephoto) {
+        this.user_id = user_id;
+        this.user_name = user_name;
+        this.user_profilephoto = user_profilephoto;
     }
 
     public Posting(){}
@@ -116,5 +122,13 @@ public class Posting {
 
     public void setCnt_favorite(int cnt_favorite) {
         this.cnt_favorite = cnt_favorite;
+    }
+
+    public String getUser_profilephoto() {
+        return user_profilephoto;
+    }
+
+    public void setUser_profilephoto(String user_profilephoto) {
+        this.user_profilephoto = user_profilephoto;
     }
 }

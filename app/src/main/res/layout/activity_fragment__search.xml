@@ -26,7 +26,7 @@
             android:layout_weight="20"
             android:background="#FFFFFF"
             android:ems="10"
-            android:hint="키워드 또는 아이디 검색"
+            android:hint="키워드 또는 @아이디 검색"
             android:inputType="textPersonName" />
 
         <ImageButton
