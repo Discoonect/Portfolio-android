@@ -48,7 +48,8 @@
             android:layout_height="35dp"
             android:layout_alignParentTop="true"
             android:layout_alignParentRight="true"
-            app:srcCompat="@drawable/ic_baseline_menu_24" />
+            android:visibility="invisible"
+            app:srcCompat="@drawable/ic_baseline_more_horiz_24" />
 
     </RelativeLayout>
 

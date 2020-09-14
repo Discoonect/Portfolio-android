@@ -92,6 +92,8 @@ public class CommentActivity extends AppCompatActivity {
                 uploadComment(post_id,comment,token);
             }
         });
+
+
     }
 
     private void uploadComment(int post_id,String comment,String token) {
@@ -194,13 +196,14 @@ public class CommentActivity extends AppCompatActivity {
 
                             for(int i=0; i<items.length(); i++){
                                 jsonObject = items.getJSONObject(i);
+                                int post_id = jsonObject.getInt("post_id");
                                 int comment_id = jsonObject.getInt("comment_id");
                                 int user_id = jsonObject.getInt("user_id");
                                 String user_name = jsonObject.getString("user_name");
                                 String comment = jsonObject.getString("comment");
                                 String created_at = jsonObject.getString("created_at");
 
-                                Comments comments = new Comments(comment_id,user_id,user_name,comment,created_at);
+                                Comments comments = new Comments(post_id,comment_id,user_id,user_name,comment,created_at);
                                 list.add(comments);
                             }
                             adapter_comment = new Adapter_comment(CommentActivity.this, list);

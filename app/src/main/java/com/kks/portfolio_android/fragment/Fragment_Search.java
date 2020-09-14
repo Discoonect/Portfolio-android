@@ -96,7 +96,7 @@ public class Fragment_Search extends Fragment {
     private void getFamousPosting() {
         requestQueue = Volley.newRequestQueue(getContext());
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET,
-                Util.BASE_URL + "/api/v1/post/bestpost?offset="+offset+"&limit=10",
+                Util.BASE_URL + "/api/v1/post/bestpost?offset="+offset+"&limit=30",
                 null,
                 new Response.Listener<JSONObject>() {
                     @Override

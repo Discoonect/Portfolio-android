@@ -62,6 +62,8 @@ public class Fragment_Home extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+
+
         recyclerView = getView().findViewById(R.id.fh_recyclerview);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -87,6 +89,7 @@ public class Fragment_Home extends Fragment {
 
         requestQueue = Volley.newRequestQueue(getActivity());
 
+
     }
 
     @Override
@@ -94,68 +97,67 @@ public class Fragment_Home extends Fragment {
         super.onResume();
         postArrayList.clear();
         getPostingData(getContext(),token);
-
     }
 
-    private void addNetworkData() {
-        JsonObjectRequest request = new JsonObjectRequest(
-                Request.Method.GET,
-                Util.BASE_URL + path + "?offset=" + offset + "&limit=25", null,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        try{
-                            boolean success = response.getBoolean("success");
-                            if (success == false) {
-                                Toast.makeText(getActivity(), "떙", Toast.LENGTH_SHORT).show();
-                                return;
-                            }
-
-                            JSONArray items = response.getJSONArray("items");
-
-                            for(int i=0; i<items.length(); i++){
-                                jsonObject = items.getJSONObject(i);
-
-                                int post_id = jsonObject.getInt("post_id");
-                                int user_id = jsonObject.getInt("user_id");
-                                String user_name = jsonObject.getString("user_name");
-                                String content = jsonObject.getString("content");
-                                String created_at = jsonObject.getString("created_at");
-                                int like_cnt = jsonObject.getInt("like_cnt");
-                                int comment_cnt = jsonObject.getInt("comment_cnt");
-                                int postlike = jsonObject.getInt("mylike");
-
-                                String photo = jsonObject.getString("photo_url");
-                                String photo_url = Util.BASE_URL+"/public/uploads/"+photo;
-
-                                Posting posting = new Posting(post_id,user_id,user_name,content,created_at,photo_url,comment_cnt,like_cnt,postlike);
-                                postArrayList.add(posting);
-
-                            }
-                            adapter_home.notifyDataSetChanged();
-                            offset = offset + response.getInt("count");
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                    }
-                }
-        )
-        {
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-
-                Map<String, String> stringStringMap = new HashMap<String, String>();
-                stringStringMap.put("Authorization","Bearer "+token);
-                return stringStringMap;
-            }
-        };
-        requestQueue.add(request);
-    }
+//    private void addNetworkData() {
+//        JsonObjectRequest request = new JsonObjectRequest(
+//                Request.Method.GET,
+//                Util.BASE_URL + path + "?offset=" + offset + "&limit=25", null,
+//                new Response.Listener<JSONObject>() {
+//                    @Override
+//                    public void onResponse(JSONObject response) {
+//                        try{
+//                            boolean success = response.getBoolean("success");
+//                            if (success == false) {
+//                                Toast.makeText(getActivity(), "떙", Toast.LENGTH_SHORT).show();
+//                                return;
+//                            }
+//
+//                            JSONArray items = response.getJSONArray("items");
+//
+//                            for(int i=0; i<items.length(); i++){
+//                                jsonObject = items.getJSONObject(i);
+//
+//                                int post_id = jsonObject.getInt("post_id");
+//                                int user_id = jsonObject.getInt("user_id");
+//                                String user_name = jsonObject.getString("user_name");
+//                                String content = jsonObject.getString("content");
+//                                String created_at = jsonObject.getString("created_at");
+//                                int like_cnt = jsonObject.getInt("like_cnt");
+//                                int comment_cnt = jsonObject.getInt("comment_cnt");
+//                                int postlike = jsonObject.getInt("mylike");
+//
+//                                String photo = jsonObject.getString("photo_url");
+//                                String photo_url = Util.BASE_URL+"/public/uploads/"+photo;
+//
+//                                Posting posting = new Posting(post_id,user_id,user_name,content,created_at,photo_url,comment_cnt,like_cnt,postlike);
+//                                postArrayList.add(posting);
+//
+//                            }
+//                            adapter_home.notifyDataSetChanged();
+//                            offset = offset + response.getInt("count");
+//                        } catch (Exception e) {
+//                            e.printStackTrace();
+//                        }
+//                    }
+//                },
+//                new Response.ErrorListener() {
+//                    @Override
+//                    public void onErrorResponse(VolleyError error) {
+//                    }
+//                }
+//        )
+//        {
+//            @Override
+//            public Map<String, String> getHeaders() throws AuthFailureError {
+//
+//                Map<String, String> stringStringMap = new HashMap<String, String>();
+//                stringStringMap.put("Authorization","Bearer "+token);
+//                return stringStringMap;
+//            }
+//        };
+//        requestQueue.add(request);
+//    }
 
     public void getPostingData(Context context,String token) {
         JsonObjectRequest request = new JsonObjectRequest(
@@ -164,6 +166,7 @@ public class Fragment_Home extends Fragment {
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
+                        Log.i("aaa",response.toString());
 
                         try{
                             boolean success = response.getBoolean("success");
@@ -186,10 +189,13 @@ public class Fragment_Home extends Fragment {
                                 int comment_cnt = jsonObject.getInt("comment_cnt");
                                 int postlike = jsonObject.getInt("mylike");
 
+                                String profile = jsonObject.getString("user_profilephoto");
+
+
                                 String photo = jsonObject.getString("photo_url");
                                 String photo_url = Util.BASE_URL+"/public/uploads/"+photo;
 
-                                Posting posting = new Posting(post_id,user_id,user_name,content,created_at,photo_url,comment_cnt,like_cnt,postlike);
+                                Posting posting = new Posting(post_id,user_id,user_name,profile,content,created_at,photo_url,comment_cnt,like_cnt,postlike);
 
                                 postArrayList.add(posting);
                             }
@@ -211,7 +217,6 @@ public class Fragment_Home extends Fragment {
         {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
-
                 Map<String, String> stringStringMap = new HashMap<String, String>();
                 stringStringMap.put("Authorization","Bearer "+token);
                 return stringStringMap;

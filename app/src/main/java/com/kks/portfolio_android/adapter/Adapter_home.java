@@ -99,7 +99,9 @@ public class Adapter_home extends RecyclerView.Adapter<Adapter_home.ViewHolder> 
         int sp_user_id = sharedPreferences.getInt("user_id",0);
         String token = sharedPreferences.getString("token",null);
 
-        if(sp_user_id!=posting.getUser_id()){
+        if(sp_user_id==posting.getUser_id()){
+            holder.fh_img_menu.setVisibility(View.VISIBLE);
+        }else{
             holder.fh_img_menu.setVisibility(View.INVISIBLE);
         }
 
@@ -162,9 +164,14 @@ public class Adapter_home extends RecyclerView.Adapter<Adapter_home.ViewHolder> 
             }
 
         });
+
+        if(posting.getUser_profilephoto()!="null"){
+            Glide.with(context).load(Util.BASE_URL+"/public/uploads/"+posting.getUser_profilephoto()).into(holder.fh_img_profilePhoto);
+        }else{
+            holder.fh_img_profilePhoto.setImageResource(R.drawable.ic_baseline_account_circle_24);
+        }
+
     }
-
-
 
     @Override
     public int getItemCount() {
@@ -230,7 +237,6 @@ public class Adapter_home extends RecyclerView.Adapter<Adapter_home.ViewHolder> 
 
                     context.startActivity(i);
 
-
                 }
             });
 
@@ -244,15 +250,6 @@ public class Adapter_home extends RecyclerView.Adapter<Adapter_home.ViewHolder> 
                     Intent i = new Intent(context,CommentActivity.class);
                     i.putExtra("post_id",post_id);
 
-                    context.startActivity(i);
-                }
-            });
-
-            fh_img_postPhoto.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent i = new Intent(context, PostingActivity.class);
-                    i.putExtra("post_id",postArrayList.get(getAdapterPosition()).getId());
                     context.startActivity(i);
                 }
             });

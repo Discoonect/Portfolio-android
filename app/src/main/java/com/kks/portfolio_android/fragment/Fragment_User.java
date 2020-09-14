@@ -48,6 +48,7 @@ public class Fragment_User extends Fragment {
     TextView fu_txt_followingCnt;
     TextView fu_txt_userId;
     ImageView fu_img_profile;
+    TextView fu_txt_introduce;
 
     RecyclerView recyclerView;
     Adapter_user adapter_user;
@@ -94,10 +95,10 @@ public class Fragment_User extends Fragment {
 
         getUserData(token);
         getUserData2(token);
-        getMyPosting(user_id,token);
+        getMyPosting(user_id);
     }
 
-    private void getMyPosting(int user_id,String token) {
+    private void getMyPosting(int user_id) {
         requestQueue = Volley.newRequestQueue(getContext());
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET,
                 Util.BASE_URL + "/api/v1/post/getpostphotourl/"+user_id+"?offset="+offset+"&limit=25",
@@ -203,6 +204,7 @@ public class Fragment_User extends Fragment {
         fu_txt_followerCnt = getView().findViewById(R.id.fu_txt_followerCnt);
         fu_txt_userId =getView().findViewById(R.id.fu_txt_userId);
         fu_img_profile = getView().findViewById(R.id.fu_img_profile);
+        fu_txt_introduce = getView().findViewById(R.id.fu_txt_introduce);
 
         requestQueue = Volley.newRequestQueue(getContext());
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET,
@@ -224,14 +226,20 @@ public class Fragment_User extends Fragment {
 
                             String user_name = jsonObject.getString("user_name");
                             String user_profile = jsonObject.getString("user_profilephoto");
+                            String userProfile_url = Util.BASE_URL+"/public/uploads/"+user_profile;
+                            String introduce = jsonObject.getString("introduce");
+
                             int follower_cnt = jsonObject.getInt("follower");
 
                             if(!user_profile.equals("null")){
-                                Glide.with(getContext()).load(user_profile).into(fu_img_profile);
+                                Glide.with(getContext()).load(userProfile_url).into(fu_img_profile);
+                            }else{
+                                fu_img_profile.setImageResource(R.drawable.ic_baseline_account_circle_24);
                             }
 
                             fu_txt_userId.setText(user_name);
                             fu_txt_followerCnt.setText(""+follower_cnt);
+                            fu_txt_introduce.setText(introduce);
 
                         } catch (JSONException e) {
                             e.printStackTrace();

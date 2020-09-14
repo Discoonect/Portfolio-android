@@ -3,11 +3,14 @@ package com.kks.portfolio_android;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,6 +23,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.kks.portfolio_android.adapter.Adapter_home;
+import com.kks.portfolio_android.api.PostApi;
 import com.kks.portfolio_android.model.Comments;
 import com.kks.portfolio_android.model.Posting;
 import com.kks.portfolio_android.util.Util;
@@ -57,7 +61,8 @@ public class PostingActivity extends AppCompatActivity {
 
     int mylike;
 
-    
+    int post_id;
+    String token;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,11 +83,27 @@ public class PostingActivity extends AppCompatActivity {
 
         SharedPreferences sharedPreferences =
                 getSharedPreferences(Util.PREFERENCE_NAME,MODE_PRIVATE);
-        String token = sharedPreferences.getString("token",null);
+        token = sharedPreferences.getString("token",null);
 
-        int post_id = getIntent().getIntExtra("post_id",0);
+        post_id = getIntent().getIntExtra("post_id",0);
 
-        getPostData(post_id,token);
+        po_img_comment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(PostingActivity.this,CommentActivity.class);
+                i.putExtra("post_id",post_id);
+                startActivity(i);
+            }
+        });
+
+        po_txt_cntComment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(PostingActivity.this,CommentActivity.class);
+                i.putExtra("post_id",post_id);
+                startActivity(i);
+            }
+        });
 
         po_img_back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -96,17 +117,77 @@ public class PostingActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if(mylike==1){
                     clickDislike(post_id,token);
-                    Log.i("aaa",""+mylike);
                 }else{
                     clickLike(post_id,token);
-                    Log.i("aaa",""+mylike);
                 }
             }
         });
 
+        po_img_menu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                PopupMenu popupMenu = new PopupMenu(PostingActivity.this,po_img_menu);
+                popupMenu.inflate(R.menu.fh_post_menu);
+
+                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem menuItem) {
+                        switch (menuItem.getItemId()){
+                            case R.id.fh_menu_edit:
+                                Toast.makeText(PostingActivity.this, "수정", Toast.LENGTH_SHORT).show();
+                                return true;
+
+                            case R.id.fh_menu_delete:
+                                deletePosting(post_id,token);
+                                return true;
+
+                            default:
+                                return false;
+                        }
+                    }
+                });
+                popupMenu.show();
+            }
+        });
     }
 
-    private void clickLike(int post_id,String token) {
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        getPostData(post_id,token);
+    }
+
+    private void deletePosting(int post_id, String token) {
+        JsonObjectRequest request = new JsonObjectRequest(
+                Request.Method.POST, Util.BASE_URL + "/api/v1/post/deletepost/"+post_id,
+                null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Toast.makeText(PostingActivity.this, "포스팅 삭제 성공", Toast.LENGTH_SHORT).show();
+                        finish();
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+
+                    }
+                }
+        )
+        {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> stringStringMap = new HashMap<String, String>();
+                stringStringMap.put("Authorization","Bearer "+token);
+                return stringStringMap;
+            }
+        };
+        Volley.newRequestQueue(PostingActivity.this).add(request);
+    }
+
+    private void clickLike(int post_id, String token) {
         JSONObject body = new JSONObject();
         try {
             body.put("post_id", post_id);
@@ -230,8 +311,8 @@ public class PostingActivity extends AppCompatActivity {
                                     getSharedPreferences(Util.PREFERENCE_NAME,MODE_PRIVATE);
                             int sp_user_id = sharedPreferences.getInt("user_id",0);
                             int user_id = jsonObject.getInt("user_id");
-                            if(sp_user_id!=user_id){
-                                po_img_menu.setVisibility(View.INVISIBLE);
+                            if(sp_user_id==user_id){
+                                po_img_menu.setVisibility(View.VISIBLE);
                             }
 
                             String user_name = jsonObject.getString("user_name");

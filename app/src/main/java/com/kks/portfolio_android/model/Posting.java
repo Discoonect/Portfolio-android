@@ -26,10 +26,11 @@ public class Posting {
         this.postlike = postlike;
     }
 
-    public Posting(int id, int user_id,String user_name, String content, String createdAt,String photo_url,int cnt_comment,int cnt_favorite,int postlike) {
+    public Posting(int id, int user_id,String user_name, String user_profilephoto ,String content, String createdAt,String photo_url,int cnt_comment,int cnt_favorite,int postlike) {
         this.id = id;
         this.user_id = user_id;
         this.user_name = user_name;
+        this.user_profilephoto = user_profilephoto;
         this.content = content;
         this.createdAt = createdAt;
         this.photo_url = photo_url;

@@ -86,9 +86,9 @@ public class Search_UserResult extends AppCompatActivity {
                     @Override
                     public void onResponse(JSONObject response) {
                         try{
-                            Log.i("aaa",response.toString());
 
                             boolean success = response.getBoolean("success");
+
                             if (success == false) {
                                 Toast.makeText(Search_UserResult.this, "떙", Toast.LENGTH_SHORT).show();
                                 return;

@@ -50,9 +50,7 @@ public class Search_PostingResult extends AppCompatActivity {
         sp_img_back = findViewById(R.id.sp_img_back);
         sp_txt_title = findViewById(R.id.sp_txt_title);
 
-        SharedPreferences sharedPreferences = getSharedPreferences(Util.PREFERENCE_NAME,MODE_PRIVATE);
 
-        String token = sharedPreferences.getString("token",null);
 
         String keyword = getIntent().getStringExtra("keyword");
 
@@ -82,7 +80,6 @@ public class Search_PostingResult extends AppCompatActivity {
                     @Override
                     public void onResponse(JSONObject response) {
                         try{
-                            Log.i("aaa",response.toString());
 
                             boolean success = response.getBoolean("success");
                             if (success == false) {
