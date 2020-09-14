@@ -9,14 +9,26 @@
     android:orientation="vertical"
     tools:context=".PostingActivity">
 
+    <ImageView
+        android:id="@+id/po_img_back"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginRight="15dp"
+        app:srcCompat="@drawable/ic_baseline_arrow_back_ios_24" />
+
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="15dp">
 
         <ImageView
             android:id="@+id/po_img_profile"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             app:srcCompat="@drawable/ic_baseline_account_circle_24" />
 
         <TextView
@@ -43,12 +55,14 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
         android:orientation="vertical">
 
         <ImageView
             android:id="@+id/po_img_photo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="400dp"
+            android:layout_height="400dp"
             android:layout_gravity="center"
             app:srcCompat="@drawable/ic_launcher_background" />
     </LinearLayout>
@@ -56,6 +70,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
         android:orientation="horizontal">
 
         <ImageView
@@ -76,22 +92,22 @@
             android:layout_height="match_parent"
             android:layout_marginLeft="20dp"
             android:layout_weight="1"
-            android:gravity="center|start"
-            android:text="TextView" />
+            android:gravity="center|start" />
 
         <TextView
             android:id="@+id/po_txt_cntFavorite"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:gravity="center|right"
-            android:text="TextView" />
+            android:gravity="center|right" />
 
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
         android:orientation="vertical">
 
         <TextView

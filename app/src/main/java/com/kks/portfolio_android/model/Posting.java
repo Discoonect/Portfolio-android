@@ -50,6 +50,8 @@ public class Posting {
         this.user_profilephoto = user_profilephoto;
     }
 
+
+
     public Posting(){}
 
     public int getId() {

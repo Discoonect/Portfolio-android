@@ -25,6 +25,7 @@ import com.kks.portfolio_android.model.Posting;
 import com.kks.portfolio_android.util.Util;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.ParseException;
@@ -52,6 +53,10 @@ public class PostingActivity extends AppCompatActivity {
     TextView po_txt_content;
     TextView po_txt_created;
     TextView po_txt_cntFavorite;
+    ImageView po_img_back;
+
+    int mylike;
+
     
 
     @Override
@@ -69,6 +74,7 @@ public class PostingActivity extends AppCompatActivity {
         po_txt_content = findViewById(R.id.po_txt_content);
         po_txt_created = findViewById(R.id.po_txt_created);
         po_txt_cntFavorite = findViewById(R.id.po_txt_cntFavorite);
+        po_img_back = findViewById(R.id.po_img_back);
 
         SharedPreferences sharedPreferences =
                 getSharedPreferences(Util.PREFERENCE_NAME,MODE_PRIVATE);
@@ -78,6 +84,126 @@ public class PostingActivity extends AppCompatActivity {
 
         getPostData(post_id,token);
 
+        po_img_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
+        
+        po_img_like.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(mylike==1){
+                    clickDislike(post_id,token);
+                    Log.i("aaa",""+mylike);
+                }else{
+                    clickLike(post_id,token);
+                    Log.i("aaa",""+mylike);
+                }
+            }
+        });
+
+    }
+
+    private void clickLike(int post_id,String token) {
+        JSONObject body = new JSONObject();
+        try {
+            body.put("post_id", post_id);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        JsonObjectRequest request = new JsonObjectRequest(
+                Request.Method.POST,
+                Util.BASE_URL + "/api/v1/like/likepost",
+                body,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        mylike=1;
+                        po_img_like.setImageResource(R.drawable.ic_baseline_favorite_24);
+                        getLikeCntData(post_id);
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.i("aaa",error.toString());
+                    }
+                }
+        )  {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("Authorization", "Bearer " + token);
+                return params;
+            }
+        } ;
+        Volley.newRequestQueue(PostingActivity.this).add(request);
+    }
+
+    private void clickDislike(int post_id,String token) {
+        JSONObject body = new JSONObject();
+        try {
+            body.put("post_id", post_id);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        JsonObjectRequest request = new JsonObjectRequest(
+                Request.Method.POST,
+                Util.BASE_URL + "/api/v1/like/deletelikepost",
+                body,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        mylike=0;
+                        po_img_like.setImageResource(R.drawable.ic_baseline_favorite_border_24);
+                        getLikeCntData(post_id);
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.i("aaa",error.toString());
+                    }
+                }
+        )  {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("Authorization", "Bearer " + token);
+                return params;
+            }
+        } ;
+        Volley.newRequestQueue(PostingActivity.this).add(request);
+    }
+
+    private void getLikeCntData(int post_id) {
+        JsonObjectRequest request1 = new JsonObjectRequest(
+                Request.Method.GET, Util.BASE_URL + "/api/v1/like/countlikepost/" + post_id,
+                null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            int likecnt = response.getInt("cnt");
+                            po_txt_cntFavorite.setText(""+likecnt+"명이 좋아합니다");
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+
+                    }
+                }
+        );
+        Volley.newRequestQueue(PostingActivity.this).add(request1);
     }
 
     private void getPostData(int post_id,String token) {
@@ -88,7 +214,7 @@ public class PostingActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(JSONObject response) {
                         try{
-                            Log.i("aaa",response.toString());
+
                             boolean success = response.getBoolean("success");
                             if (success == false) {
                                 Toast.makeText(PostingActivity.this, "떙", Toast.LENGTH_SHORT).show();
@@ -99,8 +225,6 @@ public class PostingActivity extends AppCompatActivity {
                             JSONObject jsonObject = items.getJSONObject(0);
 
                             int post_id = jsonObject.getInt("post_id");
-
-
 
                             SharedPreferences sharedPreferences =
                                     getSharedPreferences(Util.PREFERENCE_NAME,MODE_PRIVATE);
@@ -122,7 +246,7 @@ public class PostingActivity extends AppCompatActivity {
                             int like_cnt = jsonObject.getInt("like_cnt");
                             po_txt_cntFavorite.setText(""+like_cnt+"명이 좋아합니다");
 
-                            int mylike = jsonObject.getInt("mylike");
+                            mylike = jsonObject.getInt("mylike");
                             if(mylike == 1){
                                 po_img_like.setImageResource(R.drawable.ic_baseline_favorite_24);
                             }else {

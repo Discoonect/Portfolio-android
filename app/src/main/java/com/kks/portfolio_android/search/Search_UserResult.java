@@ -47,6 +47,8 @@ public class Search_UserResult extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search__user_result);
 
+        Toast.makeText(this, "유저검색", Toast.LENGTH_SHORT).show();
+
         su_img_back = findViewById(R.id.su_img_back);
         su_txt_title = findViewById(R.id.su_txt_title);
 
@@ -56,6 +58,7 @@ public class Search_UserResult extends AppCompatActivity {
         int sp_userId = sharedPreferences.getInt("user_id",0);
 
         String keyword = getIntent().getStringExtra("keyword");
+        Log.i("aaa",keyword);
 
         recyclerView = findViewById(R.id.su_recyclerview);
         recyclerView.setHasFixedSize(true);

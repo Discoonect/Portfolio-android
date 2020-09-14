@@ -12,19 +12,20 @@
         app:cardCornerRadius="50dp">
 
         <ImageView
-            android:id="@+id/su_img_profile"
+            android:id="@+id/sp_img_photo"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:srcCompat="@tools:sample/avatars" />
+            android:scaleType="centerCrop"
+            tools:srcCompat="@tools:sample/backgrounds/scenic" />
     </androidx.cardview.widget.CardView>
 
     <TextView
-        android:id="@+id/su_txt_userName"
-        android:layout_width="wrap_content"
+        android:id="@+id/sp_txt_content"
+        android:layout_width="match_parent"
         android:layout_height="70dp"
         android:layout_weight="1"
+        android:ellipsize="end"
         android:gravity="center"
-        android:textSize="30sp"
-        app:autoSizeMaxTextSize="30sp"
-        app:autoSizeTextType="uniform" />
+        android:maxLines="50"
+        android:textSize="18sp" />
 </LinearLayout>

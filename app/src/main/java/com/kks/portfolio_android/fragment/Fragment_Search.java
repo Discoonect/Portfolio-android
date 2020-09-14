@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -78,13 +79,14 @@ public class Fragment_Search extends Fragment {
 
                 String keyword = fs_edit_search.getText().toString().trim();
                 String keyword_search = keyword.substring(0,1);
+                Log.i("aaa",keyword_search);
 
-                if(keyword_search == "@"){
-                    i.putExtra("keyword",keyword);
-                    getContext().startActivity(i);
-                }else{
+                if(keyword_search.equals("@")){
                     j.putExtra("keyword",keyword);
                     getContext().startActivity(j);
+                }else{
+                    i.putExtra("keyword",keyword);
+                    getContext().startActivity(i);
                 }
                 fs_edit_search.setText("");
             }

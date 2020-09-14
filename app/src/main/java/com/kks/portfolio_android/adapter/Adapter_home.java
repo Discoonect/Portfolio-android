@@ -208,11 +208,10 @@ public class Adapter_home extends RecyclerView.Adapter<Adapter_home.ViewHolder> 
                     SharedPreferences sp = context.getSharedPreferences(Util.PREFERENCE_NAME, MODE_PRIVATE);
                     token = sp.getString("token", null);
                     if(is_like==1){
-                        clickLike(position,token);
-                    }else{
                         clickDislike(position,token);
+                    }else{
+                        clickLike(position,token);
                     }
-
                 }
             });
 
@@ -259,8 +258,7 @@ public class Adapter_home extends RecyclerView.Adapter<Adapter_home.ViewHolder> 
             });
         }
 
-        private void clickDislike(int position,String token) {
-
+        private void clickLike(int position,String token) {
             Posting posting = postArrayList.get(position);
             int cnt_like_postid = postArrayList.get(position).getId();
             int posting_id = posting.getId();
@@ -303,7 +301,7 @@ public class Adapter_home extends RecyclerView.Adapter<Adapter_home.ViewHolder> 
 
         }
 
-        private void clickLike(int position,String token) {
+        private void clickDislike(int position,String token) {
             int cnt_like_postid = postArrayList.get(position).getId();
             Posting posting = postArrayList.get(position);
             int posting_id = posting.getId();

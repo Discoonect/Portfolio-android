@@ -18,39 +18,33 @@
 
             <ImageView
                 android:id="@+id/cm_img_profile"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="2"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
                 app:srcCompat="@drawable/ic_baseline_account_circle_24" />
 
             <TextView
                 android:id="@+id/cm_txt_name"
-                android:layout_width="wrap_content"
+                android:layout_width="100dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center|left"
-                android:text="TextView" />
+                android:layout_marginLeft="20dp"
+                android:gravity="center|left" />
 
             <TextView
                 android:id="@+id/cm_txt_comment"
-                android:layout_width="wrap_content"
+                android:layout_width="150dp"
                 android:layout_height="match_parent"
-                android:layout_weight="7"
-                android:gravity="center|left"
-                android:text="TextView" />
+                android:gravity="center|left" />
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="2"
                 android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/cm_txt_time"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="TextView" />
+                    android:gravity="center" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -61,7 +55,6 @@
                         android:id="@+id/cm_img_delete"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_weight="1"
                         android:visibility="visible"
                         app:srcCompat="@drawable/ic_baseline_clear_24" />
                 </LinearLayout>
