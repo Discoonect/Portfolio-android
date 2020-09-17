@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -25,6 +26,8 @@ import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.kks.portfolio_android.R;
 import com.kks.portfolio_android.adapter.Adapter_user;
+import com.kks.portfolio_android.follow.Follower_Activity;
+import com.kks.portfolio_android.follow.Following_Activity;
 import com.kks.portfolio_android.model.Posting;
 import com.kks.portfolio_android.util.Util;
 
@@ -59,6 +62,7 @@ public class Fragment_User extends Fragment {
 
 
 
+
     int offset=0;
     int user_id;
 
@@ -84,7 +88,24 @@ public class Fragment_User extends Fragment {
         token = sharedPreferences.getString("token",null);
         user_id = sharedPreferences.getInt("user_id",0);
 
+        fu_txt_followerCnt = getView().findViewById(R.id.fu_txt_followerCnt);
+        fu_txt_followingCnt = getView().findViewById(R.id.fu_txt_followingCnt);
 
+        fu_txt_followerCnt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(getContext(), Follower_Activity.class);
+                getContext().startActivity(i);
+            }
+        });
+
+        fu_txt_followingCnt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(getContext(), Following_Activity.class);
+                getContext().startActivity(i);
+            }
+        });
     }
 
     @Override

@@ -132,7 +132,7 @@ public class Fragment_Write extends Fragment {
 
                     @Override
                     public void onFailure(Call<UserRes> call, Throwable t) {
-                        Log.i("AAA", t.toString());
+                        Log.i("aaa", t.toString());
                     }
                 });
             }

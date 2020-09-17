@@ -23,6 +23,7 @@ import com.kks.portfolio_android.util.Util;
 
 import org.json.JSONObject;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,44 +31,50 @@ public class SettingActivity extends AppCompatActivity {
 
     Button setting_btn_leaveMember;
     Button setting_btn_logout;
-
-    String token;
+    Button setting_btn_gallery;
+    Button setting_btn_basicPhoto;
+    Button setting_btn_save;
 
     RequestQueue requestQueue;
+
+    File photoFile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
 
+        SharedPreferences sharedPreferences =
+                getSharedPreferences(Util.PREFERENCE_NAME,MODE_PRIVATE);
+        String token = sharedPreferences.getString("token",null);
+
         setting_btn_leaveMember = findViewById(R.id.setting_btn_leaveMember);
         setting_btn_logout = findViewById(R.id.setting_btn_logout);
+        setting_btn_gallery = findViewById(R.id.setting_btn_gallery);
+        setting_btn_basicPhoto = findViewById(R.id.setting_btn_basicPhoto);
+        setting_btn_save = findViewById(R.id.setting_btn_save);
 
         setting_btn_logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                SharedPreferences sharedPreferences =
-                        getSharedPreferences(Util.PREFERENCE_NAME,MODE_PRIVATE);
-                token = sharedPreferences.getString("token",null);
 
-                userLogout();
+                userLogout(token);
             }
         });
 
         setting_btn_leaveMember.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                SharedPreferences sharedPreferences =
-                        getSharedPreferences(Util.PREFERENCE_NAME,MODE_PRIVATE);
-                token = sharedPreferences.getString("token",null);
 
-                alertDialog_adios("회원 탈퇴","정말로 탈퇴하시겠습니까?");
+                alertDialog_adios("회원 탈퇴","정말로 탈퇴하시겠습니까?",token);
 
             }
         });
+
+
     }
 
-    private void userLogout() {
+    private void userLogout(String token) {
         requestQueue = Volley.newRequestQueue(SettingActivity.this);
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.DELETE,
                 Util.BASE_URL + "/api/v1/user/logout",
@@ -103,7 +110,7 @@ public class SettingActivity extends AppCompatActivity {
         requestQueue.add(jsonObjectRequest);
     }
 
-    private void userAdios(){
+    private void userAdios(String token){
         requestQueue = Volley.newRequestQueue(SettingActivity.this);
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.DELETE,
                 Util.BASE_URL + "/api/v1/user/adios",
@@ -115,9 +122,6 @@ public class SettingActivity extends AppCompatActivity {
                         SharedPreferences.Editor editor = sharedPreferences.edit();
                         editor.clear();
                         editor.apply();
-
-                        Log.i("aaa",token);
-                        Log.i("aaa",sharedPreferences.getString("auto",null));
 
                         Intent i = new Intent(SettingActivity.this,MainActivity.class);
                         startActivity(i);
@@ -168,7 +172,7 @@ public class SettingActivity extends AppCompatActivity {
         alertDialog .show();
     }
 
-    void alertDialog_adios(String title, String message){
+    void alertDialog_adios(String title, String message,String token){
 
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(SettingActivity.this,R.style.myDialogTheme);
         alertDialog .setTitle(title);
@@ -178,7 +182,7 @@ public class SettingActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 
-                        userAdios();
+                        userAdios(token);
                     }
                 });
         alertDialog .setNegativeButton("아니요", new DialogInterface.OnClickListener() {

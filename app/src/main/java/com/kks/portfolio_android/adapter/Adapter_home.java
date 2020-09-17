@@ -24,7 +24,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.kks.portfolio_android.CommentActivity;
-import com.kks.portfolio_android.PostingActivity;
+import com.kks.portfolio_android.PageActivity;
 import com.kks.portfolio_android.R;
 import com.kks.portfolio_android.model.Posting;
 import com.kks.portfolio_android.util.Util;
@@ -214,6 +214,7 @@ public class Adapter_home extends RecyclerView.Adapter<Adapter_home.ViewHolder> 
 
                     SharedPreferences sp = context.getSharedPreferences(Util.PREFERENCE_NAME, MODE_PRIVATE);
                     token = sp.getString("token", null);
+
                     if(is_like==1){
                         clickDislike(position,token);
                     }else{
@@ -250,6 +251,15 @@ public class Adapter_home extends RecyclerView.Adapter<Adapter_home.ViewHolder> 
                     Intent i = new Intent(context,CommentActivity.class);
                     i.putExtra("post_id",post_id);
 
+                    context.startActivity(i);
+                }
+            });
+
+            fh_img_profilePhoto.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent i = new Intent(context, PageActivity.class);
+                    i.putExtra("user_id",postArrayList.get(getAdapterPosition()).getUser_id());
                     context.startActivity(i);
                 }
             });

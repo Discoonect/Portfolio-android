@@ -13,7 +13,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/setting_layout"
-        android:text="TextView" />
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="15dp"
+        android:text="한줄소개" />
 
     <TextView
         android:id="@+id/textView11"
@@ -44,20 +46,20 @@
             android:orientation="vertical">
 
             <Button
-                android:id="@+id/button4"
+                android:id="@+id/setting_btn_gallery"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="30dp"
                 android:layout_weight="1"
-                android:text="Button" />
+                android:text="프로필 사진 선택" />
 
             <Button
-                android:id="@+id/button5"
+                android:id="@+id/setting_btn_basicPhoto"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="30dp"
                 android:layout_weight="1"
-                android:text="Button" />
+                android:text="기본 이미지 변경" />
         </LinearLayout>
     </LinearLayout>
 
@@ -92,7 +94,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/textView12"
+        android:layout_margin="15dp"
         android:background="#FFFFFF"
         android:ems="10"
+        android:hint="20자 이내로 작성해주세요."
         android:inputType="textPersonName" />
 </RelativeLayout>

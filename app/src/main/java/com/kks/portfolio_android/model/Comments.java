@@ -11,13 +11,14 @@ public class Comments {
 
     public Comments(){}
 
-    public Comments(int post_id, int comment_id, int user_id, String user_name, String comment, String created_at) {
+    public Comments(int post_id, int comment_id, int user_id, String user_name, String comment, String created_at,String user_profile) {
         this.post_id = post_id;
         this.comment_id = comment_id;
         this.user_id = user_id;
         this.user_name = user_name;
         this.comment = comment;
         this.created_at = created_at;
+        this.user_profile = user_profile;
     }
 
     public int getPost_id() {

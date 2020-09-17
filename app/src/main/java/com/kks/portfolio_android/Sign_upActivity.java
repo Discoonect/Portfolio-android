@@ -1,16 +1,21 @@
 package com.kks.portfolio_android;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
+import android.Manifest;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -19,6 +24,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.kks.portfolio_android.api.VolleyApi;
 import com.kks.portfolio_android.util.Util;
 
 import org.json.JSONException;
@@ -37,6 +43,9 @@ public class Sign_upActivity extends AppCompatActivity {
     Button signup_btn_signup;
     Button signup_btn_cancle;
     Button signup_btn_checkId;
+    Button signup_btn_gallery;
+
+    ImageView signup_img_profile;
 
     int offset;
     String name;
@@ -44,13 +53,15 @@ public class Sign_upActivity extends AppCompatActivity {
     String password2;
     String phone;
 
+    VolleyApi volleyApi = new VolleyApi();
 
-    boolean check_id=true;
+    int check_name=0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
+
 
 
         signup_edit_password1 = findViewById(R.id.singup_edit_password1);
@@ -61,24 +72,39 @@ public class Sign_upActivity extends AppCompatActivity {
         signup_btn_cancle = findViewById(R.id.signup_btn_cancle);
         signup_btn_signup = findViewById(R.id.signup_btn_signup);
         signup_btn_checkId = findViewById(R.id.signup_btn_checkId);
+        signup_btn_gallery = findViewById(R.id.signup_btn_gallery);
+
+        signup_img_profile = findViewById(R.id.signup_img_profile);
 
 
         signup_btn_cancle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(Sign_upActivity.this, MainActivity.class);
-                startActivity(i);
                 finish();
-                return;
             }
         });
 
         signup_btn_checkId.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                checkIdData();
+                name = signup_edit_id.getText().toString().trim();
+                checkName(name,Sign_upActivity.this);
+                Log.i("aaa",""+check_name);
             }
         });
+
+//        signup_btn_gallery.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                if(Build.VERSION.SDK_INT >= 23){
+//                    if(checkPermission()){
+//                        displayFileChoose();
+//                    }else{
+//                        requestPermission();
+//                    }
+//                }
+//            }
+//        });
 
         signup_btn_signup.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -89,7 +115,7 @@ public class Sign_upActivity extends AppCompatActivity {
                 phone = signup_edit_phone.getText().toString().trim();
                 name= signup_edit_id.getText().toString().trim();
 
-                if (!check_id) {
+                if (check_name==0) {
                     Toast.makeText(Sign_upActivity.this, "아이디 중복체크를 해주세요.", Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -106,57 +132,42 @@ public class Sign_upActivity extends AppCompatActivity {
                     return;
                 }
 
-                if(check_id==false) {
-                    Toast.makeText(Sign_upActivity.this, "닉네임 확인해주세요.", Toast.LENGTH_SHORT).show();
+                if(phone.isEmpty()){
+                    Toast.makeText(Sign_upActivity.this, "핸드폰 번호를 입력해주세요.",
+                            Toast.LENGTH_SHORT).show();
                     return;
                 }
-
-                signUpData();
+                volleyApi.signUp(name,password1,phone,Sign_upActivity.this);
             }
         });
     }
 
-    private void signUpData() {
-        JSONObject body = new JSONObject();
-        try {
-            body.put("user_name", name);
-            body.put("user_passwd", password1);
-            body.put("user_phone", phone);
-        } catch (Exception e) {
-            e.printStackTrace();
+    private void requestPermission() {
+        if(ActivityCompat.shouldShowRequestPermissionRationale(Sign_upActivity.this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE)){
+            Toast.makeText(Sign_upActivity.this, "권한 수락이 필요합니다.",
+                    Toast.LENGTH_SHORT).show();
+        }else{
+            ActivityCompat.requestPermissions(Sign_upActivity.this,
+                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 500);
         }
-        Log.i("aaa","회원가입 body  : "+body.toString());
-        requestQueue = Volley.newRequestQueue(Sign_upActivity.this);
-        JsonObjectRequest request =
-                new JsonObjectRequest(Request.Method.POST, Util.BASE_URL + "/api/v1/user/signup",body,
-                        new Response.Listener<JSONObject>() {
-                            @Override
-                            public void onResponse(JSONObject response) {
-                                Toast.makeText(Sign_upActivity.this, "회원가입 성공", Toast.LENGTH_SHORT).show();
-                                Intent i = new Intent(Sign_upActivity.this, MainActivity.class);
-                                startActivity(i);
-                                finish();
-                            }
-                        },
-                        new Response.ErrorListener() {
-                            @Override
-                            public void onErrorResponse(VolleyError error) {
-                                Log.i("aaa",error.toString());
-                            }
-                        }
-                );
-        requestQueue.add(request);
     }
 
-    private void checkIdData() {
-        name = signup_edit_id.getText().toString().trim();
+    private void displayFileChoose() {
+        Intent i = new Intent();
+        i.setType("image/*");
+        i.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(i, "SELECT IMAGE"), 300);
+    }
+
+    public void checkName(String name,Context context){
         JSONObject body = new JSONObject();
         try {
             body.put("user_name", name);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        requestQueue = Volley.newRequestQueue(Sign_upActivity.this);
+        RequestQueue requestQueue = Volley.newRequestQueue(context);
         JsonObjectRequest request =
                 new JsonObjectRequest(Request.Method.POST,
                         Util.BASE_URL + "/api/v1/user/checkid", body,
@@ -164,17 +175,17 @@ public class Sign_upActivity extends AppCompatActivity {
                             @Override
                             public void onResponse(JSONObject response) {
                                 try {
+
                                     boolean success = response.getBoolean("success");
                                     String message = response.getString("message");
+
                                     if (success) {
-                                        alertDialog_checked(message);
+                                        volleyApi.alertDialog_checked(message,context);
+                                        check_name=1;
                                     } else {
-                                        alertDialog_Unchecked(message);
+                                        volleyApi.alertDialog_Unchecked(message,context);
+                                        check_name=0;
                                     }
-                                    check_id=success;
-                                    Log.i("aaa","success  "+success);
-                                    Log.i("aaa","닉네임  "+check_id);
-                                    return;
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
@@ -188,49 +199,5 @@ public class Sign_upActivity extends AppCompatActivity {
                         }
                 );
         requestQueue.add(request);
-    }
-
-    void alertDialog_checked(String message) {
-        AlertDialog.Builder alertDialog = new AlertDialog.Builder(Sign_upActivity.this, R.style.myDialogTheme);
-        alertDialog.setTitle("아이디 중복체크");
-        alertDialog.setMessage(message);
-        alertDialog.setPositiveButton
-                ("확인", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        check_id = true;
-                    }
-                });
-        final AlertDialog dialog = alertDialog.create();
-        dialog.setOnShowListener(new DialogInterface.OnShowListener() {
-            @Override
-            public void onShow(DialogInterface dialogInterface) {
-                dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.BLACK);
-            }
-        });
-        alertDialog.setCancelable(false);
-        alertDialog.show();
-    }
-
-    void alertDialog_Unchecked(String message) {
-        AlertDialog.Builder alertDialog = new AlertDialog.Builder(Sign_upActivity.this, R.style.myDialogTheme);
-        alertDialog.setTitle("아이디 중복체크");
-        alertDialog.setMessage(message);
-        alertDialog.setPositiveButton
-                ("확인", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        check_id = false;
-                    }
-                });
-        final AlertDialog dialog = alertDialog.create();
-        dialog.setOnShowListener(new DialogInterface.OnShowListener() {
-            @Override
-            public void onShow(DialogInterface dialogInterface) {
-                dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.BLACK);
-            }
-        });
-        alertDialog.setCancelable(false);
-        alertDialog.show();
     }
 }

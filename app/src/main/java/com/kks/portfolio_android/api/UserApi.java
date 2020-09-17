@@ -5,11 +5,14 @@ package com.kks.portfolio_android.api;
 import com.kks.portfolio_android.model.UserReq;
 import com.kks.portfolio_android.model.UserRes;
 
+import okhttp3.MultipartBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.Header;
+import retrofit2.http.Multipart;
 import retrofit2.http.POST;
+import retrofit2.http.Part;
 
 // 레트로핏 라이브러리 사용할때는 인터페이스로 먼저 선언
 public interface UserApi {
@@ -26,5 +29,10 @@ public interface UserApi {
 
     @DELETE("/api/v1/users/logout")
     Call<UserRes> logoutUser(@Header("Authorization") String token);
+
+    @Multipart
+    @POST("/api/v1/user/profilephoto")
+    Call<UserRes> uploadProfile(@Header("Authorization") String token,
+                                @Part MultipartBody.Part file);
 
 }

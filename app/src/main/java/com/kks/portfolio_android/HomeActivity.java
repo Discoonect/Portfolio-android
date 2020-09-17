@@ -73,7 +73,6 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     public void clickHandler(View view){
-
         transaction = fragmentManager.beginTransaction();
         switch (view.getId()){
             case R.id.btn_fragment_home:

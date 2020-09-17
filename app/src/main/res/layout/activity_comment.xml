@@ -12,12 +12,16 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/layout"
-        android:layout_below="@id/relative1" />
+        android:layout_below="@id/relative1"
+        android:layout_margin="15dp" />
 
     <RelativeLayout
         android:id="@+id/relative1"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="15dp">
 
         <TextView
             android:id="@+id/cm_txt_cnt"
@@ -25,7 +29,6 @@
             android:layout_height="50dp"
             android:layout_centerInParent="true"
             android:gravity="center"
-            android:text="TextView"
             android:textSize="30sp" />
 
         <ImageView

@@ -62,7 +62,7 @@ public class Fragment_Home extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-
+        postArrayList.clear();
 
         recyclerView = getView().findViewById(R.id.fh_recyclerview);
         recyclerView.setHasFixedSize(true);
@@ -90,13 +90,13 @@ public class Fragment_Home extends Fragment {
         requestQueue = Volley.newRequestQueue(getActivity());
 
 
+        getPostingData(getContext(),token);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        postArrayList.clear();
-        getPostingData(getContext(),token);
+
     }
 
 //    private void addNetworkData() {

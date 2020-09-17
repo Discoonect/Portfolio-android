@@ -19,6 +19,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.bumptech.glide.Glide;
 import com.kks.portfolio_android.CommentActivity;
 import com.kks.portfolio_android.R;
 import com.kks.portfolio_android.model.Comments;
@@ -85,6 +86,12 @@ public class Adapter_comment extends RecyclerView.Adapter<Adapter_comment.ViewHo
 
         if(sp_user_id!=commentArrayList.get(position).getUser_id()){
             holder.cm_img_delete.setVisibility(View.INVISIBLE);
+        }
+
+        if(comments.getUser_profile()!="null"){
+            Glide.with(context).load(Util.BASE_URL+"/public/uploads/"+comments.getUser_profile()).into(holder.cm_img_profile);
+        }else{
+            holder.cm_img_profile.setImageResource(R.drawable.ic_baseline_account_circle_24);
         }
 
     }

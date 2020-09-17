@@ -27,4 +27,6 @@ public interface PostApi {
     Call<UserRes> createPost(@Header("Authorization") String token,
                              @Part MultipartBody.Part file,
                              @Part("content") RequestBody requestBody);
+
+
 }

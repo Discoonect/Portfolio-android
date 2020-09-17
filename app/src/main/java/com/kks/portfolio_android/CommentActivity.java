@@ -202,8 +202,9 @@ public class CommentActivity extends AppCompatActivity {
                                 String user_name = jsonObject.getString("user_name");
                                 String comment = jsonObject.getString("comment");
                                 String created_at = jsonObject.getString("created_at");
+                                String profile = jsonObject.getString("user_profilephoto");
 
-                                Comments comments = new Comments(post_id,comment_id,user_id,user_name,comment,created_at);
+                                Comments comments = new Comments(post_id,comment_id,user_id,user_name,comment,created_at,profile);
                                 list.add(comments);
                             }
                             adapter_comment = new Adapter_comment(CommentActivity.this, list);
