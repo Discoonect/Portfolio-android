@@ -11,6 +11,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -19,6 +21,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.kks.portfolio_android.api.VolleyApi;
 import com.kks.portfolio_android.util.Util;
 
 import org.json.JSONObject;
@@ -35,9 +38,16 @@ public class SettingActivity extends AppCompatActivity {
     Button setting_btn_basicPhoto;
     Button setting_btn_save;
 
+    ImageView setting_img_back;
+    ImageView setting_img_profile;
+
+    EditText setting_edit_introduce;
+
     RequestQueue requestQueue;
 
     File photoFile;
+
+    VolleyApi volleyApi = new VolleyApi();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,17 +57,22 @@ public class SettingActivity extends AppCompatActivity {
         SharedPreferences sharedPreferences =
                 getSharedPreferences(Util.PREFERENCE_NAME,MODE_PRIVATE);
         String token = sharedPreferences.getString("token",null);
+        int user_id = sharedPreferences.getInt("user_id",0);
 
         setting_btn_leaveMember = findViewById(R.id.setting_btn_leaveMember);
         setting_btn_logout = findViewById(R.id.setting_btn_logout);
         setting_btn_gallery = findViewById(R.id.setting_btn_gallery);
         setting_btn_basicPhoto = findViewById(R.id.setting_btn_basicPhoto);
         setting_btn_save = findViewById(R.id.setting_btn_save);
+        setting_edit_introduce = findViewById(R.id.setting_edit_introduce);
+        setting_img_profile = findViewById(R.id.setting_img_profile);
+        setting_img_back = findViewById(R.id.setting_img_back);
+
+        volleyApi.getSettingData(SettingActivity.this,user_id,setting_img_profile,setting_edit_introduce);
 
         setting_btn_logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 userLogout(token);
             }
         });
@@ -65,12 +80,17 @@ public class SettingActivity extends AppCompatActivity {
         setting_btn_leaveMember.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 alertDialog_adios("회원 탈퇴","정말로 탈퇴하시겠습니까?",token);
 
             }
         });
 
+        setting_img_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
 
     }
 

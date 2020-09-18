@@ -1,6 +1,8 @@
 package com.kks.portfolio_android.adapter;
 
 import android.content.Context;
+import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,33 +13,32 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.kks.portfolio_android.PageActivity;
 import com.kks.portfolio_android.R;
 import com.kks.portfolio_android.model.Posting;
 import com.kks.portfolio_android.util.Util;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
 
-public class Adapter_follower extends RecyclerView.Adapter<Adapter_follower.ViewHolder> {
+public class Adapter_follow extends RecyclerView.Adapter<Adapter_follow.ViewHolder> {
 
     Context context;
     ArrayList<Posting> postArrayList;
 
-    public Adapter_follower(Context context, ArrayList<Posting> postArrayList) {
+    public Adapter_follow(Context context, ArrayList<Posting> postArrayList) {
         this.context = context;
         this.postArrayList = postArrayList;
     }
     @NonNull
     @Override
-    public Adapter_follower.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public Adapter_follow.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.follow_row, parent, false);
-        return new Adapter_follower.ViewHolder(view);
+        return new Adapter_follow.ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull Adapter_follower.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull Adapter_follow.ViewHolder holder, int position) {
         Posting posting = postArrayList.get(position);
 
         if(posting.getUser_profilephoto()!="null"){
@@ -67,7 +68,30 @@ public class Adapter_follower extends RecyclerView.Adapter<Adapter_follower.View
             follow_img_profile = itemView.findViewById(R.id.follow_img_profile);
             follow_txt_userName = itemView.findViewById(R.id.follow_txt_userName);
 
+            follow_img_profile.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
 
+                    int user_id = postArrayList.get(getAdapterPosition()).getUser_id();
+
+                    Intent i = new Intent(context, PageActivity.class);
+                    i.putExtra("user_id",user_id);
+                    Log.i("aaa","user_id : "+user_id);
+                    context.startActivity(i);
+                }
+            });
+
+            follow_txt_userName.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int user_id = postArrayList.get(getAdapterPosition()).getUser_id();
+
+                    Intent i = new Intent(context, PageActivity.class);
+                    i.putExtra("user_id",user_id);
+                    Log.i("aaa","user_id : "+user_id);
+                    context.startActivity(i);
+                }
+            });
         }
     }
 }

@@ -18,10 +18,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import com.kks.portfolio_android.CommentActivity;
 import com.kks.portfolio_android.R;
-import com.kks.portfolio_android.adapter.Adapter_follower;
-import com.kks.portfolio_android.adapter.Adapter_home;
+import com.kks.portfolio_android.adapter.Adapter_follow;
 import com.kks.portfolio_android.model.Posting;
 import com.kks.portfolio_android.util.Util;
 
@@ -38,7 +36,7 @@ public class Follower_Activity extends AppCompatActivity {
     JSONObject jsonObject;
 
     RecyclerView recyclerView;
-    Adapter_follower adapter_follower;
+    Adapter_follow adapter_follow;
 
     ArrayList<Posting> postArrayList = new ArrayList<>();
 
@@ -58,6 +56,7 @@ public class Follower_Activity extends AppCompatActivity {
                 getSharedPreferences(Util.PREFERENCE_NAME,MODE_PRIVATE);
 
         String token = sharedPreferences.getString("token",null);
+        int sp_user_id = sharedPreferences.getInt("user_id",0);
 
         recyclerView = findViewById(R.id.follower_recyclerView);
         recyclerView.setHasFixedSize(true);
@@ -72,13 +71,20 @@ public class Follower_Activity extends AppCompatActivity {
             }
         });
 
-        getFollowerData(token);
+        int user_id = getIntent().getIntExtra("user_id",0);
+
+
+        if(user_id==0){
+            getFollowerData(sp_user_id);
+        }else{
+            getFollowerData(user_id);
+        }
     }
 
-    private void getFollowerData(String token) {
+    private void getFollowerData(int user_id) {
         JsonObjectRequest request = new JsonObjectRequest(
                 Request.Method.GET,
-                Util.BASE_URL + "/api/v1/follow/myfollower?offset="+offset+"&limit=25", null,
+                Util.BASE_URL + "/api/v1/follow/userfollower/"+user_id+"?offset="+offset+"&limit=25", null,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
@@ -108,8 +114,8 @@ public class Follower_Activity extends AppCompatActivity {
                                 }
                             }
 
-                            adapter_follower = new Adapter_follower(Follower_Activity.this, postArrayList);
-                            recyclerView.setAdapter(adapter_follower);
+                            adapter_follow = new Adapter_follow(Follower_Activity.this, postArrayList);
+                            recyclerView.setAdapter(adapter_follow);
 
                             int cnt = response.getInt("cnt");
 
@@ -123,15 +129,7 @@ public class Follower_Activity extends AppCompatActivity {
                     public void onErrorResponse(VolleyError error) {
                     }
                 }
-        )
-        {
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                Map<String, String> stringStringMap = new HashMap<String, String>();
-                stringStringMap.put("Authorization","Bearer "+token);
-                return stringStringMap;
-            }
-        };
+        );
         requestQueue.add(request);
     }
 }

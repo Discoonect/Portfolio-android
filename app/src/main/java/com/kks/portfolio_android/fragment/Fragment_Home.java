@@ -203,6 +203,7 @@ public class Fragment_Home extends Fragment {
                             recyclerView.setAdapter(adapter_home);
 
                             offset = offset + response.getInt("count");
+                            Log.i("aaa","home offset : "+offset);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }

@@ -50,8 +50,6 @@ public class Search_PostingResult extends AppCompatActivity {
         sp_img_back = findViewById(R.id.sp_img_back);
         sp_txt_title = findViewById(R.id.sp_txt_title);
 
-
-
         String keyword = getIntent().getStringExtra("keyword");
 
         recyclerView = findViewById(R.id.sp_recyclerview);

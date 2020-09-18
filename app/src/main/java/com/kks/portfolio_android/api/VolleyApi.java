@@ -8,7 +8,10 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -132,45 +135,6 @@ public class VolleyApi {
         requestQueue.add(request);
     }
 
-    public void checkName(String name,Context context){
-        JSONObject body = new JSONObject();
-        try {
-            body.put("user_name", name);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        RequestQueue requestQueue = Volley.newRequestQueue(context);
-        JsonObjectRequest request =
-                new JsonObjectRequest(Request.Method.POST,
-                        Util.BASE_URL + "/api/v1/user/checkid", body,
-                        new Response.Listener<JSONObject>() {
-                            @Override
-                            public void onResponse(JSONObject response) {
-                                try {
-
-                                    boolean success = response.getBoolean("success");
-                                    String message = response.getString("message");
-
-                                    if (success) {
-                                        alertDialog_checked(message,context);
-                                    } else {
-                                        alertDialog_Unchecked(message,context);
-                                    }
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        },
-                        new Response.ErrorListener() {
-                            @Override
-                            public void onErrorResponse(VolleyError error) {
-
-                            }
-                        }
-                );
-        requestQueue.add(request);
-    }
-
     public void alertDialog_Unchecked(String message, Context context) {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(context, R.style.myDialogTheme);
         alertDialog.setTitle("아이디 중복체크");
@@ -223,6 +187,7 @@ public class VolleyApi {
                         new Response.Listener<JSONObject>() {
                             @Override
                             public void onResponse(JSONObject response) {
+                                Log.i("aaa",response.toString());
                                 try{
                                     boolean success = response.getBoolean("success");
                                     if(success==false){
@@ -237,6 +202,7 @@ public class VolleyApi {
                                     String user_profile = jsonObject.getString("user_profilephoto");
                                     String userProfile_url = Util.BASE_URL+"/public/uploads/"+user_profile;
                                     String introduce = jsonObject.getString("introduce");
+
                                     if(introduce.equals("null")){
                                         introduce = "";
                                     }
@@ -357,5 +323,108 @@ public class VolleyApi {
                 }
         );
         requestQueue.add(jsonObjectRequest);
+    }
+
+    public void getSettingData(Context context, int user_id, ImageView setting_img_profile, EditText setting_edit_introduce){
+        RequestQueue requestQueue = Volley.newRequestQueue(context);
+        JsonObjectRequest request =
+                new JsonObjectRequest(Request.Method.GET, Util.BASE_URL + "/api/v1/user/userpage/"+user_id,null,
+                        new Response.Listener<JSONObject>() {
+                            @Override
+                            public void onResponse(JSONObject response) {
+
+                                try{
+                                    boolean success = response.getBoolean("success");
+                                    if(success==false){
+                                        Toast.makeText(context, "문제있음", Toast.LENGTH_SHORT).show();
+                                        return;
+                                    }
+
+                                    JSONArray items = response.getJSONArray("items");
+                                    JSONObject jsonObject = items.getJSONObject(0);
+
+
+                                    String user_profile = jsonObject.getString("user_profilephoto");
+                                    String userProfile_url = Util.BASE_URL+"/public/uploads/"+user_profile;
+
+                                    String introduce = jsonObject.getString("introduce");
+                                    if(introduce.equals("null")){
+                                        setting_edit_introduce.setHint("20자 이내로 작성해주세요");
+                                    } else {
+                                        setting_edit_introduce.setText(introduce);
+                                    }
+
+                                    if(!user_profile.equals("null")){
+                                        Glide.with(context).load(userProfile_url).into(setting_img_profile);
+                                    }else{
+                                        setting_img_profile.setImageResource(R.drawable.ic_baseline_account_circle_24);
+                                    }
+
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        },
+                        new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                Log.i("aaa",error.toString());
+                            }
+                        }
+                );
+        requestQueue.add(request);
+    }
+
+    public void writeIntroduce(){
+
+    }
+
+    public void checkFollow(Context context, int user_id, int follow_id, String token, Button page_btn_follow,Button page_btn_unFollow){
+        RequestQueue requestQueue = Volley.newRequestQueue(context);
+        JsonObjectRequest request =
+                new JsonObjectRequest(Request.Method.GET, Util.BASE_URL + "/api/v1/follow/checkfollow/"+follow_id,null,
+                        new Response.Listener<JSONObject>() {
+                            @Override
+                            public void onResponse(JSONObject response) {
+                                Log.i("aaa",response.toString());
+                                try{
+                                    boolean success = response.getBoolean("success");
+                                    if(success==false){
+                                        Toast.makeText(context, "문제있음", Toast.LENGTH_SHORT).show();
+                                        return;
+                                    }
+
+                                    int follow = response.getInt("follow");
+
+                                    if(user_id==follow_id){
+                                        page_btn_follow.setVisibility(View.GONE);
+                                        page_btn_unFollow.setVisibility(View.GONE);
+                                    }else if(follow == 0){
+                                        page_btn_follow.setVisibility(View.VISIBLE);
+                                    }else if(follow==1){
+                                        page_btn_unFollow.setVisibility(View.VISIBLE);
+                                    }
+
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        },
+                        new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                Log.i("aaa",error.toString()+"에러");
+                            }
+                        }
+                )
+                {
+                    @Override
+                    public Map<String, String> getHeaders() throws AuthFailureError {
+                        Map<String, String> stringStringMap = new HashMap<String, String>();
+                        stringStringMap.put("Authorization","Bearer "+token);
+                        return stringStringMap;
+                    }
+                };
+        requestQueue.add(request);
     }
 }

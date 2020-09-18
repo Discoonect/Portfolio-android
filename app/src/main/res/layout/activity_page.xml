@@ -17,6 +17,7 @@
             android:id="@+id/page_img_back"
             android:layout_width="30dp"
             android:layout_height="30dp"
+            android:layout_margin="15dp"
             app:srcCompat="@drawable/ic_baseline_arrow_back_ios_24" />
 
         <TextView
@@ -149,7 +150,7 @@
             android:id="@+id/page_layout2"
             android:layout_width="match_parent"
             android:layout_height="40dp"
-            android:layout_below="@id/page_txt_introduce"
+            android:layout_below="@id/page_btn_follow"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
             android:orientation="horizontal">
@@ -160,7 +161,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:contentDescription="TODO"
-                app:srcCompat="@drawable/ic_baseline_apps_24"  />
+                app:srcCompat="@drawable/ic_baseline_apps_24" />
 
             <ImageView
                 android:id="@+id/imageView8"
@@ -180,6 +181,30 @@
             android:layout_marginEnd="15dp"
             android:layout_marginRight="15dp"
             android:layout_marginBottom="15dp"  />
+
+        <Button
+            android:id="@+id/page_btn_follow"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/page_txt_introduce"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginBottom="10dp"
+            android:text="팔로우하기"
+            android:visibility="invisible" />
+
+        <Button
+            android:id="@+id/page_btn_unFollow"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/page_txt_introduce"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginBottom="10dp"
+            android:text="팔로우 끊기"
+            android:visibility="invisible" />
 
     </RelativeLayout>
 </ScrollView>

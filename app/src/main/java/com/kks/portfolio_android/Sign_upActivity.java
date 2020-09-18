@@ -2,12 +2,14 @@ package com.kks.portfolio_android;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -93,18 +95,18 @@ public class Sign_upActivity extends AppCompatActivity {
             }
         });
 
-//        signup_btn_gallery.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                if(Build.VERSION.SDK_INT >= 23){
-//                    if(checkPermission()){
-//                        displayFileChoose();
-//                    }else{
-//                        requestPermission();
-//                    }
-//                }
-//            }
-//        });
+        signup_btn_gallery.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(Build.VERSION.SDK_INT >= 23){
+                    if(checkPermission()){
+                        displayFileChoose();
+                    }else{
+                        requestPermission();
+                    }
+                }
+            }
+        });
 
         signup_btn_signup.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -199,5 +201,14 @@ public class Sign_upActivity extends AppCompatActivity {
                         }
                 );
         requestQueue.add(request);
+    }
+
+    private boolean checkPermission(){
+        int result = ContextCompat.checkSelfPermission(Sign_upActivity.this,Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        if(result == PackageManager.PERMISSION_DENIED){
+            return true;
+        }else{
+            return false;
+        }
     }
 }
