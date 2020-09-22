@@ -1,16 +1,21 @@
 package com.kks.portfolio_android.adapter;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.kks.portfolio_android.PostingActivity;
 import com.kks.portfolio_android.R;
 import com.kks.portfolio_android.model.Posting;
 
@@ -37,9 +42,9 @@ public class Adapter_searchPosting extends RecyclerView.Adapter<Adapter_searchPo
     public void onBindViewHolder(@NonNull Adapter_searchPosting.ViewHolder holder, int position) {
         Posting posting = postArrayList.get(position);
 
-        Glide.with(context).load(posting.getUser_name()).into(holder.sp_img_photo);
+        Glide.with(context).load(posting.getPhoto_url()).into(holder.sp_img_photo);
 
-        holder.sp_txt_content.setText(posting.getUser_profilephoto());
+        holder.sp_txt_content.setText(posting.getContent());
 
     }
 
@@ -52,12 +57,29 @@ public class Adapter_searchPosting extends RecyclerView.Adapter<Adapter_searchPo
 
         ImageView sp_img_photo;
         TextView sp_txt_content;
+        LinearLayout sp_layout;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
             sp_img_photo = itemView.findViewById(R.id.sp_img_photo);
             sp_txt_content = itemView.findViewById(R.id.sp_txt_content);
+            sp_layout = itemView.findViewById(R.id.sp_layout);
+
+            sp_layout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int post_id = postArrayList.get(getAdapterPosition()).getId();
+                    int user_id = postArrayList.get(getAdapterPosition()).getUser_id();
+
+                    Intent i = new Intent(context, PostingActivity.class);
+                    i.putExtra("post_id",post_id);
+                    i.putExtra("user_id",user_id);
+
+                    Log.i("aaa","서치어댑터 post_id : "+post_id+"   user_id : "+user_id);
+                    context.startActivity(i);
+                }
+            });
         }
     }
 }

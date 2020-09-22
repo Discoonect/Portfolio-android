@@ -30,7 +30,10 @@ import com.kks.portfolio_android.HomeActivity;
 import com.kks.portfolio_android.MainActivity;
 import com.kks.portfolio_android.R;
 import com.kks.portfolio_android.Sign_upActivity;
+import com.kks.portfolio_android.adapter.Adapter_follow;
 import com.kks.portfolio_android.adapter.Adapter_user;
+import com.kks.portfolio_android.follow.Follower_Activity;
+import com.kks.portfolio_android.follow.Following_Activity;
 import com.kks.portfolio_android.model.Posting;
 import com.kks.portfolio_android.util.Util;
 
@@ -427,4 +430,230 @@ public class VolleyApi {
                 };
         requestQueue.add(request);
     }
+
+    public void getFollowingData(Context context,int user_id,int offset,RecyclerView recyclerView) {
+        RequestQueue requestQueue = Volley.newRequestQueue(context);
+        ArrayList<Posting> postArrayList = new ArrayList<>();
+        JsonObjectRequest request = new JsonObjectRequest(
+                Request.Method.GET,
+                Util.BASE_URL + "/api/v1/follow/userfollowing/"+user_id+"?offset="+offset+"&limit=25", null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.i("aaa",response.toString());
+                        try{
+                            boolean success = response.getBoolean("success");
+                            if (success == false) {
+                                Toast.makeText(context, "떙", Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+
+                            JSONArray items = response.getJSONArray("items");
+                            for(int i=0;i<items.length(); i++){
+                                JSONObject jsonObject = items.getJSONObject(i);
+                                int following_id = jsonObject.getInt("following_id");
+
+                                String user_name = jsonObject.getString("user_name");
+                                String profile = jsonObject.getString("user_profilephoto");
+                                int user_id = jsonObject.getInt("user_id");
+
+                                Posting posting = new Posting(following_id,user_name,profile);
+
+
+                                postArrayList.add(posting);
+
+                                if (following_id == user_id){
+                                    postArrayList.remove(posting);
+                                }
+                            }
+                            Adapter_follow adapter_follow;
+
+                            adapter_follow = new Adapter_follow(context, postArrayList);
+                            recyclerView.setAdapter(adapter_follow);
+
+                            int cnt = response.getInt("cnt");
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                    }
+                }
+        );
+        requestQueue.add(request);
+    }
+
+    public void getFollowerData(Context context,int user_id,int offset,RecyclerView recyclerView) {
+        RequestQueue requestQueue = Volley.newRequestQueue(context);
+        ArrayList<Posting> postArrayList = new ArrayList<>();
+
+        JsonObjectRequest request = new JsonObjectRequest(
+                Request.Method.GET,
+                Util.BASE_URL + "/api/v1/follow/userfollower/"+user_id+"?offset="+offset+"&limit=25", null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.i("aaa",response.toString());
+                        try{
+                            boolean success = response.getBoolean("success");
+                            if (success == false) {
+                                Toast.makeText(context, "떙", Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+
+                            JSONArray items = response.getJSONArray("items");
+                            for(int i=0;i<items.length(); i++){
+                                JSONObject jsonObject = items.getJSONObject(i);
+                                int following_id = jsonObject.getInt("following_id");
+
+                                String user_name = jsonObject.getString("user_name");
+                                String profile = jsonObject.getString("user_profilephoto");
+                                int user_id = jsonObject.getInt("user_id");
+
+                                Posting posting = new Posting(user_id,user_name,profile);
+
+                                postArrayList.add(posting);
+
+                                if (following_id == user_id){
+                                    postArrayList.remove(posting);
+                                }
+                            }
+                            Adapter_follow adapter_follow;
+
+                            adapter_follow = new Adapter_follow(context, postArrayList);
+                            recyclerView.setAdapter(adapter_follow);
+
+                            int cnt = response.getInt("cnt");
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                    }
+                }
+        );
+        requestQueue.add(request);
+    }
+
+    public void followUser(Context context,int following_id,String token,Button page_btn_follow,Button page_btn_unFollow,TextView page_txt_followerCnt){
+        RequestQueue requestQueue = Volley.newRequestQueue(context);
+
+        JSONObject body = new JSONObject();
+        try {
+            body.put("following_id", following_id);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        JsonObjectRequest request = new JsonObjectRequest(
+                Request.Method.POST,
+                Util.BASE_URL + "/api/v1/follow/following", body,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.i("aaa",response.toString());
+                        try{
+                            boolean success = response.getBoolean("success");
+                            if (success == false) {
+                                Toast.makeText(context, "떙", Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+
+                            String message = response.getString("message");
+
+                            Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+
+                            page_btn_follow.setVisibility(View.INVISIBLE);
+                            page_btn_unFollow.setVisibility(View.VISIBLE);
+
+                            int follower_cnt = Integer.parseInt(page_txt_followerCnt.getText().toString().trim())+1;
+
+                            page_txt_followerCnt.setText(""+follower_cnt);
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                    }
+                }
+        )
+        {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> stringStringMap = new HashMap<String, String>();
+                stringStringMap.put("Authorization","Bearer "+token);
+                return stringStringMap;
+            }
+        };
+        requestQueue.add(request);
+    }
+
+    public void cancleFollow(Context context,int following_id,String token,Button page_btn_follow,Button page_btn_unFollow,TextView page_txt_followerCnt){
+        RequestQueue requestQueue = Volley.newRequestQueue(context);
+
+        JSONObject body = new JSONObject();
+        try {
+            body.put("following_id", following_id);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        JsonObjectRequest request = new JsonObjectRequest(
+                Request.Method.POST,
+                Util.BASE_URL + "/api/v1/follow/deletefollow", body,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.i("aaa",response.toString());
+                        try{
+                            boolean success = response.getBoolean("success");
+                            if (success == false) {
+                                Toast.makeText(context, "떙", Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+
+                            String message = response.getString("message");
+
+                            Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+
+                            page_btn_unFollow.setVisibility(View.INVISIBLE);
+                            page_btn_follow.setVisibility(View.VISIBLE);
+
+                            int follower_cnt = Integer.parseInt(page_txt_followerCnt.getText().toString().trim())-1;
+
+                            page_txt_followerCnt.setText(""+follower_cnt);
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                    }
+                }
+        )
+        {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> stringStringMap = new HashMap<String, String>();
+                stringStringMap.put("Authorization","Bearer "+token);
+                return stringStringMap;
+            }
+        };
+        requestQueue.add(request);
+    }
+
+
 }

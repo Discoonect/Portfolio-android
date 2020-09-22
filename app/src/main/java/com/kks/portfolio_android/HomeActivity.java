@@ -3,6 +3,7 @@ package com.kks.portfolio_android;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -41,16 +42,20 @@ public class HomeActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.app_toolbar);
         setSupportActionBar(toolbar);
 
-        fragmentManager = getSupportFragmentManager();
-
         fragment_home = new Fragment_Home();
         fragment_search = new Fragment_Search();
         fragment_write = new Fragment_Write();
         fragment_user = new Fragment_User();
         fragment_favorite = new Fragment_Favorite();
 
+        transaction = getSupportFragmentManager().beginTransaction();
+        transaction.add(R.id.frameLayout,fragment_home.newInstance()).commit();
+    }
+
+    public void replaceFragment(Fragment fragment){
+        fragmentManager = getSupportFragmentManager();
         transaction = fragmentManager.beginTransaction();
-        transaction.replace(R.id.frameLayout,fragment_home).commitAllowingStateLoss();
+        transaction.replace(R.id.frameLayout,fragment).commit();
     }
 
     @Override
@@ -65,7 +70,7 @@ public class HomeActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         if(id==R.id.action_settings){
-            Intent i = new Intent(HomeActivity.this, SettingActivity.class);
+            Intent i = new Intent(this, SettingActivity.class);
             startActivity(i);
             return true;
         }
@@ -73,26 +78,25 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     public void clickHandler(View view){
-        transaction = fragmentManager.beginTransaction();
         switch (view.getId()){
             case R.id.btn_fragment_home:
-                transaction.replace(R.id.frameLayout,fragment_home).commitAllowingStateLoss();
+                replaceFragment(fragment_home);
                 break;
 
             case R.id.btn_fragment_search:
-                transaction.replace(R.id.frameLayout,fragment_search).commitAllowingStateLoss();
+                replaceFragment(fragment_search);
                 break;
 
             case R.id.btn_fragment_write:
-                transaction.replace(R.id.frameLayout,fragment_write).commitAllowingStateLoss();
+                replaceFragment(fragment_write);
                 break;
 
             case R.id.btn_fragment_favorite:
-                transaction.replace(R.id.frameLayout,fragment_favorite).commitAllowingStateLoss();
+                replaceFragment(fragment_favorite);
                 break;
 
-            case R.id.btn_fragment_setting:
-                transaction.replace(R.id.frameLayout,fragment_user).commitAllowingStateLoss();
+            case R.id.btn_fragment_user:
+                replaceFragment(fragment_user);
                 break;
         }
     }

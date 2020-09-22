@@ -25,11 +25,21 @@
         android:layout_marginTop="10dp"
         android:layout_marginRight="15dp">
 
-        <ImageView
-            android:id="@+id/po_img_profile"
+        <androidx.cardview.widget.CardView
+            android:id="@+id/po_cardview"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            app:srcCompat="@drawable/ic_baseline_account_circle_24" />
+            app:cardBackgroundColor="@color/mainColor"
+            app:cardCornerRadius="50dp"
+            app:cardElevation="0dp">
+
+            <ImageView
+                android:id="@+id/po_img_profile"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:scaleType="centerCrop"
+                app:srcCompat="@drawable/ic_baseline_account_circle_24" />
+        </androidx.cardview.widget.CardView>
 
         <TextView
             android:id="@+id/po_txt_userName"
@@ -37,7 +47,7 @@
             android:layout_height="35dp"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="10dp"
-            android:layout_toRightOf="@id/po_img_profile"
+            android:layout_toRightOf="@id/po_cardview"
             android:layout_weight="1"
             android:gravity="center"
             android:textSize="18sp" />
@@ -114,7 +124,8 @@
         <TextView
             android:id="@+id/po_txt_content"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:textSize="15sp" />
 
         <TextView
             android:id="@+id/po_txt_created"

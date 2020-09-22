@@ -20,6 +20,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.kks.portfolio_android.R;
 import com.kks.portfolio_android.adapter.Adapter_follow;
+import com.kks.portfolio_android.api.VolleyApi;
 import com.kks.portfolio_android.model.Posting;
 import com.kks.portfolio_android.util.Util;
 
@@ -43,6 +44,8 @@ public class Following_Activity extends AppCompatActivity {
 
     int offset;
 
+    VolleyApi volleyApi = new VolleyApi();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,9 +55,9 @@ public class Following_Activity extends AppCompatActivity {
         following_img_back = findViewById(R.id.following_img_back);
 
         SharedPreferences sharedPreferences =
-                getSharedPreferences(Util.PREFERENCE_NAME,MODE_PRIVATE);
-        String token = sharedPreferences.getString("token",null);
-        int sp_user_id = sharedPreferences.getInt("user_id",0);
+                getSharedPreferences(Util.PREFERENCE_NAME, MODE_PRIVATE);
+        String token = sharedPreferences.getString("token", null);
+        int sp_user_id = sharedPreferences.getInt("user_id", 0);
 
         recyclerView = findViewById(R.id.following_recyclerView);
         recyclerView.setHasFixedSize(true);
@@ -69,67 +72,12 @@ public class Following_Activity extends AppCompatActivity {
             }
         });
 
-        int user_id = getIntent().getIntExtra("user_id",0);
+        int user_id = getIntent().getIntExtra("user_id", 0);
 
-        if(user_id==0){
-            getFollowingData(sp_user_id);
-        }else{
-            getFollowingData(user_id);
+        if (user_id == 0) {
+            volleyApi.getFollowingData(Following_Activity.this, sp_user_id, offset, recyclerView);
+        } else {
+            volleyApi.getFollowingData(Following_Activity.this, user_id, offset, recyclerView);
         }
-
-
-
-    }
-
-    private void getFollowingData(int user_id) {
-        JsonObjectRequest request = new JsonObjectRequest(
-                Request.Method.GET,
-                Util.BASE_URL + "/api/v1/follow/userfollowing/"+user_id+"?offset="+offset+"&limit=25", null,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        Log.i("aaa",response.toString());
-                        try{
-                            boolean success = response.getBoolean("success");
-                            if (success == false) {
-                                Toast.makeText(Following_Activity.this, "떙", Toast.LENGTH_SHORT).show();
-                                return;
-                            }
-
-                            JSONArray items = response.getJSONArray("items");
-                            for(int i=0;i<items.length(); i++){
-                                jsonObject = items.getJSONObject(i);
-                                int following_id = jsonObject.getInt("following_id");
-
-                                String user_name = jsonObject.getString("user_name");
-                                String profile = jsonObject.getString("user_profilephoto");
-                                int user_id = jsonObject.getInt("user_id");
-
-                                Posting posting = new Posting(following_id,user_name,profile);
-
-                                postArrayList.add(posting);
-
-                                if (following_id == user_id){
-                                    postArrayList.remove(posting);
-                                }
-                            }
-
-                            adapter_follow = new Adapter_follow(Following_Activity.this, postArrayList);
-                            recyclerView.setAdapter(adapter_follow);
-
-                            int cnt = response.getInt("cnt");
-
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                    }
-                }
-        );
-        requestQueue.add(request);
     }
 }

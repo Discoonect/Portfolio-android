@@ -114,12 +114,14 @@ public class Fragment_Search extends Fragment {
                             for(int i=0; i<items.length();i++){
                                 jsonObject = items.getJSONObject(i);
 
+                                int user_id = jsonObject.getInt("user_id");
+
                                 int like_cnt = jsonObject.getInt("cnt_like");
                                 int post_id = jsonObject.getInt("post_id");
                                 String photo = jsonObject.getString("photo_url");
                                 String photo_url = Util.BASE_URL+"/public/uploads/"+photo;
 
-                                Posting posting = new Posting(post_id,photo_url,like_cnt);
+                                Posting posting = new Posting(post_id,user_id,photo_url,like_cnt);
                                 postingArrayList.add(posting);
                             }
 

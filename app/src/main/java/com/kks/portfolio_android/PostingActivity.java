@@ -61,6 +61,7 @@ public class PostingActivity extends AppCompatActivity {
 
     int mylike;
 
+    int user_id;
     int post_id;
     String token;
 
@@ -68,6 +69,8 @@ public class PostingActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_posting);
+
+        list.clear();
 
         po_img_profile = findViewById(R.id.po_img_profile);
         po_txt_cntComment = findViewById(R.id.po_txt_cntComment);
@@ -86,6 +89,7 @@ public class PostingActivity extends AppCompatActivity {
         token = sharedPreferences.getString("token",null);
 
         post_id = getIntent().getIntExtra("post_id",0);
+        user_id = getIntent().getIntExtra("user_id",0);
 
         po_img_comment.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -149,13 +153,29 @@ public class PostingActivity extends AppCompatActivity {
                 popupMenu.show();
             }
         });
+
+        po_img_profile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(PostingActivity.this,PageActivity.class);
+
+                if(user_id==0){
+                    user_id = list.get(0).getUser_id();
+                    Log.i("aaa",""+ user_id);
+                }
+
+                i.putExtra("user_id",user_id);
+                startActivity(i);
+
+            }
+        });
+
+        getPostData(post_id,token);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-
-        getPostData(post_id,token);
     }
 
     private void deletePosting(int post_id, String token) {
@@ -294,6 +314,7 @@ public class PostingActivity extends AppCompatActivity {
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
+                        Log.i("aaa",response.toString());
                         try{
 
                             boolean success = response.getBoolean("success");
@@ -311,8 +332,20 @@ public class PostingActivity extends AppCompatActivity {
                                     getSharedPreferences(Util.PREFERENCE_NAME,MODE_PRIVATE);
                             int sp_user_id = sharedPreferences.getInt("user_id",0);
                             int user_id = jsonObject.getInt("user_id");
+                            Posting posting = new Posting(user_id);
+                            list.add(posting);
+
                             if(sp_user_id==user_id){
                                 po_img_menu.setVisibility(View.VISIBLE);
+                            }else{
+                                po_img_menu.setVisibility(View.INVISIBLE);
+                            }
+
+                            String user_profile = jsonObject.getString("user_profilephoto");
+                            if(user_profile == "null"){
+                                po_img_profile.setImageResource(R.drawable.ic_baseline_account_circle_24);
+                            }else{
+                                Glide.with(PostingActivity.this).load(Util.BASE_URL+"/public/uploads/"+user_profile).into(po_img_profile);
                             }
 
                             String user_name = jsonObject.getString("user_name");

@@ -2,6 +2,7 @@ package com.kks.portfolio_android.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.kks.portfolio_android.PageActivity;
 import com.kks.portfolio_android.PostingActivity;
 import com.kks.portfolio_android.R;
 import com.kks.portfolio_android.model.Posting;
@@ -60,9 +62,12 @@ public class Adapter_user extends RecyclerView.Adapter<Adapter_user.ViewHolder> 
                 public void onClick(View view) {
                     int position = getAdapterPosition();
                     int post_id = postArrayList.get(position).getId();
+                    int user_id = postArrayList.get(position).getUser_id();
 
                     Intent i = new Intent(context, PostingActivity.class);
                     i.putExtra("post_id",post_id);
+                    i.putExtra("user_id",user_id);
+                    Log.i("aaa","post_id : "+post_id+"     user_id : "+user_id);
                     context.startActivity(i);
                 }
             });

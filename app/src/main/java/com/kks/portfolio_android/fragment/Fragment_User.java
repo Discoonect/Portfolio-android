@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -127,6 +128,7 @@ public class Fragment_User extends Fragment {
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
+                        Log.i("aaa",response.toString());
 
                         try {
                             boolean success = response.getBoolean("success");
@@ -141,11 +143,12 @@ public class Fragment_User extends Fragment {
                                 jsonObject = items.getJSONObject(i);
 
                                 int post_id = jsonObject.getInt("id");
+                                int user_id = jsonObject.getInt("user_id");
 
                                 String photo = jsonObject.getString("photo_url");
                                 String photo_url = Util.BASE_URL+"/public/uploads/"+photo;
 
-                                Posting posting = new Posting(post_id,photo_url);
+                                Posting posting = new Posting(post_id,user_id,photo_url);
 
                                 postingArrayList.add(posting);
                             }

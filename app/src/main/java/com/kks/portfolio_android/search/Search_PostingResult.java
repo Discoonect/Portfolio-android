@@ -77,6 +77,7 @@ public class Search_PostingResult extends AppCompatActivity {
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
+                        Log.i("aaa","서치 포스팅 리스폰스 :"+response.toString());
                         try{
 
                             boolean success = response.getBoolean("success");
@@ -89,12 +90,13 @@ public class Search_PostingResult extends AppCompatActivity {
                             for(int i=0; i<items.length(); i++) {
                                 JSONObject jsonObject = items.getJSONObject(i);
 
-                                int posting_id = jsonObject.getInt("id");
+                                int user_id = jsonObject.getInt("user_id");
+                                int post_id = jsonObject.getInt("id");
                                 String content = jsonObject.getString("content");
                                 String photo = jsonObject.getString("photo_url");
                                 String photo_url = Util.BASE_URL+"/public/uploads/"+photo;
 
-                                Posting posting = new Posting(posting_id,photo_url,content);
+                                Posting posting = new Posting(post_id,user_id,photo_url,content);
                                 list.add(posting);
 
                             }

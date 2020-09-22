@@ -17,6 +17,26 @@ public class Posting {
         this.photo_url = photo_url;
     }
 
+    public Posting(int id, int user_id, String photo_url, int cnt_favorite) {
+        this.id = id;
+        this.user_id = user_id;
+        this.photo_url = photo_url;
+        this.cnt_favorite = cnt_favorite;
+    }
+
+    public Posting(int id, int user_id, String photo_url, String content) {
+        this.id = id;
+        this.user_id = user_id;
+        this.photo_url = photo_url;
+        this.content = content;
+    }
+
+    public Posting(int id, int user_id, String photo_url) {
+        this.id = id;
+        this.user_id = user_id;
+        this.photo_url = photo_url;
+    }
+
     public Posting(int id, String user_name, String photo_url, String content, String createdAt, int postlike) {
         this.id = id;
         this.user_name = user_name;
@@ -51,7 +71,9 @@ public class Posting {
         this.user_profilephoto = user_profilephoto;
     }
 
-
+    public Posting(int user_id) {
+        this.user_id = user_id;
+    }
 
     public Posting(){}
 

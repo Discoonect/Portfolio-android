@@ -51,6 +51,10 @@ public class Fragment_Home extends Fragment {
 
     String token;
 
+    public static Fragment_Home newInstance(){
+        return new Fragment_Home();
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -202,8 +206,7 @@ public class Fragment_Home extends Fragment {
                             adapter_home = new Adapter_home(getActivity(), postArrayList);
                             recyclerView.setAdapter(adapter_home);
 
-                            offset = offset + response.getInt("count");
-                            Log.i("aaa","home offset : "+offset);
+
                         } catch (Exception e) {
                             e.printStackTrace();
                         }

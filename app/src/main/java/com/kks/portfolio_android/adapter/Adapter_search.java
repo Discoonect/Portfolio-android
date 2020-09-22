@@ -66,6 +66,8 @@ public class Adapter_search extends RecyclerView.Adapter<Adapter_search.ViewHold
                 public void onClick(View view) {
                     Intent i = new Intent(context, PostingActivity.class);
                     i.putExtra("post_id",postArrayList.get(getAdapterPosition()).getId());
+                    i.putExtra("user_id",postArrayList.get(getAdapterPosition()).getUser_id());
+
                     context.startActivity(i);
                 }
             });

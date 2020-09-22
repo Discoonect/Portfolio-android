@@ -1,6 +1,7 @@
 package com.kks.portfolio_android.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -21,6 +22,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.kks.portfolio_android.CommentActivity;
+import com.kks.portfolio_android.PageActivity;
 import com.kks.portfolio_android.R;
 import com.kks.portfolio_android.model.Comments;
 import com.kks.portfolio_android.model.Posting;
@@ -65,7 +67,6 @@ public class Adapter_comment extends RecyclerView.Adapter<Adapter_comment.ViewHo
 
         holder.cm_txt_name.setText(comments.getUser_name());
         holder.cm_txt_comment.setText(comments.getComment());
-        holder.cm_img_profile.setImageResource(R.drawable.ic_baseline_account_circle_24);
 
         //시간 맞추기
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
@@ -85,7 +86,9 @@ public class Adapter_comment extends RecyclerView.Adapter<Adapter_comment.ViewHo
         int sp_user_id = sharedPreferences.getInt("user_id",1);
 
         if(sp_user_id!=commentArrayList.get(position).getUser_id()){
-            holder.cm_img_delete.setVisibility(View.INVISIBLE);
+            holder.cm_img_delete.setVisibility(View.GONE);
+        }else{
+            holder.cm_img_delete.setVisibility(VISIBLE);
         }
 
         if(comments.getUser_profile()!="null"){
@@ -132,6 +135,28 @@ public class Adapter_comment extends RecyclerView.Adapter<Adapter_comment.ViewHo
                     deleteComment(comment_id,token);
                     commentArrayList.remove(comments);
                     notifyDataSetChanged();
+                }
+            });
+
+            cm_img_profile.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int user_id = commentArrayList.get(getAdapterPosition()).getUser_id();
+
+                    Intent i = new Intent(context, PageActivity.class);
+                    i.putExtra("user_id",user_id);
+                    context.startActivity(i);
+                }
+            });
+
+            cm_txt_name.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int user_id = commentArrayList.get(getAdapterPosition()).getUser_id();
+
+                    Intent i = new Intent(context, PageActivity.class);
+                    i.putExtra("user_id",user_id);
+                    context.startActivity(i);
                 }
             });
         }
