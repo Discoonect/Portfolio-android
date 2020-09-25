@@ -3,7 +3,6 @@ package com.kks.portfolio_android.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,11 +20,9 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
-import com.kks.portfolio_android.CommentActivity;
-import com.kks.portfolio_android.PageActivity;
+import com.kks.portfolio_android.activity.PageActivity;
 import com.kks.portfolio_android.R;
 import com.kks.portfolio_android.model.Comments;
-import com.kks.portfolio_android.model.Posting;
 import com.kks.portfolio_android.util.Util;
 
 import org.json.JSONException;
@@ -111,7 +108,6 @@ public class Adapter_comment extends RecyclerView.Adapter<Adapter_comment.ViewHo
         TextView cm_txt_comment;
         TextView cm_txt_time;
         ImageView cm_img_delete;
-        TextView cm_txt_cnt;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -120,12 +116,11 @@ public class Adapter_comment extends RecyclerView.Adapter<Adapter_comment.ViewHo
             cm_txt_comment = itemView.findViewById(R.id.cm_txt_comment);
             cm_txt_time = itemView.findViewById(R.id.cm_txt_time);
             cm_img_delete = itemView.findViewById(R.id.cm_img_delete);
-            cm_txt_cnt = itemView.findViewById(R.id.cm_txt_cnt);
 
             cm_img_delete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Comments comments = commentArrayList.get(getAdapterPosition());
+                    Comments comments = commentArrayList.get(getBindingAdapterPosition());
                     int comment_id = comments.getComment_id();
 
                     SharedPreferences sharedPreferences =
@@ -141,7 +136,7 @@ public class Adapter_comment extends RecyclerView.Adapter<Adapter_comment.ViewHo
             cm_img_profile.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    int user_id = commentArrayList.get(getAdapterPosition()).getUser_id();
+                    int user_id = commentArrayList.get(getBindingAdapterPosition()).getUser_id();
 
                     Intent i = new Intent(context, PageActivity.class);
                     i.putExtra("user_id",user_id);
@@ -152,7 +147,7 @@ public class Adapter_comment extends RecyclerView.Adapter<Adapter_comment.ViewHo
             cm_txt_name.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    int user_id = commentArrayList.get(getAdapterPosition()).getUser_id();
+                    int user_id = commentArrayList.get(getBindingAdapterPosition()).getUser_id();
 
                     Intent i = new Intent(context, PageActivity.class);
                     i.putExtra("user_id",user_id);

@@ -26,24 +26,37 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
-import com.kks.portfolio_android.HomeActivity;
-import com.kks.portfolio_android.MainActivity;
+import com.kks.portfolio_android.activity.CommentActivity;
+import com.kks.portfolio_android.activity.HomeActivity;
+import com.kks.portfolio_android.activity.MainActivity;
 import com.kks.portfolio_android.R;
-import com.kks.portfolio_android.Sign_upActivity;
+import com.kks.portfolio_android.activity.PostLikeUser;
+import com.kks.portfolio_android.activity.Sign_upActivity;
+import com.kks.portfolio_android.adapter.Adapter_comment;
 import com.kks.portfolio_android.adapter.Adapter_follow;
+import com.kks.portfolio_android.adapter.Adapter_plu;
 import com.kks.portfolio_android.adapter.Adapter_user;
-import com.kks.portfolio_android.follow.Follower_Activity;
-import com.kks.portfolio_android.follow.Following_Activity;
+import com.kks.portfolio_android.model.Comments;
 import com.kks.portfolio_android.model.Posting;
+import com.kks.portfolio_android.model.User;
+import com.kks.portfolio_android.model.UserRes;
 import com.kks.portfolio_android.util.Util;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Retrofit;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -80,6 +93,8 @@ public class VolleyApi {
                                     editor.putString("token",token);
                                     editor.putInt("user_id",user_id);
 
+                                    Log.i("aaa","user_id : "+user_id+"    token : "+token);
+
                                     editor.apply();
 
                                     if(auto_login_check.isChecked()==true){
@@ -107,7 +122,7 @@ public class VolleyApi {
         requestQueue.add(request);
     }
 
-    public void signUp(String name,String password,String phone,Context context){
+    public void signUpWithProfile(String name, String password, String phone, Context context, File photoFile){
         JSONObject body = new JSONObject();
         try {
             body.put("user_name", name);
@@ -122,10 +137,64 @@ public class VolleyApi {
                         new Response.Listener<JSONObject>() {
                             @Override
                             public void onResponse(JSONObject response) {
-                                Toast.makeText(context, "회원가입 성공", Toast.LENGTH_SHORT).show();
-                                Intent i = new Intent(context, MainActivity.class);
-                                context.startActivity(i);
-                                ((Activity)context).finish();
+                                Log.i("aaa",response.toString());
+
+                                try {
+                                    String token = response.getString("token");
+
+                                    Retrofit retrofit = NetworkClient.getRetrofitClient(context);
+                                    RequestBody fileBody = RequestBody.create(MediaType.parse("image/*"), photoFile);
+                                    MultipartBody.Part part = MultipartBody.Part.createFormData("photo", photoFile.getName(), fileBody);
+                                    UserApi userApi = retrofit.create(UserApi.class);
+
+                                    Call<UserRes> call = userApi.uploadProfile("Bearer " + token, part);
+                                    call.enqueue(new Callback<UserRes>() {
+                                        @Override
+                                        public void onResponse(Call<UserRes> call, retrofit2.Response<UserRes> response) {
+                                            Toast.makeText(context, "회원가입성공", Toast.LENGTH_SHORT).show();
+                                        }
+
+                                        @Override
+                                        public void onFailure(Call<UserRes> call, Throwable t) {
+                                            Log.i("aaa", t.toString());
+                                        }
+                                    });
+
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+
+
+
+                            }
+                        },
+                        new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                Log.i("aaa",error.toString());
+                            }
+                        }
+                );
+        requestQueue.add(request);
+    }
+
+    public void signUp(String name, String password, String phone, Context context){
+        JSONObject body = new JSONObject();
+        try {
+            body.put("user_name", name);
+            body.put("user_passwd", password);
+            body.put("user_phone", phone);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        RequestQueue requestQueue = Volley.newRequestQueue(context);
+        JsonObjectRequest request =
+                new JsonObjectRequest(Request.Method.POST, Util.BASE_URL + "/api/v1/user/signup",body,
+                        new Response.Listener<JSONObject>() {
+                            @Override
+                            public void onResponse(JSONObject response) {
+                                Log.i("aaa",response.toString());
+                                Toast.makeText(context, "회원가입성공", Toast.LENGTH_SHORT).show();
                             }
                         },
                         new Response.ErrorListener() {
@@ -328,13 +397,14 @@ public class VolleyApi {
         requestQueue.add(jsonObjectRequest);
     }
 
-    public void getSettingData(Context context, int user_id, ImageView setting_img_profile, EditText setting_edit_introduce){
+    public void getSettingData(Context context, int user_id, TextView setting_txt_userName,ImageView setting_img_profile, EditText setting_edit_introduce){
         RequestQueue requestQueue = Volley.newRequestQueue(context);
         JsonObjectRequest request =
                 new JsonObjectRequest(Request.Method.GET, Util.BASE_URL + "/api/v1/user/userpage/"+user_id,null,
                         new Response.Listener<JSONObject>() {
                             @Override
                             public void onResponse(JSONObject response) {
+                                Log.i("aaa",response.toString());
 
                                 try{
                                     boolean success = response.getBoolean("success");
@@ -345,6 +415,9 @@ public class VolleyApi {
 
                                     JSONArray items = response.getJSONArray("items");
                                     JSONObject jsonObject = items.getJSONObject(0);
+
+                                    String user_name = jsonObject.getString("user_name");
+                                    setting_txt_userName.setText(user_name);
 
 
                                     String user_profile = jsonObject.getString("user_profilephoto");
@@ -378,8 +451,49 @@ public class VolleyApi {
         requestQueue.add(request);
     }
 
-    public void writeIntroduce(){
+    public void writeIntroduce(Context context,String introduce,String token){
+        RequestQueue requestQueue = Volley.newRequestQueue(context);
 
+        JSONObject body = new JSONObject();
+        try {
+            body.put("introduce", introduce);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        JsonObjectRequest request = new JsonObjectRequest(
+                Request.Method.PUT,
+                Util.BASE_URL + "/api/v1/user/myintroduce", body,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.i("aaa",response.toString());
+                        try{
+                            boolean success = response.getBoolean("success");
+                            if (success == false) {
+                                Toast.makeText(context, "떙", Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                    }
+                }
+        )
+        {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> stringStringMap = new HashMap<String, String>();
+                stringStringMap.put("Authorization","Bearer "+token);
+                return stringStringMap;
+            }
+        };
+        requestQueue.add(request);
     }
 
     public void checkFollow(Context context, int user_id, int follow_id, String token, Button page_btn_follow,Button page_btn_unFollow){
@@ -655,5 +769,59 @@ public class VolleyApi {
         requestQueue.add(request);
     }
 
+    public void likePostUser(Context context,int post_id,RecyclerView recyclerView,TextView textView){
 
+        ArrayList<Posting> list = new ArrayList<>();
+
+        RequestQueue requestQueue = Volley.newRequestQueue(context);
+
+        JsonObjectRequest request = new JsonObjectRequest(
+                Request.Method.GET,
+                Util.BASE_URL + "/api/v1/like/likepostuser/"+post_id, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.i("aaa",response.toString());
+                        try{
+                            boolean success = response.getBoolean("success");
+                            if (success == false) {
+                                Toast.makeText(context, "떙", Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+
+                            JSONArray items = response.getJSONArray("items");
+
+                            for(int i=0; i<items.length(); i++) {
+                                JSONObject jsonObject = items.getJSONObject(i);
+
+                                int id = jsonObject.getInt("id");
+                                String name = jsonObject.getString("user_name");
+                                String profile = jsonObject.getString("user_profilephoto");
+                                String time = jsonObject.getString("postliketime");
+
+                                Posting posting = new Posting(id,name,time,profile);
+
+                                list.add(posting);
+                            }
+
+                            int cnt = response.getInt("cnt");
+
+                            textView.setText("좋아요 ("+cnt+")");
+
+                            Adapter_plu adapter_plu = new Adapter_plu(context, list);
+                            recyclerView.setAdapter(adapter_plu);
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                    }
+                }
+        );
+        requestQueue.add(request);
+    }
 }

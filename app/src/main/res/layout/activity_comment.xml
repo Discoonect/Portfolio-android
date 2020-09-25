@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/mainColor"
-    tools:context=".CommentActivity">
+    tools:context=".activity.CommentActivity">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/cm_recyclerview"
@@ -24,11 +24,11 @@
         android:layout_marginEnd="15dp">
 
         <TextView
-            android:id="@+id/cm_txt_cnt"
             android:layout_width="wrap_content"
-            android:layout_height="50dp"
+            android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:gravity="center"
+            android:text="댓글"
             android:textSize="30sp" />
 
         <ImageView

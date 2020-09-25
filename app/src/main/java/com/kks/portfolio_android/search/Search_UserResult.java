@@ -17,7 +17,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import com.kks.portfolio_android.CommentActivity;
 import com.kks.portfolio_android.R;
 import com.kks.portfolio_android.adapter.Adapter_SearchUser;
 import com.kks.portfolio_android.model.Posting;
@@ -110,6 +109,7 @@ public class Search_UserResult extends AppCompatActivity {
                                 if(user_id==sp_userId){
                                     list.remove(posting);
                                 }
+
                             }
                             adapter_searchUser = new Adapter_SearchUser(Search_UserResult.this, list);
                             recyclerView.setAdapter(adapter_searchUser);

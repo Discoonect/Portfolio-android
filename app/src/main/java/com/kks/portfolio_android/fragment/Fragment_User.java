@@ -25,6 +25,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
+import com.kks.portfolio_android.activity.MainActivity;
 import com.kks.portfolio_android.R;
 import com.kks.portfolio_android.adapter.Adapter_user;
 import com.kks.portfolio_android.follow.Follower_Activity;
@@ -45,7 +46,7 @@ import static android.content.Context.MODE_PRIVATE;
 public class Fragment_User extends Fragment {
 
     RequestQueue requestQueue;
-    String token;
+
 
     TextView fu_txt_postingCnt;
     TextView fu_txt_followerCnt;
@@ -61,12 +62,13 @@ public class Fragment_User extends Fragment {
 
     JSONObject jsonObject = new JSONObject();
 
-
-
-
+    String token;
     int offset=0;
     int user_id;
 
+    public static Fragment_User newInstance(){
+        return new Fragment_User();
+    }
 
     @Nullable
     @Override
@@ -88,6 +90,8 @@ public class Fragment_User extends Fragment {
                 getContext().getSharedPreferences(Util.PREFERENCE_NAME,MODE_PRIVATE);
         token = sharedPreferences.getString("token",null);
         user_id = sharedPreferences.getInt("user_id",0);
+
+
 
         fu_txt_followerCnt = getView().findViewById(R.id.fu_txt_followerCnt);
         fu_txt_followingCnt = getView().findViewById(R.id.fu_txt_followingCnt);
@@ -112,6 +116,15 @@ public class Fragment_User extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+
+        if (token == null) {
+            Toast.makeText(getContext(), "로그인을 해주세요", Toast.LENGTH_SHORT).show();
+            Intent i = new Intent(getContext(), MainActivity.class);
+            startActivity(i);
+            getActivity().finish();
+        }
+
+        Log.i("aaa","user_id : "+user_id+"    token : "+token);
 
         postingArrayList.clear();
 
@@ -167,7 +180,6 @@ public class Fragment_User extends Fragment {
         );
         requestQueue.add(jsonObjectRequest);
     }
-
     private void getUserData2(String token) {
 
         fu_txt_postingCnt = getView().findViewById(R.id.fu_txt_postingCnt);
@@ -224,7 +236,6 @@ public class Fragment_User extends Fragment {
     }
 
     private void getUserData(String token) {
-
         fu_txt_followerCnt = getView().findViewById(R.id.fu_txt_followerCnt);
         fu_txt_userId =getView().findViewById(R.id.fu_txt_userId);
         fu_img_profile = getView().findViewById(R.id.fu_img_profile);
@@ -237,6 +248,7 @@ public class Fragment_User extends Fragment {
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
+                        Log.i("aaa",response.toString());
 
                         try {
                             boolean success = response.getBoolean("success");
@@ -263,7 +275,12 @@ public class Fragment_User extends Fragment {
 
                             fu_txt_userId.setText(user_name);
                             fu_txt_followerCnt.setText(""+follower_cnt);
-                            fu_txt_introduce.setText(introduce);
+                            if(introduce=="null"){
+                                fu_txt_introduce.setText("");
+                            }else{
+                                fu_txt_introduce.setText(introduce);
+                            }
+
 
                         } catch (JSONException e) {
                             e.printStackTrace();

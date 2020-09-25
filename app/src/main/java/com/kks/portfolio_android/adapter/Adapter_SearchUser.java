@@ -2,7 +2,6 @@ package com.kks.portfolio_android.adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.kks.portfolio_android.PageActivity;
+import com.kks.portfolio_android.activity.PageActivity;
 import com.kks.portfolio_android.R;
 import com.kks.portfolio_android.model.Posting;
 import com.kks.portfolio_android.util.Util;
@@ -74,7 +73,7 @@ public class Adapter_SearchUser extends RecyclerView.Adapter<Adapter_SearchUser.
             su_layout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    int user_id = postArrayList.get(getAdapterPosition()).getUser_id();
+                    int user_id = postArrayList.get(getBindingAdapterPosition()).getUser_id();
 
                     Intent i = new Intent(context, PageActivity.class);
                     i.putExtra("user_id",user_id);

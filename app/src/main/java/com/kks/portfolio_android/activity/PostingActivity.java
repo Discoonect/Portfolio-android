@@ -1,7 +1,6 @@
-package com.kks.portfolio_android;
+package com.kks.portfolio_android.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -22,9 +21,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
-import com.kks.portfolio_android.adapter.Adapter_home;
-import com.kks.portfolio_android.api.PostApi;
-import com.kks.portfolio_android.model.Comments;
+import com.kks.portfolio_android.R;
 import com.kks.portfolio_android.model.Posting;
 import com.kks.portfolio_android.util.Util;
 
@@ -91,10 +88,19 @@ public class PostingActivity extends AppCompatActivity {
         post_id = getIntent().getIntExtra("post_id",0);
         user_id = getIntent().getIntExtra("user_id",0);
 
+        po_txt_cntFavorite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(PostingActivity.this,PostLikeUser.class);
+                i.putExtra("post_id",post_id);
+                startActivity(i);
+            }
+        });
+
         po_img_comment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(PostingActivity.this,CommentActivity.class);
+                Intent i = new Intent(PostingActivity.this, CommentActivity.class);
                 i.putExtra("post_id",post_id);
                 startActivity(i);
             }
@@ -157,7 +163,7 @@ public class PostingActivity extends AppCompatActivity {
         po_img_profile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(PostingActivity.this,PageActivity.class);
+                Intent i = new Intent(PostingActivity.this, PageActivity.class);
 
                 if(user_id==0){
                     user_id = list.get(0).getUser_id();

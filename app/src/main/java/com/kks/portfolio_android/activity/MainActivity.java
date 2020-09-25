@@ -1,4 +1,4 @@
-package com.kks.portfolio_android;
+package com.kks.portfolio_android.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -12,14 +12,13 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
+import com.kks.portfolio_android.R;
 import com.kks.portfolio_android.api.VolleyApi;
 import com.kks.portfolio_android.util.Util;
 
 import java.io.File;
 
 public class MainActivity extends AppCompatActivity {
-
-    RequestQueue requestQueue;
 
     EditText main_edit_name;
     EditText main_edit_password;
@@ -28,15 +27,12 @@ public class MainActivity extends AppCompatActivity {
 
     Button main_btn_login;
     Button main_btn_regist;
-    Button main_btn_guest;
 
     String name;
     String passwd;
 
     String token="";
     String auto;
-
-    File photoFile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +41,6 @@ public class MainActivity extends AppCompatActivity {
 
         VolleyApi volleyApi = new VolleyApi();
 
-        main_btn_guest = findViewById(R.id.main_btn_guest);
         main_btn_login = findViewById(R.id.main_btn_login);
         main_btn_regist = findViewById(R.id.main_btn_regist);
 

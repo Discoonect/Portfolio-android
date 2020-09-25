@@ -2,7 +2,6 @@ package com.kks.portfolio_android.fragment;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -28,10 +27,11 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.kks.portfolio_android.activity.HomeActivity;
+import com.kks.portfolio_android.activity.MainActivity;
 import com.kks.portfolio_android.R;
 import com.kks.portfolio_android.api.NetworkClient;
 import com.kks.portfolio_android.api.PostApi;
-import com.kks.portfolio_android.model.Posting;
 import com.kks.portfolio_android.model.UserRes;
 import com.kks.portfolio_android.util.Util;
 
@@ -41,6 +41,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -64,22 +66,27 @@ public class Fragment_Write extends Fragment {
 
     EditText fw_edit_content;
 
+    String token;
+
+    public static Fragment_Write newInstance(){
+        return new Fragment_Write();
+    }
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.activity_fragment__write,container,false);
-    }
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+        View view = inflater.inflate(R.layout.activity_fragment__write, null);
 
-        fw_btn_gallery = getView().findViewById(R.id.fw_btn_gallery);
-        fw_img_img = getView().findViewById(R.id.fw_img_img);
-        fw_btn_upload = getView().findViewById(R.id.fw_btn_upload);
-        fw_edit_content = getView().findViewById(R.id.fw_edit_content);
+        SharedPreferences sharedPreferences =
+                getContext().getSharedPreferences(Util.PREFERENCE_NAME,MODE_PRIVATE);
+        token = sharedPreferences.getString("token",null);
+
+        fw_btn_upload = view.findViewById(R.id.fw_btn_upload);
+        fw_btn_gallery = view.findViewById(R.id.fw_btn_gallery);
+        fw_img_img = view.findViewById(R.id.fw_img_img);
+        fw_btn_upload = view.findViewById(R.id.fw_btn_upload);
+        fw_edit_content = view.findViewById(R.id.fw_edit_content);
 
         fw_btn_gallery.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -126,6 +133,7 @@ public class Fragment_Write extends Fragment {
                                 Toast.makeText(getContext(), "업로드성공", Toast.LENGTH_SHORT).show();
                                 fw_edit_content.setText("");
 
+                                ((HomeActivity)getActivity()).replaceFragment(Fragment_Home.newInstance());
                             }
                         }
                     }
@@ -137,6 +145,19 @@ public class Fragment_Write extends Fragment {
                 });
             }
         });
+        return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        if (token == null) {
+            Toast.makeText(getContext(), "로그인을 해주세요", Toast.LENGTH_SHORT).show();
+            Intent i = new Intent(getContext(), MainActivity.class);
+            startActivity(i);
+            getActivity().finish();
+        }
     }
 
     private void displayFileChoose() {
@@ -188,11 +209,12 @@ public class Fragment_Write extends Fragment {
             Log.i("AAA", imgPath.toString());
             fw_img_img.setImageURI(imgPath);
 
-            // 실제 경로를 몰라도, 파일의 내용을 읽어와서, 임시파일 만들어서 서버로 보낸다.
-            String id = DocumentsContract.getDocumentId(imgPath);
+//            // 실제 경로를 몰라도, 파일의 내용을 읽어와서, 임시파일 만들어서 서버로 보낸다.
+//            String id = DocumentsContract.getDocumentId(imgPath);
+            String fileName = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
             try {
-                InputStream inputStream = getActivity().getContentResolver().openInputStream(imgPath);
-                photoFile = new File(getActivity().getCacheDir().getAbsolutePath()+"/"+id+".jpg");
+                InputStream inputStream = (getActivity()).getContentResolver().openInputStream(imgPath);
+                photoFile = new File(getActivity().getCacheDir().getAbsolutePath()+"/"+fileName+".jpg");
                 writeFile(inputStream, photoFile);
 //                String filePath = photoFile.getAbsolutePath();
             } catch (FileNotFoundException e) {
@@ -227,7 +249,6 @@ public class Fragment_Write extends Fragment {
     }
 
     public static Bitmap rotateBitmap(Bitmap bitmap, int orientation) {
-
         Matrix matrix = new Matrix();
         switch (orientation) {
             case ExifInterface.ORIENTATION_NORMAL:

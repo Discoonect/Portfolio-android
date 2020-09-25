@@ -1,18 +1,23 @@
-package com.kks.portfolio_android;
+package com.kks.portfolio_android.activity;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.media.ExifInterface;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.DocumentsContract;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -26,17 +31,40 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.kks.portfolio_android.R;
+import com.kks.portfolio_android.api.NetworkClient;
+import com.kks.portfolio_android.api.PostApi;
+import com.kks.portfolio_android.api.UserApi;
 import com.kks.portfolio_android.api.VolleyApi;
+import com.kks.portfolio_android.fragment.Fragment_Home;
+import com.kks.portfolio_android.model.User;
+import com.kks.portfolio_android.model.UserRes;
 import com.kks.portfolio_android.util.Util;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Retrofit;
+
 public class Sign_upActivity extends AppCompatActivity {
 
     RequestQueue requestQueue;
 
-
+    File photoFile;
     EditText signup_edit_password1;
     EditText signup_edit_password2;
     EditText signup_edit_phone;
@@ -59,12 +87,11 @@ public class Sign_upActivity extends AppCompatActivity {
 
     int check_name=0;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
-
-
 
         signup_edit_password1 = findViewById(R.id.singup_edit_password1);
         signup_edit_password2 = findViewById(R.id.singup_edit_password2);
@@ -139,7 +166,16 @@ public class Sign_upActivity extends AppCompatActivity {
                             Toast.LENGTH_SHORT).show();
                     return;
                 }
-                volleyApi.signUp(name,password1,phone,Sign_upActivity.this);
+
+
+                if(photoFile==null){
+                    volleyApi.signUp(name,password1,phone,Sign_upActivity.this);
+                }else{
+                    volleyApi.signUpWithProfile(name, password1, phone, Sign_upActivity.this,photoFile);
+                }
+
+                finish();
+
             }
         });
     }
@@ -209,6 +245,109 @@ public class Sign_upActivity extends AppCompatActivity {
             return true;
         }else{
             return false;
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if(requestCode == 100 && resultCode == RESULT_OK){
+            Bitmap photo = BitmapFactory.decodeFile(photoFile.getAbsolutePath());
+
+            ExifInterface exif = null;
+            try {
+                exif = new ExifInterface(photoFile.getAbsolutePath());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION,
+                    ExifInterface.ORIENTATION_UNDEFINED);
+            photo = rotateBitmap(photo, orientation);
+            signup_img_profile.setImageBitmap(photo);
+        }else if(requestCode == 300 && resultCode == RESULT_OK && data != null &&
+                data.getData() != null){
+            Uri imgPath = data.getData();
+            Log.i("AAA", imgPath.toString());
+            signup_img_profile.setImageURI(imgPath);
+
+            // 실제 경로를 몰라도, 파일의 내용을 읽어와서, 임시파일 만들어서 서버로 보낸다.
+//            String id = DocumentsContract.getDocumentId(imgPath);
+            String fileName = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+            try {
+                InputStream inputStream = getContentResolver().openInputStream(imgPath);
+                photoFile = new File(getCacheDir().getAbsolutePath()+"/"+fileName+".jpg");
+                writeFile(inputStream, photoFile);
+//                String filePath = photoFile.getAbsolutePath();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    void writeFile(InputStream in, File file) {
+        OutputStream out = null;
+        try {
+            out = new FileOutputStream(file);
+            byte[] buf = new byte[1024];
+            int len;
+            while((len=in.read(buf))>0){
+                out.write(buf,0,len);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        finally {
+            try {
+                if ( out != null ) {
+                    out.close();
+                }
+                in.close();
+            } catch ( IOException e ) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public static Bitmap rotateBitmap(Bitmap bitmap, int orientation) {
+        Matrix matrix = new Matrix();
+        switch (orientation) {
+            case ExifInterface.ORIENTATION_NORMAL:
+                return bitmap;
+            case ExifInterface.ORIENTATION_FLIP_HORIZONTAL:
+                matrix.setScale(-1, 1);
+                break;
+            case ExifInterface.ORIENTATION_ROTATE_180:
+                matrix.setRotate(180);
+                break;
+            case ExifInterface.ORIENTATION_FLIP_VERTICAL:
+                matrix.setRotate(180);
+                matrix.postScale(-1, 1);
+                break;
+            case ExifInterface.ORIENTATION_TRANSPOSE:
+                matrix.setRotate(90);
+                matrix.postScale(-1, 1);
+                break;
+            case ExifInterface.ORIENTATION_ROTATE_90:
+                matrix.setRotate(90);
+                break;
+            case ExifInterface.ORIENTATION_TRANSVERSE:
+                matrix.setRotate(-90);
+                matrix.postScale(-1, 1);
+                break;
+            case ExifInterface.ORIENTATION_ROTATE_270:
+                matrix.setRotate(-90);
+                break;
+            default:
+                return bitmap;
+        }
+        try {
+            Bitmap bmRotated = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+            bitmap.recycle();
+            return bmRotated;
+        }
+        catch (OutOfMemoryError e) {
+            e.printStackTrace();
+            return null;
         }
     }
 }

@@ -1,4 +1,4 @@
-package com.kks.portfolio_android;
+package com.kks.portfolio_android.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -7,13 +7,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.volley.RequestQueue;
+import com.kks.portfolio_android.R;
 import com.kks.portfolio_android.api.VolleyApi;
 import com.kks.portfolio_android.follow.Follower_Activity;
 import com.kks.portfolio_android.follow.Following_Activity;
@@ -54,7 +54,6 @@ public class PageActivity extends AppCompatActivity {
     int user_id;
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,6 +79,8 @@ public class PageActivity extends AppCompatActivity {
         page_txt_introduce = findViewById(R.id.page_txt_introduce);
         page_btn_follow = findViewById(R.id.page_btn_follow);
         page_btn_unFollow = findViewById(R.id.page_btn_unFollow);
+
+
 
         page_img_back.setOnClickListener(new View.OnClickListener() {
             @Override

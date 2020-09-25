@@ -6,13 +6,13 @@
     android:layout_height="match_parent"
     android:background="@color/mainColor"
     android:orientation="vertical"
-    tools:context=".SettingActivity">
+    tools:context=".activity.SettingActivity">
 
     <TextView
         android:id="@+id/textView12"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/setting_layout"
+        android:layout_below="@id/setting_txt_userName"
         android:layout_marginLeft="15dp"
         android:layout_marginTop="15dp"
         android:text="한줄소개" />
@@ -40,6 +40,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:scaleType="centerCrop"
                 app:srcCompat="@drawable/ic_baseline_account_circle_24" />
         </androidx.cardview.widget.CardView>
 
@@ -118,12 +119,21 @@
 
     <ImageView
         android:id="@+id/setting_img_back"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:layout_marginLeft="15dp"
         android:layout_marginTop="5dp"
         android:layout_marginBottom="15dp"
         app:srcCompat="@drawable/ic_baseline_arrow_back_ios_24" />
+
+    <TextView
+        android:id="@+id/setting_txt_userName"
+        android:layout_width="130dp"
+        android:layout_height="40dp"
+        android:layout_below="@id/setting_layout"
+        android:layout_marginLeft="50dp"
+        android:gravity="center"
+        android:textSize="26sp" />
 </RelativeLayout>

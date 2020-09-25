@@ -1,16 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.kks.portfolio_android.resize.SquareLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="200dp"
+    android:layout_height="match_parent"
     android:background="@color/mainColor"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:paddingLeft="10dp"
+    android:paddingEnd="10dp"
+    android:paddingRight="10dp"
+    android:paddingBottom="10dp"
+    >
 
     <androidx.cardview.widget.CardView
         android:id="@+id/fu_cardView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="30dp"
         app:cardBackgroundColor="@color/mainColor">
 
         <LinearLayout
@@ -26,4 +31,4 @@
                 app:srcCompat="@drawable/ic_launcher_background" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>
-</LinearLayout>
+</com.kks.portfolio_android.resize.SquareLayout>

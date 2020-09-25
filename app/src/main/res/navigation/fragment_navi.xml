@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fragment_navi"
+    app:startDestination="@id/fragment_Home">
+
+    <fragment
+        android:id="@+id/fragment_Home"
+        android:name="com.kks.portfolio_android.fragment.Fragment_Home"
+        android:label="activity_fragment__home"
+        tools:layout="@layout/activity_fragment__home" />
+    <fragment
+        android:id="@+id/fragment_Search"
+        android:name="com.kks.portfolio_android.fragment.Fragment_Search"
+        android:label="activity_fragment__search"
+        tools:layout="@layout/activity_fragment__search" />
+    <fragment
+        android:id="@+id/fragment_Write"
+        android:name="com.kks.portfolio_android.fragment.Fragment_Write"
+        android:label="activity_fragment__write"
+        tools:layout="@layout/activity_fragment__write" />
+    <fragment
+        android:id="@+id/fragment_Favorite"
+        android:name="com.kks.portfolio_android.fragment.Fragment_Favorite"
+        android:label="activity_fragment__favorite"
+        tools:layout="@layout/activity_fragment__favorite" />
+    <fragment
+        android:id="@+id/fragment_User"
+        android:name="com.kks.portfolio_android.fragment.Fragment_User"
+        android:label="activity_fragment__user"
+        tools:layout="@layout/activity_fragment__user" />
+</navigation>

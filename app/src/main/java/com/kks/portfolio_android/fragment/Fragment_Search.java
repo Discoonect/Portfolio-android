@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -22,6 +23,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.kks.portfolio_android.activity.MainActivity;
 import com.kks.portfolio_android.R;
 import com.kks.portfolio_android.search.Search_PostingResult;
 import com.kks.portfolio_android.search.Search_UserResult;
@@ -34,6 +36,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+
+import static android.content.Context.MODE_PRIVATE;
 
 public class Fragment_Search extends Fragment {
 
@@ -50,6 +54,12 @@ public class Fragment_Search extends Fragment {
     Adapter_search adapter_search;
     RecyclerView recyclerView;
 
+    String token;
+
+    public static Fragment_Search newInstance(){
+        return new Fragment_Search();
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -59,6 +69,10 @@ public class Fragment_Search extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
+        SharedPreferences sharedPreferences =
+                getActivity().getSharedPreferences(Util.PREFERENCE_NAME,MODE_PRIVATE);
+        token = sharedPreferences.getString("token",null);
 
         postingArrayList.clear();
 
@@ -91,6 +105,18 @@ public class Fragment_Search extends Fragment {
                 fs_edit_search.setText("");
             }
         });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        if (token == null) {
+            Toast.makeText(getContext(), "로그인을 해주세요", Toast.LENGTH_SHORT).show();
+            Intent i = new Intent(getContext(), MainActivity.class);
+            startActivity(i);
+            getActivity().finish();
+        }
     }
 
     private void getFamousPosting() {

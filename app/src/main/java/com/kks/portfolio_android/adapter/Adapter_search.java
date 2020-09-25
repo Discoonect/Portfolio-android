@@ -12,7 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.kks.portfolio_android.PostingActivity;
+import com.kks.portfolio_android.activity.PostingActivity;
 import com.kks.portfolio_android.R;
 import com.kks.portfolio_android.model.Posting;
 
@@ -65,8 +65,8 @@ public class Adapter_search extends RecyclerView.Adapter<Adapter_search.ViewHold
                 @Override
                 public void onClick(View view) {
                     Intent i = new Intent(context, PostingActivity.class);
-                    i.putExtra("post_id",postArrayList.get(getAdapterPosition()).getId());
-                    i.putExtra("user_id",postArrayList.get(getAdapterPosition()).getUser_id());
+                    i.putExtra("post_id",postArrayList.get(getBindingAdapterPosition()).getId());
+                    i.putExtra("user_id",postArrayList.get(getBindingAdapterPosition()).getUser_id());
 
                     context.startActivity(i);
                 }

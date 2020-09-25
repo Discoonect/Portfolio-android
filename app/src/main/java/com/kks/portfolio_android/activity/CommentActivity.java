@@ -1,17 +1,16 @@
-package com.kks.portfolio_android;
+package com.kks.portfolio_android.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -21,10 +20,9 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.kks.portfolio_android.R;
 import com.kks.portfolio_android.adapter.Adapter_comment;
-import com.kks.portfolio_android.adapter.Adapter_home;
 import com.kks.portfolio_android.model.Comments;
-import com.kks.portfolio_android.model.Posting;
 import com.kks.portfolio_android.util.Util;
 
 import org.json.JSONArray;
@@ -38,7 +36,6 @@ import java.util.Map;
 public class CommentActivity extends AppCompatActivity {
 
     ImageView cm_btn_back;
-    TextView cm_txt_cnt;
     EditText cm_edit_comment;
     Button cm_btn_complete;
 
@@ -53,6 +50,8 @@ public class CommentActivity extends AppCompatActivity {
     int post_id;
     int offset;
 
+    String token;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,16 +59,15 @@ public class CommentActivity extends AppCompatActivity {
 
         SharedPreferences sharedPreferences =
                 getSharedPreferences(Util.PREFERENCE_NAME,MODE_PRIVATE);
-        String token = sharedPreferences.getString("token",null);
+        token = sharedPreferences.getString("token",null);
 
         requestQueue = Volley.newRequestQueue(CommentActivity.this);
 
         cm_btn_back = findViewById(R.id.cm_btn_back);
-        cm_txt_cnt = findViewById(R.id.cm_txt_cnt);
         cm_edit_comment = findViewById(R.id.cm_edit_comment);
         cm_btn_complete = findViewById(R.id.cm_btn_complete);
 
-        post_id = getIntent().getIntExtra("post_id",1);
+        post_id = getIntent().getIntExtra("post_id",0);
 
         cm_btn_back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -82,8 +80,7 @@ public class CommentActivity extends AppCompatActivity {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(CommentActivity.this));
 
-        getComment_cnt(post_id);
-        getCommentData(post_id);
+
 
         cm_btn_complete.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -96,7 +93,22 @@ public class CommentActivity extends AppCompatActivity {
 
     }
 
-    private void uploadComment(int post_id,String comment,String token) {
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (token == null) {
+            Toast.makeText(this, "로그인을 해주세요", Toast.LENGTH_SHORT).show();
+            Intent i = new Intent(this, MainActivity.class);
+            startActivity(i);
+            finish();
+        }
+
+        getComment_cnt(post_id);
+        getCommentData(post_id);
+
+    }
+
+    private void uploadComment(int post_id, String comment, String token) {
         JSONObject body = new JSONObject();
         try {
             body.put("post_id", post_id);
@@ -161,8 +173,7 @@ public class CommentActivity extends AppCompatActivity {
                                 Toast.makeText(CommentActivity.this, "떙", Toast.LENGTH_SHORT).show();
                                 return;
                             }
-                            int cnt = response.getInt("cnt");
-                            cm_txt_cnt.setText("댓글("+cnt+")");
+
 
                         } catch (Exception e) {
                             e.printStackTrace();

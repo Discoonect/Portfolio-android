@@ -71,6 +71,13 @@ public class Posting {
         this.user_profilephoto = user_profilephoto;
     }
 
+    public Posting(int user_id, String user_name, String createdAt, String user_profilephoto) {
+        this.user_id = user_id;
+        this.user_name = user_name;
+        this.createdAt = createdAt;
+        this.user_profilephoto = user_profilephoto;
+    }
+
     public Posting(int user_id) {
         this.user_id = user_id;
     }

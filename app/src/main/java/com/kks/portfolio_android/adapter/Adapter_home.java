@@ -23,9 +23,10 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
-import com.kks.portfolio_android.CommentActivity;
-import com.kks.portfolio_android.PageActivity;
+import com.kks.portfolio_android.activity.CommentActivity;
+import com.kks.portfolio_android.activity.PageActivity;
 import com.kks.portfolio_android.R;
+import com.kks.portfolio_android.activity.PostLikeUser;
 import com.kks.portfolio_android.model.Posting;
 import com.kks.portfolio_android.util.Util;
 
@@ -208,7 +209,7 @@ public class Adapter_home extends RecyclerView.Adapter<Adapter_home.ViewHolder> 
                 @Override
                 public void onClick(View view) {
 
-                    int position = getAdapterPosition();
+                    int position = getBindingAdapterPosition();
                     int is_like = postArrayList.get(position).getPostlike();
                     String token;
 
@@ -226,7 +227,7 @@ public class Adapter_home extends RecyclerView.Adapter<Adapter_home.ViewHolder> 
             fh_img_comment.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    int position = getAdapterPosition();
+                    int position = getBindingAdapterPosition();
                     Posting posting = postArrayList.get(position);
                     int post_id = posting.getId();
 
@@ -244,7 +245,7 @@ public class Adapter_home extends RecyclerView.Adapter<Adapter_home.ViewHolder> 
             fh_txt_cntComment.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    int position = getAdapterPosition();
+                    int position = getBindingAdapterPosition();
                     Posting posting = postArrayList.get(position);
                     int post_id = posting.getId();
 
@@ -259,7 +260,18 @@ public class Adapter_home extends RecyclerView.Adapter<Adapter_home.ViewHolder> 
                 @Override
                 public void onClick(View view) {
                     Intent i = new Intent(context, PageActivity.class);
-                    i.putExtra("user_id",postArrayList.get(getAdapterPosition()).getUser_id());
+                    i.putExtra("user_id",postArrayList.get(getBindingAdapterPosition()).getUser_id());
+                    context.startActivity(i);
+                }
+            });
+
+            fh_txt_cntFavorite.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int post_id = postArrayList.get(getBindingAdapterPosition()).getId();
+
+                    Intent i = new Intent(context, PostLikeUser.class);
+                    i.putExtra("post_id",post_id);
                     context.startActivity(i);
                 }
             });

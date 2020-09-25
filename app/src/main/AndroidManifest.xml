@@ -10,26 +10,25 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/ic_main"
         android:label="WASSUP?"
         android:networkSecurityConfig="@xml/network_security_config"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@mipmap/ic_main_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".PageActivity"></activity>
-        <activity android:name=".fragment.Fragment_OtherUser" />
+        <activity android:name=".activity.PostLikeUser"></activity>
+        <activity android:name=".activity.PageActivity" />
         <activity android:name=".follow.Following_Activity" />
         <activity android:name=".follow.Follower_Activity" />
         <activity android:name=".search.Search_PostingResult" />
         <activity android:name=".search.Search_UserResult" />
-        <activity android:name=".fragment.Fragment_SearchResult" />
-        <activity android:name=".PostingActivity" />
-        <activity android:name=".CommentActivity" />
-        <activity android:name=".SettingActivity" />
-        <activity android:name=".HomeActivity" />
-        <activity android:name=".Sign_upActivity" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".activity.PostingActivity" />
+        <activity android:name=".activity.CommentActivity" />
+        <activity android:name=".activity.SettingActivity" />
+        <activity android:name=".activity.HomeActivity" />
+        <activity android:name=".activity.Sign_upActivity" />
+        <activity android:name=".activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

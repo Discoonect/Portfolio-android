@@ -5,46 +5,41 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    tools:context=".activity.PostLikeUser"
     android:background="@color/mainColor"
-    tools:context=".fragment.Fragment_Favorite" >
+    >
 
-    <LinearLayout
-        android:id="@+id/ff_layout"
+    <RelativeLayout
+        android:id="@+id/plu_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="15dp"
         android:layout_marginTop="15dp"
-        android:layout_marginEnd="15dp"
-        android:orientation="horizontal"
-        android:padding="5dp">
+        android:layout_marginEnd="15dp">
 
-        <Button
-            android:id="@+id/button"
+        <TextView
+            android:id="@+id/plu_txt_cnt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="게시물" />
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:textSize="30sp" />
 
-        <Button
-            android:id="@+id/button3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="댓글" />
-
-        <Button
-            android:id="@+id/button4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="팔로우" />
-
-    </LinearLayout>
+        <ImageView
+            android:id="@+id/plu_img_back"
+            android:layout_width="38dp"
+            android:layout_height="38dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="5dp"
+            app:srcCompat="@drawable/ic_baseline_arrow_back_ios_24" />
+    </RelativeLayout>
 
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/plu_recyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/ff_layout"
+        android:layout_below="@id/plu_layout"
+        android:layout_margin="15dp"
         android:layout_marginStart="15dp"
         android:layout_marginTop="15dp"
         android:layout_marginEnd="15dp"

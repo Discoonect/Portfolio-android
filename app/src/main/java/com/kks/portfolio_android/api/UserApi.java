@@ -30,6 +30,7 @@ public interface UserApi {
     @DELETE("/api/v1/users/logout")
     Call<UserRes> logoutUser(@Header("Authorization") String token);
 
+    // 프로필 사진 등록
     @Multipart
     @POST("/api/v1/user/profilephoto")
     Call<UserRes> uploadProfile(@Header("Authorization") String token,

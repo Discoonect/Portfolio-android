@@ -12,8 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.kks.portfolio_android.PageActivity;
-import com.kks.portfolio_android.PostingActivity;
+import com.kks.portfolio_android.activity.PostingActivity;
 import com.kks.portfolio_android.R;
 import com.kks.portfolio_android.model.Posting;
 
@@ -60,7 +59,7 @@ public class Adapter_user extends RecyclerView.Adapter<Adapter_user.ViewHolder> 
             fu_img_postimg.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    int position = getAdapterPosition();
+                    int position = getBindingAdapterPosition();
                     int post_id = postArrayList.get(position).getId();
                     int user_id = postArrayList.get(position).getUser_id();
 
