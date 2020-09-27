@@ -33,9 +33,11 @@ import com.kks.portfolio_android.R;
 import com.kks.portfolio_android.activity.PostLikeUser;
 import com.kks.portfolio_android.activity.Sign_upActivity;
 import com.kks.portfolio_android.adapter.Adapter_comment;
+import com.kks.portfolio_android.adapter.Adapter_favorite;
 import com.kks.portfolio_android.adapter.Adapter_follow;
 import com.kks.portfolio_android.adapter.Adapter_plu;
 import com.kks.portfolio_android.adapter.Adapter_user;
+import com.kks.portfolio_android.model.Alram;
 import com.kks.portfolio_android.model.Comments;
 import com.kks.portfolio_android.model.Posting;
 import com.kks.portfolio_android.model.User;
@@ -47,9 +49,14 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
+import java.util.TimeZone;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -822,6 +829,146 @@ public class VolleyApi {
                     }
                 }
         );
+        requestQueue.add(request);
+    }
+
+    public void postLikeAlarm(Context context,int offset,int limit,String token,RecyclerView recyclerView){
+        ArrayList<Alram> list = new ArrayList<>();
+        list.clear();
+        RequestQueue requestQueue = Volley.newRequestQueue(context);
+        JsonObjectRequest request =
+                new JsonObjectRequest(Request.Method.GET, Util.BASE_URL + "/api/v1/alarm/postlikealarm?offset="+offset+"&limit="+limit,null,
+                        new Response.Listener<JSONObject>() {
+                            @Override
+                            public void onResponse(JSONObject response) {
+                                Log.i("aaa",response.toString());
+
+                                try {
+                                    JSONArray items = response.getJSONArray("items");
+
+                                    for(int i=0; i<items.length(); i++){
+                                        JSONObject jsonObject = items.getJSONObject(i);
+
+                                        String profile = jsonObject.getString("user_profilephoto");
+                                        String name = jsonObject.getString("user_name");
+                                        int post_id = jsonObject.getInt("post_id");
+                                        String photo = Util.BASE_URL+"/public/uploads/"+jsonObject.getString("photo_url");
+                                        String time = jsonObject.getString("created_at");
+
+                                        //시간 맞추기
+                                        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+                                        df.setTimeZone(TimeZone.getTimeZone("UTC"));
+
+                                        //포스팅 작성시간 표시
+                                        try {
+                                            Date date = df.parse(time);
+                                            df.setTimeZone(TimeZone.getDefault());
+                                            String strDate = df.format(date);
+                                            String content = name+" 님이 게시물을 좋아합니다.\n"+strDate;
+
+                                            Alram alram = new Alram(post_id,photo,profile,content);
+                                            list.add(alram);
+
+                                        } catch (ParseException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+
+                                    Adapter_favorite adapter_favorite = new Adapter_favorite(context, list);
+                                    recyclerView.setAdapter(adapter_favorite);
+
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        },
+                        new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                Log.i("aaa",error.toString());
+                            }
+                        }
+                )
+                {
+                    @Override
+                    public Map<String, String> getHeaders() throws AuthFailureError {
+                        Map<String, String> stringStringMap = new HashMap<String, String>();
+                        stringStringMap.put("Authorization","Bearer "+token);
+                        return stringStringMap;
+                    }
+                };
+        requestQueue.add(request);
+    }
+
+    public void postCommentAlarm(Context context,int offset,int limit,String token, RecyclerView recyclerView){
+        ArrayList<Alram> list = new ArrayList<>();
+        list.clear();
+        RequestQueue requestQueue = Volley.newRequestQueue(context);
+        JsonObjectRequest request =
+                new JsonObjectRequest(Request.Method.GET, Util.BASE_URL + "/api/v1/alarm/commentalarm?offset="+offset+"&limit="+limit,null,
+                        new Response.Listener<JSONObject>() {
+                            @Override
+                            public void onResponse(JSONObject response) {
+                                Log.i("aaa",response.toString());
+
+                                try {
+                                    JSONArray items = response.getJSONArray("items");
+
+                                    for(int i=0; i<items.length(); i++){
+                                        JSONObject jsonObject = items.getJSONObject(i);
+
+                                        int id = jsonObject.getInt("comment_id");
+                                        String name = jsonObject.getString("user_name");
+                                        String profile = jsonObject.getString("user_profilephoto");
+                                        String comment = jsonObject.getString("comment");
+                                        String time = jsonObject.getString("created_at");
+                                        String photo = Util.BASE_URL+"/public/uploads/"+jsonObject.getString("photo_url");
+
+                                        if(comment.length()>13){
+                                            comment = comment.substring(0,13)+"...";
+                                        }
+
+                                        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+                                        df.setTimeZone(TimeZone.getTimeZone("UTC"));
+
+                                        try {
+                                            Date date = df.parse(time);
+                                            df.setTimeZone(TimeZone.getDefault());
+                                            String strDate = df.format(date);
+
+                                            String content = name+" 님이 댓글을 달았습니다.\n"+comment+"\n"+strDate;
+
+                                            Alram alram = new Alram(id,photo,profile,content);
+                                            list.add(alram);
+
+                                        } catch (ParseException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+
+                                    Adapter_favorite adapter_favorite = new Adapter_favorite(context, list);
+                                    recyclerView.setAdapter(adapter_favorite);
+
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        },
+                        new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                Log.i("aaa",error.toString());
+                            }
+                        }
+                )
+                {
+                    @Override
+                    public Map<String, String> getHeaders() throws AuthFailureError {
+                        Map<String, String> stringStringMap = new HashMap<String, String>();
+                        stringStringMap.put("Authorization","Bearer "+token);
+                        return stringStringMap;
+                    }
+                };
         requestQueue.add(request);
     }
 }

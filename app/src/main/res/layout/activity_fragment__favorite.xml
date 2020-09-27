@@ -19,29 +19,37 @@
         android:padding="5dp">
 
         <Button
-            android:id="@+id/button"
+            android:id="@+id/ff_btn_posting"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="게시물" />
 
         <Button
-            android:id="@+id/button3"
+            android:id="@+id/ff_btn_comment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="댓글" />
 
         <Button
-            android:id="@+id/button4"
+            android:id="@+id/ff_btn_follow"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="팔로우" />
 
+        <Button
+            android:id="@+id/ff_btn_tag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="태그" />
+
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/ff_recyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/ff_layout"

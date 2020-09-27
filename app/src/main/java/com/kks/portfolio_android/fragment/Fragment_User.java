@@ -86,12 +86,12 @@ public class Fragment_User extends Fragment {
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(),3));
 
 
+
+
         SharedPreferences sharedPreferences =
                 getContext().getSharedPreferences(Util.PREFERENCE_NAME,MODE_PRIVATE);
         token = sharedPreferences.getString("token",null);
         user_id = sharedPreferences.getInt("user_id",0);
-
-
 
         fu_txt_followerCnt = getView().findViewById(R.id.fu_txt_followerCnt);
         fu_txt_followingCnt = getView().findViewById(R.id.fu_txt_followingCnt);

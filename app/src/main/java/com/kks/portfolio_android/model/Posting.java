@@ -78,6 +78,8 @@ public class Posting {
         this.user_profilephoto = user_profilephoto;
     }
 
+
+
     public Posting(int user_id) {
         this.user_id = user_id;
     }
