@@ -186,12 +186,12 @@ public class PostingActivity extends AppCompatActivity {
 
     private void deletePosting(int post_id, String token) {
         JsonObjectRequest request = new JsonObjectRequest(
-                Request.Method.POST, Util.BASE_URL + "/api/v1/post/deletepost/"+post_id,
+                Request.Method.POST, Util.DELETE_POSTING+post_id,
                 null,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        Toast.makeText(PostingActivity.this, "포스팅 삭제 성공", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(PostingActivity.this, R.string.delete_posting_complete, Toast.LENGTH_SHORT).show();
                         finish();
                     }
                 },
@@ -220,11 +220,7 @@ public class PostingActivity extends AppCompatActivity {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
-        JsonObjectRequest request = new JsonObjectRequest(
-                Request.Method.POST,
-                Util.BASE_URL + "/api/v1/like/likepost",
-                body,
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST,Util.LIKE_POST,body,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
@@ -257,11 +253,7 @@ public class PostingActivity extends AppCompatActivity {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
-        JsonObjectRequest request = new JsonObjectRequest(
-                Request.Method.POST,
-                Util.BASE_URL + "/api/v1/like/deletelikepost",
-                body,
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST,Util.DELETE_LIKE_POST,body,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
@@ -288,16 +280,14 @@ public class PostingActivity extends AppCompatActivity {
     }
 
     private void getLikeCntData(int post_id) {
-        JsonObjectRequest request1 = new JsonObjectRequest(
-                Request.Method.GET, Util.BASE_URL + "/api/v1/like/countlikepost/" + post_id,
-                null,
+        JsonObjectRequest request1 = new JsonObjectRequest(Request.Method.GET, Util.COUNT_LIKE_POST + post_id,null,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
                             int likecnt = response.getInt("cnt");
-                            po_txt_cntFavorite.setText(""+likecnt+"명이 좋아합니다");
-
+                            String text = getString(R.string.how_many_like);
+                            po_txt_cntFavorite.setText(String.format(text,likecnt));
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -306,7 +296,6 @@ public class PostingActivity extends AppCompatActivity {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-
                     }
                 }
         );
@@ -314,21 +303,17 @@ public class PostingActivity extends AppCompatActivity {
     }
 
     private void getPostData(int post_id,String token) {
-        JsonObjectRequest request = new JsonObjectRequest(
-                Request.Method.GET,
-                Util.BASE_URL + "/api/v1/post/getonepost/"+post_id, null,
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET,Util.GET_ONE_POST+post_id, null,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
                         Log.i("aaa",response.toString());
                         try{
-
                             boolean success = response.getBoolean("success");
                             if (success == false) {
-                                Toast.makeText(PostingActivity.this, "떙", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(PostingActivity.this, R.string.success_fail, Toast.LENGTH_SHORT).show();
                                 return;
                             }
-
                             JSONArray items = response.getJSONArray("items");
                             JSONObject jsonObject = items.getJSONObject(0);
 
@@ -351,7 +336,7 @@ public class PostingActivity extends AppCompatActivity {
                             if(user_profile == "null"){
                                 po_img_profile.setImageResource(R.drawable.ic_baseline_account_circle_24);
                             }else{
-                                Glide.with(PostingActivity.this).load(Util.BASE_URL+"/public/uploads/"+user_profile).into(po_img_profile);
+                                Glide.with(PostingActivity.this).load(Util.IMAGE_PATH+user_profile).into(po_img_profile);
                             }
 
                             String user_name = jsonObject.getString("user_name");
@@ -361,10 +346,12 @@ public class PostingActivity extends AppCompatActivity {
                             po_txt_content.setText(content);
 
                             int comment_cnt = jsonObject.getInt("comment_cnt");
-                            po_txt_cntComment.setText("댓글 "+comment_cnt+"개");
+                            String text = getString(R.string.how_many_comment);
+                            po_txt_cntComment.setText(String.format(text,comment_cnt));
 
                             int like_cnt = jsonObject.getInt("like_cnt");
-                            po_txt_cntFavorite.setText(""+like_cnt+"명이 좋아합니다");
+                            String text1 = getString(R.string.how_many_like);
+                            po_txt_cntFavorite.setText(String.format(text1,like_cnt));
 
                             mylike = jsonObject.getInt("mylike");
                             if(mylike == 1){
@@ -374,7 +361,7 @@ public class PostingActivity extends AppCompatActivity {
                             }
 
                             String photo = jsonObject.getString("photo_url");
-                            String photo_url = Util.BASE_URL+"/public/uploads/"+photo;
+                            String photo_url = Util.IMAGE_PATH+photo;
 
                             Glide.with(PostingActivity.this).load(photo_url).into(po_img_photo);
 
@@ -390,8 +377,6 @@ public class PostingActivity extends AppCompatActivity {
                             } catch (ParseException e) {
                                 e.printStackTrace();
                             }
-
-
                         } catch (Exception e) {
                             e.printStackTrace();
                         }

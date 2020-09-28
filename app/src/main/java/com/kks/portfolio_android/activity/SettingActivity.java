@@ -111,14 +111,13 @@ public class SettingActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 userLogout(token);
-
             }
         });
 
         setting_btn_leaveMember.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                alertDialog_adios("회원 탈퇴","정말로 탈퇴하시겠습니까?",token);
+                alertDialog_adios(R.string.adios_member,R.string.adios_are_you_sure,token);
             }
         });
 
@@ -157,15 +156,11 @@ public class SettingActivity extends AppCompatActivity {
                             photoFile.getName(), fileBody);
 
                     UserApi userApi = retrofit.create(UserApi.class);
-
                     Call<UserRes> call = userApi.uploadProfile("Bearer " + token, part);
-
                     call.enqueue(new Callback<UserRes>() {
                         @Override
                         public void onResponse(Call<UserRes> call, retrofit2.Response<UserRes> response) {
-
                         }
-
                         @Override
                         public void onFailure(Call<UserRes> call, Throwable t) {
                             Log.i("aaa", t.toString());
@@ -175,8 +170,15 @@ public class SettingActivity extends AppCompatActivity {
                     volleyApi.writeIntroduce(SettingActivity.this,introduce,token);
                 }
 
-                Toast.makeText(SettingActivity.this, "변경완료", Toast.LENGTH_SHORT).show();
+                Toast.makeText(SettingActivity.this, R.string.setting_complete, Toast.LENGTH_SHORT).show();
 
+            }
+        });
+
+        setting_btn_basicPhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                volleyApi.deleteProfilePhoto(SettingActivity.this,token,user_id,setting_txt_userName,setting_img_profile,setting_edit_introduce);
             }
         });
 
@@ -187,7 +189,7 @@ public class SettingActivity extends AppCompatActivity {
         super.onResume();
 
         if (token == null) {
-            Toast.makeText(this, "로그인을 해주세요", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.please_login, Toast.LENGTH_SHORT).show();
             Intent i = new Intent(this, MainActivity.class);
             startActivity(i);
             finish();
@@ -198,8 +200,7 @@ public class SettingActivity extends AppCompatActivity {
 
     private void userLogout(String token) {
         requestQueue = Volley.newRequestQueue(SettingActivity.this);
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.DELETE,
-                Util.BASE_URL + "/api/v1/user/logout",
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.DELETE,Util.LOGOUT,
                 null,
                 new Response.Listener<JSONObject>() {
                     @Override
@@ -208,10 +209,7 @@ public class SettingActivity extends AppCompatActivity {
                         SharedPreferences.Editor editor = sharedPreferences.edit();
                         editor.clear();
                         editor.apply();
-
-                        Log.i("aaa",token);
-                        alertDialog("로그아웃 완료","로그인 화면으로 이동합니다.");
-
+                        alertDialog(R.string.logout_complete,R.string.move_to_login);
                     }
                 },
                 new Response.ErrorListener() {
@@ -269,7 +267,7 @@ public class SettingActivity extends AppCompatActivity {
         requestQueue.add(jsonObjectRequest);
     }
 
-    void alertDialog(String title, String message){
+    void alertDialog(int title, int message){
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(SettingActivity.this,R.style.myDialogTheme);
         alertDialog .setTitle(title);
         alertDialog .setMessage(message);
@@ -293,20 +291,18 @@ public class SettingActivity extends AppCompatActivity {
         alertDialog .show();
     }
 
-    void alertDialog_adios(String title, String message,String token){
-
+    void alertDialog_adios(int title, int message, String token){
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(SettingActivity.this,R.style.myDialogTheme);
         alertDialog .setTitle(title);
         alertDialog .setMessage(message);
         alertDialog .setPositiveButton
-                ("네", new DialogInterface.OnClickListener() {
+                (R.string.yes, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-
                         userAdios(token);
                     }
                 });
-        alertDialog .setNegativeButton("아니요", new DialogInterface.OnClickListener() {
+        alertDialog .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
@@ -334,8 +330,7 @@ public class SettingActivity extends AppCompatActivity {
     private void requestPermission() {
         if(ActivityCompat.shouldShowRequestPermissionRationale(this,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE)){
-            Toast.makeText(this, "권한 수락이 필요합니다.",
-                    Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.need_accept_authority,Toast.LENGTH_SHORT).show();
         }else{
             ActivityCompat.requestPermissions(this,
                     new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 500);
@@ -454,6 +449,4 @@ public class SettingActivity extends AppCompatActivity {
             return null;
         }
     }
-
-
 }

@@ -45,8 +45,11 @@ public class Adapter_favorite extends RecyclerView.Adapter<Adapter_favorite.View
     public void onBindViewHolder(@NonNull Adapter_favorite.ViewHolder holder, int position) {
         Alram alram = postArrayList.get(position);
 
-        Glide.with(context).load(alram.getPhoto()).into(holder.ff_img_postImg);
-        Log.i("aaa",alram.getPhoto());
+        if(alram.getPhoto()!=null) {
+            Glide.with(context).load(alram.getPhoto()).into(holder.ff_img_postImg);
+        }else{
+            holder.ff_img_postImg.setVisibility(View.GONE);
+        }
 
         if(alram.getProfile()!="null"){
             Glide.with(context).load(Util.BASE_URL+"/public/uploads/"+alram.getProfile()).into(holder.ff_profile);

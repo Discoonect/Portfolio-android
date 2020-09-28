@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
         token = sharedPreferences.getString("token",null);
 
         if(auto!=null){
-            if(auto.equals("on")){
+            if(auto.equals(Util.AUTO_LOGIN_ON)){
                 Intent i = new Intent(MainActivity.this, HomeActivity.class);
                 startActivity(i);
                 finish();
@@ -80,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
                 passwd = main_edit_password.getText().toString().trim();
 
                 if(name.isEmpty()||passwd.isEmpty()){
-                    Toast.makeText(MainActivity.this, "이메일 또는 비밀번호를 입력해주세요.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, R.string.please_enter_email_password, Toast.LENGTH_SHORT).show();
                     return;
                 }
                 volleyApi.login(name,passwd,MainActivity.this,auto_login_check);

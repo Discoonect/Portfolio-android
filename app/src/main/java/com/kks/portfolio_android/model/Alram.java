@@ -17,6 +17,12 @@ public class Alram {
         this.content = content;
     }
 
+    public Alram(int id, String profile, String content) {
+        this.id = id;
+        this.profile = profile;
+        this.content = content;
+    }
+
     public int getId() {
         return id;
     }

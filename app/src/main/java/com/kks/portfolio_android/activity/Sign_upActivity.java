@@ -118,7 +118,6 @@ public class Sign_upActivity extends AppCompatActivity {
             public void onClick(View view) {
                 name = signup_edit_id.getText().toString().trim();
                 checkName(name,Sign_upActivity.this);
-                Log.i("aaa",""+check_name);
             }
         });
 
@@ -145,25 +144,22 @@ public class Sign_upActivity extends AppCompatActivity {
                 name= signup_edit_id.getText().toString().trim();
 
                 if (check_name==0) {
-                    Toast.makeText(Sign_upActivity.this, "아이디 중복체크를 해주세요.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Sign_upActivity.this, R.string.please_check_id, Toast.LENGTH_SHORT).show();
                     return;
                 }
 
                 if (password1.length() < 4 || password1.length() > 12) {
-                    Toast.makeText(Sign_upActivity.this, "비밀번호 길이는 4자리 이상,12자리 이하입니다.",
-                            Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Sign_upActivity.this, R.string.please_check_password_length,Toast.LENGTH_SHORT).show();
                     return;
                 }
 
                 if (password1.equalsIgnoreCase(password2) == false) {
-                    Toast.makeText(Sign_upActivity.this, "비밀번호가 일치하지 않습니다.",
-                            Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Sign_upActivity.this, R.string.incorrect_password,Toast.LENGTH_SHORT).show();
                     return;
                 }
 
                 if(phone.isEmpty()){
-                    Toast.makeText(Sign_upActivity.this, "핸드폰 번호를 입력해주세요.",
-                            Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Sign_upActivity.this, R.string.please_insert_phoneNumber,Toast.LENGTH_SHORT).show();
                     return;
                 }
 
@@ -183,8 +179,7 @@ public class Sign_upActivity extends AppCompatActivity {
     private void requestPermission() {
         if(ActivityCompat.shouldShowRequestPermissionRationale(Sign_upActivity.this,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE)){
-            Toast.makeText(Sign_upActivity.this, "권한 수락이 필요합니다.",
-                    Toast.LENGTH_SHORT).show();
+            Toast.makeText(Sign_upActivity.this, R.string.need_accept_authority,Toast.LENGTH_SHORT).show();
         }else{
             ActivityCompat.requestPermissions(Sign_upActivity.this,
                     new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 500);
@@ -207,8 +202,7 @@ public class Sign_upActivity extends AppCompatActivity {
         }
         RequestQueue requestQueue = Volley.newRequestQueue(context);
         JsonObjectRequest request =
-                new JsonObjectRequest(Request.Method.POST,
-                        Util.BASE_URL + "/api/v1/user/checkid", body,
+                new JsonObjectRequest(Request.Method.POST,Util.CHECK_ID, body,
                         new Response.Listener<JSONObject>() {
                             @Override
                             public void onResponse(JSONObject response) {

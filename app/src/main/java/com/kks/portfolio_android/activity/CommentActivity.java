@@ -49,6 +49,7 @@ public class CommentActivity extends AppCompatActivity {
 
     int post_id;
     int offset;
+    int limit = 25;
 
     String token;
 
@@ -80,8 +81,6 @@ public class CommentActivity extends AppCompatActivity {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(CommentActivity.this));
 
-
-
         cm_btn_complete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -89,23 +88,18 @@ public class CommentActivity extends AppCompatActivity {
                 uploadComment(post_id,comment,token);
             }
         });
-
-
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         if (token == null) {
-            Toast.makeText(this, "로그인을 해주세요", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this,R.string.please_login, Toast.LENGTH_SHORT).show();
             Intent i = new Intent(this, MainActivity.class);
             startActivity(i);
             finish();
         }
-
-        getComment_cnt(post_id);
-        getCommentData(post_id);
-
+        getCommentData(post_id,limit);
     }
 
     private void uploadComment(int post_id, String comment, String token) {
@@ -117,25 +111,23 @@ public class CommentActivity extends AppCompatActivity {
             e.printStackTrace();
         }
         JsonObjectRequest request = new JsonObjectRequest(
-                Request.Method.POST,
-                Util.BASE_URL +"/api/v1/comment/addcomment", body,
+                Request.Method.POST, Util.ADD_COMMENT, body,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
                         try{
                             boolean success = response.getBoolean("success");
+
                             if (success == false) {
-                                Toast.makeText(CommentActivity.this, "떙", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(CommentActivity.this, R.string.success_fail, Toast.LENGTH_SHORT).show();
                                 return;
                             }
 
-                            Toast.makeText(CommentActivity.this, "댓글 달기 성공", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(CommentActivity.this, R.string.comment_complete, Toast.LENGTH_SHORT).show();
 
-                            cm_edit_comment.setText("");
+                            cm_edit_comment.setText(R.string.text_clear);
                             offset = 0;
-                            getCommentData(post_id);
-                            getComment_cnt(post_id);
-
+                            getCommentData(post_id,limit);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -150,7 +142,6 @@ public class CommentActivity extends AppCompatActivity {
         {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
-
                 Map<String, String> stringStringMap = new HashMap<String, String>();
                 stringStringMap.put("Authorization","Bearer "+token);
                 return stringStringMap;
@@ -160,47 +151,18 @@ public class CommentActivity extends AppCompatActivity {
 
     }
 
-    private void getComment_cnt(int post_id) {
-        JsonObjectRequest request = new JsonObjectRequest(
-                Request.Method.GET,
-                Util.BASE_URL + "/api/v1/comment/countcomment/"+ post_id, null,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        try{
-                            boolean success = response.getBoolean("success");
-                            if (success == false) {
-                                Toast.makeText(CommentActivity.this, "떙", Toast.LENGTH_SHORT).show();
-                                return;
-                            }
-
-
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                    }
-                }
-        );
-        Volley.newRequestQueue(CommentActivity.this).add(request);
-    }
-
-    private void getCommentData(int post_id) {
+    private void getCommentData(int post_id,int limit) {
         list.clear();
         JsonObjectRequest request = new JsonObjectRequest(
                 Request.Method.GET,
-                Util.BASE_URL + "/api/v1/comment/getcomment/"+ post_id + "?offset=" + offset + "&limit=25", null,
+                Util.GET_COMMENT+ post_id + Util.OFFSET + offset + Util.LIMIT + limit, null,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
                         try{
                             boolean success = response.getBoolean("success");
                             if (success == false) {
-                                Toast.makeText(CommentActivity.this, "떙", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(CommentActivity.this, R.string.success_fail, Toast.LENGTH_SHORT).show();
                                 return;
                             }
                             JSONArray items = response.getJSONArray("items");

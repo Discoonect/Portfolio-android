@@ -43,17 +43,13 @@ public class PostLikeUser extends AppCompatActivity {
             }
         });
 
-
+        VolleyApi volleyApi = new VolleyApi();
+        volleyApi.likePostUser(this,post_id,recyclerView,plu_txt_cnt);
 
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-
-        VolleyApi volleyApi = new VolleyApi();
-        volleyApi.likePostUser(this,post_id,recyclerView,plu_txt_cnt);
-
-
     }
 }

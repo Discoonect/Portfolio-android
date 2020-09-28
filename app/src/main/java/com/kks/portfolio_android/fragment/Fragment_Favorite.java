@@ -90,6 +90,13 @@ public class Fragment_Favorite extends Fragment {
             }
         });
 
+        ff_btn_follow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                volleyApi.followAlram(getContext(),offset,limit,token,recyclerView);
+            }
+        });
+
 
     }
 
