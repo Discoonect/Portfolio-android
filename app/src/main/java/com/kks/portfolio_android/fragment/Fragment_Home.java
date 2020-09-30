@@ -26,7 +26,9 @@ import com.android.volley.toolbox.Volley;
 import com.kks.portfolio_android.activity.MainActivity;
 import com.kks.portfolio_android.R;
 import com.kks.portfolio_android.adapter.Adapter_home;
+import com.kks.portfolio_android.api.RetrofitApi;
 import com.kks.portfolio_android.model.Posting;
+import com.kks.portfolio_android.retrofitmodel.Items;
 import com.kks.portfolio_android.util.Util;
 
 import org.json.JSONArray;
@@ -34,6 +36,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static android.content.Context.MODE_PRIVATE;
@@ -44,7 +47,7 @@ public class Fragment_Home extends Fragment {
     Adapter_home adapter_home;
 
     JSONObject jsonObject = new JSONObject();
-    ArrayList<Posting> postArrayList = new ArrayList<>();
+    List<Items> postArrayList = new ArrayList<>();
 
     RequestQueue requestQueue;
 
@@ -67,6 +70,8 @@ public class Fragment_Home extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
+
 
         postArrayList.clear();
 
@@ -93,15 +98,12 @@ public class Fragment_Home extends Fragment {
                 getActivity().getSharedPreferences(Util.PREFERENCE_NAME,MODE_PRIVATE);
         token = sharedPreferences.getString("token",null);
 
-        requestQueue = Volley.newRequestQueue(getActivity());
 
+//        requestQueue = Volley.newRequestQueue(getActivity());
+//        getPostingData(getContext(),token);
 
-        getPostingData(getContext(),token);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
+        RetrofitApi retrofitApi = new RetrofitApi();
+        retrofitApi.getPostingData(getContext(),token,recyclerView);
 
         if (token == null) {
             Toast.makeText(getContext(), "로그인을 해주세요", Toast.LENGTH_SHORT).show();
@@ -109,6 +111,12 @@ public class Fragment_Home extends Fragment {
             startActivity(i);
             getActivity().finish();
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
 
     }
 
@@ -172,69 +180,68 @@ public class Fragment_Home extends Fragment {
 //        requestQueue.add(request);
 //    }
 
-    public void getPostingData(Context context,String token) {
-        JsonObjectRequest request = new JsonObjectRequest(
-                Request.Method.GET,
-                Util.BASE_URL + path + "?offset=" + offset + "&limit=25", null,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        Log.i("aaa",response.toString());
-
-                        try{
-                            boolean success = response.getBoolean("success");
-                            if (success == false) {
-                                Toast.makeText(getActivity(), "떙", Toast.LENGTH_SHORT).show();
-                                return;
-                            }
-
-                            JSONArray items = response.getJSONArray("items");
-
-                            for(int i=0; i<items.length(); i++){
-                                jsonObject = items.getJSONObject(i);
-
-                                int post_id = jsonObject.getInt("post_id");
-                                int user_id = jsonObject.getInt("user_id");
-                                String user_name = jsonObject.getString("user_name");
-                                String content = jsonObject.getString("content");
-                                String created_at = jsonObject.getString("created_at");
-                                int like_cnt = jsonObject.getInt("like_cnt");
-                                int comment_cnt = jsonObject.getInt("comment_cnt");
-                                int postlike = jsonObject.getInt("mylike");
-
-                                String profile = jsonObject.getString("user_profilephoto");
-
-
-                                String photo = jsonObject.getString("photo_url");
-                                String photo_url = Util.BASE_URL+"/public/uploads/"+photo;
-
-                                Posting posting = new Posting(post_id,user_id,user_name,profile,content,created_at,photo_url,comment_cnt,like_cnt,postlike);
-
-                                postArrayList.add(posting);
-                            }
-                            adapter_home = new Adapter_home(getActivity(), postArrayList);
-                            recyclerView.setAdapter(adapter_home);
-
-
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                    }
-                }
-        )
-        {
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                Map<String, String> stringStringMap = new HashMap<String, String>();
-                stringStringMap.put("Authorization","Bearer "+token);
-                return stringStringMap;
-            }
-        };
-        Volley.newRequestQueue(context).add(request);
-    }
+//    public void getPostingData(Context context,String token) {
+//        JsonObjectRequest request = new JsonObjectRequest(
+//                Request.Method.GET,Util.BASE_URL + path + "?offset=" + offset + "&limit=25", null,
+//                new Response.Listener<JSONObject>() {
+//                    @Override
+//                    public void onResponse(JSONObject response) {
+//                        Log.i("aaa",response.toString());
+//
+//                        try{
+//                            boolean success = response.getBoolean("success");
+//                            if (success == false) {
+//                                Toast.makeText(getActivity(), "떙", Toast.LENGTH_SHORT).show();
+//                                return;
+//                            }
+//
+//                            JSONArray items = response.getJSONArray("items");
+//
+//                            for(int i=0; i<items.length(); i++){
+//                                jsonObject = items.getJSONObject(i);
+//
+//                                int post_id = jsonObject.getInt("post_id");
+//                                int user_id = jsonObject.getInt("user_id");
+//                                String user_name = jsonObject.getString("user_name");
+//                                String content = jsonObject.getString("content");
+//                                String created_at = jsonObject.getString("created_at");
+//                                int like_cnt = jsonObject.getInt("like_cnt");
+//                                int comment_cnt = jsonObject.getInt("comment_cnt");
+//                                int postlike = jsonObject.getInt("mylike");
+//
+//                                String profile = jsonObject.getString("user_profilephoto");
+//
+//
+//                                String photo = jsonObject.getString("photo_url");
+//                                String photo_url = Util.BASE_URL+"/public/uploads/"+photo;
+//
+//                                Posting posting = new Posting(post_id,user_id,user_name,profile,content,created_at,photo_url,comment_cnt,like_cnt,postlike);
+//
+//                                postArrayList.add(posting);
+//                            }
+//                            adapter_home = new Adapter_home(getActivity(), postArrayList);
+//                            recyclerView.setAdapter(adapter_home);
+//
+//
+//                        } catch (Exception e) {
+//                            e.printStackTrace();
+//                        }
+//                    }
+//                },
+//                new Response.ErrorListener() {
+//                    @Override
+//                    public void onErrorResponse(VolleyError error) {
+//                    }
+//                }
+//        )
+//        {
+//            @Override
+//            public Map<String, String> getHeaders() throws AuthFailureError {
+//                Map<String, String> stringStringMap = new HashMap<String, String>();
+//                stringStringMap.put("Authorization","Bearer "+token);
+//                return stringStringMap;
+//            }
+//        };
+//        Volley.newRequestQueue(context).add(request);
+//    }
 }

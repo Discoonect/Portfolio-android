@@ -28,6 +28,7 @@ import com.kks.portfolio_android.activity.PageActivity;
 import com.kks.portfolio_android.R;
 import com.kks.portfolio_android.activity.PostLikeUser;
 import com.kks.portfolio_android.model.Posting;
+import com.kks.portfolio_android.retrofitmodel.Items;
 import com.kks.portfolio_android.util.Util;
 
 import org.json.JSONException;
@@ -38,6 +39,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
@@ -47,11 +49,11 @@ import static android.content.Context.MODE_PRIVATE;
 public class Adapter_home extends RecyclerView.Adapter<Adapter_home.ViewHolder> {
 
     Context context;
-    ArrayList<Posting> postArrayList;
+    List<Items> itemsList;
 
-    public Adapter_home(Context context, ArrayList<Posting> postArrayList) {
+    public Adapter_home(Context context, List<Items> itemsList) {
         this.context = context;
-        this.postArrayList = postArrayList;
+        this.itemsList = itemsList;
     }
 
     @NonNull
@@ -63,13 +65,12 @@ public class Adapter_home extends RecyclerView.Adapter<Adapter_home.ViewHolder> 
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Posting posting = postArrayList.get(position);
+        Items items = itemsList.get(position);
 
-        holder.fh_txt_userId.setText(posting.getUser_name());
-        holder.fh_txt_content.setText(posting.getContent());
-        holder.fh_txt_created.setText(posting.getCreatedAt());
-        holder.fh_txt_cntFavorite.setText(""+posting.getCnt_favorite()+"명이 좋아합니다");
-        holder.fh_txt_cntComment.setText("댓글 "+posting.getCnt_comment()+"개");
+        holder.fh_txt_userId.setText(items.getUser_name());
+        holder.fh_txt_content.setText(items.getContent());
+        holder.fh_txt_cntFavorite.setText(""+items.getLike_cnt()+"명이 좋아합니다");
+        holder.fh_txt_cntComment.setText("댓글 "+items.getComment_cnt()+"개");
 
         //시간 맞추기
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
@@ -77,7 +78,7 @@ public class Adapter_home extends RecyclerView.Adapter<Adapter_home.ViewHolder> 
 
         //포스팅 작성시간 표시
         try {
-            Date date = df.parse(posting.getCreatedAt());
+            Date date = df.parse(items.getCreated_at());
             df.setTimeZone(TimeZone.getDefault());
             String strDate = df.format(date);
             holder.fh_txt_created.setText(strDate);
@@ -87,20 +88,20 @@ public class Adapter_home extends RecyclerView.Adapter<Adapter_home.ViewHolder> 
         }
 
         //하트 누르면 하트이미지 바꾸기
-        if(posting.getPostlike() == 1){
+        if(items.getMylike() == 1){
             holder.fh_img_like.setImageResource(R.drawable.ic_baseline_favorite_24);
         }else {
             holder.fh_img_like.setImageResource(R.drawable.ic_baseline_favorite_border_24);
         }
 
-        Glide.with(context).load(posting.getPhoto_url()).into(holder.fh_img_postPhoto);
+        Glide.with(context).load(Util.IMAGE_PATH+items.getPhoto_url()).into(holder.fh_img_postPhoto);
 
         SharedPreferences sharedPreferences =
                 context.getSharedPreferences(Util.PREFERENCE_NAME,MODE_PRIVATE);
         int sp_user_id = sharedPreferences.getInt("user_id",0);
         String token = sharedPreferences.getString("token",null);
 
-        if(sp_user_id==posting.getUser_id()){
+        if(sp_user_id==items.getUser_id()){
             holder.fh_img_menu.setVisibility(View.VISIBLE);
         }else{
             holder.fh_img_menu.setVisibility(View.INVISIBLE);
@@ -113,7 +114,7 @@ public class Adapter_home extends RecyclerView.Adapter<Adapter_home.ViewHolder> 
                 PopupMenu popupMenu = new PopupMenu(context,holder.fh_img_menu);
                 popupMenu.inflate(R.menu.fh_post_menu);
 
-                int post_id = postArrayList.get(position).getId();
+                int post_id = itemsList.get(position).getPost_id();
 
                 popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
@@ -166,8 +167,8 @@ public class Adapter_home extends RecyclerView.Adapter<Adapter_home.ViewHolder> 
 
         });
 
-        if(posting.getUser_profilephoto()!="null"){
-            Glide.with(context).load(Util.BASE_URL+"/public/uploads/"+posting.getUser_profilephoto()).into(holder.fh_img_profilePhoto);
+        if(items.getUser_profilephoto()!="null"){
+            Glide.with(context).load(Util.IMAGE_PATH+items.getUser_profilephoto()).into(holder.fh_img_profilePhoto);
         }else{
             holder.fh_img_profilePhoto.setImageResource(R.drawable.ic_baseline_account_circle_24);
         }
@@ -176,7 +177,7 @@ public class Adapter_home extends RecyclerView.Adapter<Adapter_home.ViewHolder> 
 
     @Override
     public int getItemCount() {
-        return postArrayList.size();
+        return itemsList.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder{
@@ -210,16 +211,20 @@ public class Adapter_home extends RecyclerView.Adapter<Adapter_home.ViewHolder> 
                 public void onClick(View view) {
 
                     int position = getBindingAdapterPosition();
-                    int is_like = postArrayList.get(position).getPostlike();
-                    String token;
+                    int is_like = itemsList.get(position).getMylike();
 
                     SharedPreferences sp = context.getSharedPreferences(Util.PREFERENCE_NAME, MODE_PRIVATE);
-                    token = sp.getString("token", null);
+                    String token = sp.getString("token", null);
+
+                    Items items = itemsList.get(position);
 
                     if(is_like==1){
-                        clickDislike(position,token);
+
+                        int post_id = items.getPost_id();
+                        clickDislike(post_id,position,token);
                     }else{
-                        clickLike(position,token);
+                        int post_id = items.getPost_id();
+                        clickLike(post_id,position,token);
                     }
                 }
             });
@@ -228,8 +233,8 @@ public class Adapter_home extends RecyclerView.Adapter<Adapter_home.ViewHolder> 
                 @Override
                 public void onClick(View view) {
                     int position = getBindingAdapterPosition();
-                    Posting posting = postArrayList.get(position);
-                    int post_id = posting.getId();
+                    Items items = itemsList.get(position);
+                    int post_id = items.getPost_id();
 
                     Intent i = new Intent(context, CommentActivity.class);
                     i.putExtra("post_id",post_id);
@@ -238,7 +243,6 @@ public class Adapter_home extends RecyclerView.Adapter<Adapter_home.ViewHolder> 
                     j.putExtra("post_id",post_id);
 
                     context.startActivity(i);
-
                 }
             });
 
@@ -246,8 +250,8 @@ public class Adapter_home extends RecyclerView.Adapter<Adapter_home.ViewHolder> 
                 @Override
                 public void onClick(View view) {
                     int position = getBindingAdapterPosition();
-                    Posting posting = postArrayList.get(position);
-                    int post_id = posting.getId();
+                    Items items = itemsList.get(position);
+                    int post_id = items.getPost_id();
 
                     Intent i = new Intent(context,CommentActivity.class);
                     i.putExtra("post_id",post_id);
@@ -260,7 +264,7 @@ public class Adapter_home extends RecyclerView.Adapter<Adapter_home.ViewHolder> 
                 @Override
                 public void onClick(View view) {
                     Intent i = new Intent(context, PageActivity.class);
-                    i.putExtra("user_id",postArrayList.get(getBindingAdapterPosition()).getUser_id());
+                    i.putExtra("user_id",itemsList.get(getBindingAdapterPosition()).getUser_id());
                     context.startActivity(i);
                 }
             });
@@ -268,7 +272,7 @@ public class Adapter_home extends RecyclerView.Adapter<Adapter_home.ViewHolder> 
             fh_txt_cntFavorite.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    int post_id = postArrayList.get(getBindingAdapterPosition()).getId();
+                    int post_id = itemsList.get(getBindingAdapterPosition()).getPost_id();
 
                     Intent i = new Intent(context, PostLikeUser.class);
                     i.putExtra("post_id",post_id);
@@ -277,18 +281,13 @@ public class Adapter_home extends RecyclerView.Adapter<Adapter_home.ViewHolder> 
             });
         }
 
-        private void clickLike(int position,String token) {
-            Posting posting = postArrayList.get(position);
-            int cnt_like_postid = postArrayList.get(position).getId();
-            int posting_id = posting.getId();
+        private void clickLike(int post_id,int position,String token) {
             JSONObject body = new JSONObject();
             try {
-                body.put("post_id", posting_id);
-
+                body.put("post_id", post_id);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-
             JsonObjectRequest request = new JsonObjectRequest(
                     Request.Method.POST,
                     Util.BASE_URL + "/api/v1/like/likepost",
@@ -297,10 +296,10 @@ public class Adapter_home extends RecyclerView.Adapter<Adapter_home.ViewHolder> 
                         @Override
                         public void onResponse(JSONObject response) {
                             // 어레이리스트의 값을 변경시켜줘야 한다.
-                            Posting post = postArrayList.get(position);
-                            post.setPostlike(1);
+                            Items items = itemsList.get(position);
+                            items.setMylike(1);
                             notifyDataSetChanged();
-                            getLikeCntData(post,cnt_like_postid);
+                            getLikeCntData(items,post_id);
                         }
                     },
                     new Response.ErrorListener() {
@@ -320,18 +319,13 @@ public class Adapter_home extends RecyclerView.Adapter<Adapter_home.ViewHolder> 
 
         }
 
-        private void clickDislike(int position,String token) {
-            int cnt_like_postid = postArrayList.get(position).getId();
-            Posting posting = postArrayList.get(position);
-            int posting_id = posting.getId();
-
+        private void clickDislike(int post_id, int position,String token) {
             JSONObject body = new JSONObject();
             try {
-                body.put("post_id", posting_id);
+                body.put("post_id", post_id);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-
             JsonObjectRequest request = new JsonObjectRequest(
                     Request.Method.POST,
                     Util.BASE_URL + "/api/v1/like/deletelikepost",
@@ -340,10 +334,10 @@ public class Adapter_home extends RecyclerView.Adapter<Adapter_home.ViewHolder> 
                         @Override
                         public void onResponse(JSONObject response) {
                             // 어레이리스트의 값을 변경시켜줘야 한다.
-                            Posting post = postArrayList.get(position);
-                            post.setPostlike(0);
+                            Items items = itemsList.get(position);
+                            items.setMylike(0);
                             notifyDataSetChanged();
-                            getLikeCntData(post,cnt_like_postid);
+                            getLikeCntData(items,post_id);
                         }
                     },
                     new Response.ErrorListener() {
@@ -364,8 +358,8 @@ public class Adapter_home extends RecyclerView.Adapter<Adapter_home.ViewHolder> 
 
         }
 
-        private void getLikeCntData(Posting post,int cnt_like_postid) {
-            int position = getAdapterPosition();
+        private void getLikeCntData(Items items,int cnt_like_postid) {
+            int position = getBindingAdapterPosition();
 
             JsonObjectRequest request1 = new JsonObjectRequest(
                     Request.Method.GET, Util.BASE_URL + "/api/v1/like/countlikepost/" + cnt_like_postid,
@@ -376,7 +370,7 @@ public class Adapter_home extends RecyclerView.Adapter<Adapter_home.ViewHolder> 
                             try {
                                 int likecnt = response.getInt("cnt");
 
-                                post.setCnt_favorite(likecnt);
+                                items.setLike_cnt(likecnt);
                                 notifyDataSetChanged();
 
                             } catch (JSONException e) {

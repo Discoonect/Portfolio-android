@@ -7,20 +7,31 @@ public class Alram {
     String profile;
     String content;
     int comment_id;
+    int status;
 
     public Alram(){}
 
-    public Alram(int id, String photo, String profile, String content) {
+    public Alram(int id, String photo, String profile, String content,int status) {
         this.id = id;
         this.photo = photo;
         this.profile = profile;
         this.content = content;
+        this.status = status;
     }
 
-    public Alram(int id, String profile, String content) {
+    public Alram(int id, String profile, String content,int status) {
         this.id = id;
         this.profile = profile;
         this.content = content;
+        this.status = status;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
     }
 
     public int getId() {

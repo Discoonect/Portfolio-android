@@ -1,8 +1,9 @@
 package com.kks.portfolio_android.api;
 
 
-import com.kks.portfolio_android.model.PostRes;
-import com.kks.portfolio_android.model.UserRes;
+import com.kks.portfolio_android.retrofitmodel.post.PostRes;
+import com.kks.portfolio_android.retrofitmodel.user.UserRes;
+import com.kks.portfolio_android.util.Util;
 
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -16,10 +17,10 @@ import retrofit2.http.Query;
 
 public interface PostApi {
 
-//    @GET("/api/v1/posts")       // ?offset=0&limit=25
-//    Call<PostRes> getPosts(@Header("Authorization") String token,
-//                           @Query("offset") int offset,
-//                           @Query("limit") int limit);
+    @GET("/api/v1/post/getallpost")
+    Call<PostRes> getAllPost(@Header("Authorization") String token,
+                             @Query("offset") int offset,
+                             @Query("limit") int limit);
 
     // 파일 전송을 가능하게 해준다. => @Multipart
     @Multipart
@@ -28,5 +29,7 @@ public interface PostApi {
                              @Part MultipartBody.Part file,
                              @Part("content") RequestBody requestBody);
 
-
+    @GET(Util.BEST_POST)
+    Call<PostRes> bestPost(@Query("offset") int offset,
+                           @Query("limit") int limit);
 }

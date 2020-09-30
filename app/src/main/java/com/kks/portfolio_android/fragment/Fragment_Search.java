@@ -25,6 +25,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.kks.portfolio_android.activity.MainActivity;
 import com.kks.portfolio_android.R;
+import com.kks.portfolio_android.api.RetrofitApi;
 import com.kks.portfolio_android.search.Search_PostingResult;
 import com.kks.portfolio_android.search.Search_UserResult;
 import com.kks.portfolio_android.adapter.Adapter_search;
@@ -47,6 +48,7 @@ public class Fragment_Search extends Fragment {
     ArrayList<Posting> postingArrayList = new ArrayList<>();
 
     int offset;
+    int limit = 25;
 
     RequestQueue requestQueue;
     JSONObject jsonObject;
@@ -74,6 +76,13 @@ public class Fragment_Search extends Fragment {
                 getActivity().getSharedPreferences(Util.PREFERENCE_NAME,MODE_PRIVATE);
         token = sharedPreferences.getString("token",null);
 
+        if (token == null) {
+            Toast.makeText(getContext(), "로그인을 해주세요", Toast.LENGTH_SHORT).show();
+            Intent i = new Intent(getContext(), MainActivity.class);
+            startActivity(i);
+            getActivity().finish();
+        }
+
         postingArrayList.clear();
 
         recyclerView = getView().findViewById(R.id.fs_recyclerview);
@@ -83,7 +92,8 @@ public class Fragment_Search extends Fragment {
         fs_img_search = getView().findViewById(R.id.fs_img_search);
         fs_edit_search = getView().findViewById(R.id.fs_edit_search);
 
-        getFamousPosting();
+        RetrofitApi retrofitApi = new RetrofitApi();
+        retrofitApi.getBestPost(getContext(),offset,limit,recyclerView);
 
         fs_img_search.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -111,64 +121,59 @@ public class Fragment_Search extends Fragment {
     public void onResume() {
         super.onResume();
 
-        if (token == null) {
-            Toast.makeText(getContext(), "로그인을 해주세요", Toast.LENGTH_SHORT).show();
-            Intent i = new Intent(getContext(), MainActivity.class);
-            startActivity(i);
-            getActivity().finish();
-        }
+
     }
 
-    private void getFamousPosting() {
-        requestQueue = Volley.newRequestQueue(getContext());
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET,
-                Util.BASE_URL + "/api/v1/post/bestpost?offset="+offset+"&limit=30",
-                null,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-
-                        try {
-                            boolean success = response.getBoolean("success");
-                            if (success == false) {
-                                Toast.makeText(getActivity(), "다시 시도 해주세요.", Toast.LENGTH_SHORT).show();
-                                return;
-                            }
-
-                            JSONArray items = response.getJSONArray("items");
-
-                            for(int i=0; i<items.length();i++){
-                                jsonObject = items.getJSONObject(i);
-
-                                int user_id = jsonObject.getInt("user_id");
-
-                                int like_cnt = jsonObject.getInt("cnt_like");
-                                int post_id = jsonObject.getInt("post_id");
-                                String photo = jsonObject.getString("photo_url");
-                                String photo_url = Util.BASE_URL+"/public/uploads/"+photo;
-
-                                Posting posting = new Posting(post_id,user_id,photo_url,like_cnt);
-                                postingArrayList.add(posting);
-                            }
-
-                            adapter_search = new Adapter_search(getActivity(),postingArrayList);
-                            recyclerView.setAdapter(adapter_search);
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-
-
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-
-                    }
-                }
-        );
-        requestQueue.add(jsonObjectRequest);
-    }
+//    private void getFamousPosting(){
+//        requestQueue = Volley.newRequestQueue(getContext());
+//        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET,
+//                Util.BASE_URL + "/api/v1/post/bestpost?offset="+offset+"&limit=30",
+//                null,
+//                new Response.Listener<JSONObject>() {
+//                    @Override
+//                    public void onResponse(JSONObject response) {
+//
+//                        try {
+//                            boolean success = response.getBoolean("success");
+//                            if (success == false) {
+//                                Toast.makeText(getActivity(), "다시 시도 해주세요.", Toast.LENGTH_SHORT).show();
+//                                return;
+//                            }
+//
+//                            JSONArray items = response.getJSONArray("items");
+//
+//                            for(int i=0; i<items.length();i++){
+//                                jsonObject = items.getJSONObject(i);
+//
+//                                int user_id = jsonObject.getInt("user_id");
+//
+//                                 int like_cnt = jsonObject.getInt("cnt_like");
+//                                int post_id = jsonObject.getInt("post_id");
+//                                String photo = jsonObject.getString("photo_url");
+//                                String photo_url = Util.BASE_URL+"/public/uploads/"+photo;
+//
+//                                Posting posting = new Posting(post_id,user_id,photo_url,like_cnt);
+//                                postingArrayList.add(posting);
+//                            }
+//
+//                            adapter_search = new Adapter_search(getActivity(),postingArrayList);
+//                            recyclerView.setAdapter(adapter_search);
+//
+//                        } catch (JSONException e) {
+//                            e.printStackTrace();
+//                        }
+//
+//
+//                    }
+//                },
+//                new Response.ErrorListener() {
+//                    @Override
+//                    public void onErrorResponse(VolleyError error) {
+//
+//                    }
+//                }
+//        );
+//        requestQueue.add(jsonObjectRequest);
+//    }
 
 }

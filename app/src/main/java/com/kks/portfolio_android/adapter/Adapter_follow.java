@@ -42,7 +42,7 @@ public class Adapter_follow extends RecyclerView.Adapter<Adapter_follow.ViewHold
         Posting posting = postArrayList.get(position);
 
         if(posting.getUser_profilephoto()!="null"){
-            Glide.with(context).load(Util.BASE_URL+"/public/uploads/"+posting.getUser_profilephoto()).into(holder.follow_img_profile);
+            Glide.with(context).load(Util.IMAGE_PATH+posting.getUser_profilephoto()).into(holder.follow_img_profile);
         }else{
             holder.follow_img_profile.setImageResource(R.drawable.ic_baseline_account_circle_24);
         }

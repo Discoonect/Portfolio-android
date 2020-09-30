@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -88,6 +89,7 @@ public class CommentActivity extends AppCompatActivity {
                 uploadComment(post_id,comment,token);
             }
         });
+        getCommentData(post_id,limit);
     }
 
     @Override
@@ -99,7 +101,6 @@ public class CommentActivity extends AppCompatActivity {
             startActivity(i);
             finish();
         }
-        getCommentData(post_id,limit);
     }
 
     private void uploadComment(int post_id, String comment, String token) {
@@ -159,6 +160,7 @@ public class CommentActivity extends AppCompatActivity {
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
+                        Log.i("aaa",response.toString());
                         try{
                             boolean success = response.getBoolean("success");
                             if (success == false) {
@@ -169,6 +171,7 @@ public class CommentActivity extends AppCompatActivity {
 
                             for(int i=0; i<items.length(); i++){
                                 jsonObject = items.getJSONObject(i);
+                                int post_user_id = jsonObject.getInt("post_user_id");
                                 int post_id = jsonObject.getInt("post_id");
                                 int comment_id = jsonObject.getInt("comment_id");
                                 int user_id = jsonObject.getInt("user_id");
@@ -177,7 +180,7 @@ public class CommentActivity extends AppCompatActivity {
                                 String created_at = jsonObject.getString("created_at");
                                 String profile = jsonObject.getString("user_profilephoto");
 
-                                Comments comments = new Comments(post_id,comment_id,user_id,user_name,comment,created_at,profile);
+                                Comments comments = new Comments(post_user_id,post_id,comment_id,user_id,user_name,comment,created_at,profile);
                                 list.add(comments);
                             }
                             adapter_comment = new Adapter_comment(CommentActivity.this, list);

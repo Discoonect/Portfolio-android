@@ -15,17 +15,19 @@ import com.bumptech.glide.Glide;
 import com.kks.portfolio_android.activity.PostingActivity;
 import com.kks.portfolio_android.R;
 import com.kks.portfolio_android.model.Posting;
+import com.kks.portfolio_android.retrofitmodel.Items;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Adapter_search extends RecyclerView.Adapter<Adapter_search.ViewHolder> {
 
     Context context;
-    ArrayList<Posting> postArrayList;
+    List<Items> itemsList;
 
-    public Adapter_search(Context context, ArrayList<Posting> postArrayList) {
+    public Adapter_search(Context context, List<Items> itemsList) {
         this.context = context;
-        this.postArrayList = postArrayList;
+        this.itemsList = itemsList;
     }
     @NonNull
     @Override
@@ -37,16 +39,16 @@ public class Adapter_search extends RecyclerView.Adapter<Adapter_search.ViewHold
 
     @Override
     public void onBindViewHolder(@NonNull Adapter_search.ViewHolder holder, int position) {
-        Posting posting = postArrayList.get(position);
+        Items items = itemsList.get(position);
 
-        Glide.with(context).load(posting.getPhoto_url()).into(holder.fs_img_posting);
+        Glide.with(context).load(items.getPhoto_url()).into(holder.fs_img_posting);
 
-        holder.fs_img_likeCnt.setText(""+posting.getCnt_favorite());
+        holder.fs_img_likeCnt.setText(""+items.getCnt_like());
     }
 
     @Override
     public int getItemCount() {
-        return postArrayList.size();
+        return itemsList.size();
     }
 
 
@@ -65,8 +67,8 @@ public class Adapter_search extends RecyclerView.Adapter<Adapter_search.ViewHold
                 @Override
                 public void onClick(View view) {
                     Intent i = new Intent(context, PostingActivity.class);
-                    i.putExtra("post_id",postArrayList.get(getBindingAdapterPosition()).getId());
-                    i.putExtra("user_id",postArrayList.get(getBindingAdapterPosition()).getUser_id());
+                    i.putExtra("post_id",itemsList.get(getBindingAdapterPosition()).getPost_id());
+                    i.putExtra("user_id",itemsList.get(getBindingAdapterPosition()).getUser_id());
 
                     context.startActivity(i);
                 }

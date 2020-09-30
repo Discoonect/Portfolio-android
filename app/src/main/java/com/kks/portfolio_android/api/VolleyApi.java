@@ -1,12 +1,9 @@
 package com.kks.portfolio_android.api;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -26,22 +23,15 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
-import com.kks.portfolio_android.activity.CommentActivity;
 import com.kks.portfolio_android.activity.HomeActivity;
-import com.kks.portfolio_android.activity.MainActivity;
 import com.kks.portfolio_android.R;
-import com.kks.portfolio_android.activity.PostLikeUser;
-import com.kks.portfolio_android.activity.Sign_upActivity;
-import com.kks.portfolio_android.adapter.Adapter_comment;
 import com.kks.portfolio_android.adapter.Adapter_favorite;
 import com.kks.portfolio_android.adapter.Adapter_follow;
 import com.kks.portfolio_android.adapter.Adapter_plu;
 import com.kks.portfolio_android.adapter.Adapter_user;
 import com.kks.portfolio_android.model.Alram;
-import com.kks.portfolio_android.model.Comments;
 import com.kks.portfolio_android.model.Posting;
-import com.kks.portfolio_android.model.User;
-import com.kks.portfolio_android.model.UserRes;
+import com.kks.portfolio_android.retrofitmodel.user.UserRes;
 import com.kks.portfolio_android.util.Util;
 
 import org.json.JSONArray;
@@ -80,16 +70,17 @@ public class VolleyApi {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
         RequestQueue requestQueue = Volley.newRequestQueue(context);
         JsonObjectRequest request =
-                new JsonObjectRequest(Request.Method.POST, Util.BASE_URL + "/api/v1/user/login",body,
+                new JsonObjectRequest(Request.Method.POST, Util.LOGIN,body,
                         new Response.Listener<JSONObject>() {
                             @Override
                             public void onResponse(JSONObject response) {
                                 try{
                                     boolean success = response.getBoolean("success");
                                     if(success==false){
-                                        Toast.makeText(context, "문제있음", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(context, R.string.success_fail, Toast.LENGTH_SHORT).show();
                                         return;
                                     }
                                     String token = response.getString("token");
@@ -100,15 +91,13 @@ public class VolleyApi {
                                     editor.putString("token",token);
                                     editor.putInt("user_id",user_id);
 
-                                    Log.i("aaa","user_id : "+user_id+"    token : "+token);
-
                                     editor.apply();
 
                                     if(auto_login_check.isChecked()==true){
-                                        editor.putString("auto","on");
+                                        editor.putString("auto",Util.AUTO_LOGIN_ON);
                                         editor.apply();
                                     }else{
-                                        editor.putString("auto","off");
+                                        editor.putString("auto",Util.AUTO_LOGIN_OFF);
                                         editor.apply();
                                     }
                                     Intent i = new Intent(context, HomeActivity.class);
@@ -140,12 +129,10 @@ public class VolleyApi {
         }
         RequestQueue requestQueue = Volley.newRequestQueue(context);
         JsonObjectRequest request =
-                new JsonObjectRequest(Request.Method.POST, Util.BASE_URL + "/api/v1/user/signup",body,
+                new JsonObjectRequest(Request.Method.POST, Util.SIGN_UP,body,
                         new Response.Listener<JSONObject>() {
                             @Override
                             public void onResponse(JSONObject response) {
-                                Log.i("aaa",response.toString());
-
                                 try {
                                     String token = response.getString("token");
 
@@ -158,9 +145,8 @@ public class VolleyApi {
                                     call.enqueue(new Callback<UserRes>() {
                                         @Override
                                         public void onResponse(Call<UserRes> call, retrofit2.Response<UserRes> response) {
-                                            Toast.makeText(context, "회원가입성공", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(context, R.string.sign_up_complete, Toast.LENGTH_SHORT).show();
                                         }
-
                                         @Override
                                         public void onFailure(Call<UserRes> call, Throwable t) {
                                             Log.i("aaa", t.toString());
@@ -170,9 +156,6 @@ public class VolleyApi {
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
-
-
-
                             }
                         },
                         new Response.ErrorListener() {
@@ -196,12 +179,12 @@ public class VolleyApi {
         }
         RequestQueue requestQueue = Volley.newRequestQueue(context);
         JsonObjectRequest request =
-                new JsonObjectRequest(Request.Method.POST, Util.BASE_URL + "/api/v1/user/signup",body,
+                new JsonObjectRequest(Request.Method.POST, Util.SIGN_UP,body,
                         new Response.Listener<JSONObject>() {
                             @Override
                             public void onResponse(JSONObject response) {
                                 Log.i("aaa",response.toString());
-                                Toast.makeText(context, "회원가입성공", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(context, R.string.sign_up_complete, Toast.LENGTH_SHORT).show();
                             }
                         },
                         new Response.ErrorListener() {
@@ -212,51 +195,6 @@ public class VolleyApi {
                         }
                 );
         requestQueue.add(request);
-    }
-
-    public void alertDialog_Unchecked(String message, Context context) {
-        AlertDialog.Builder alertDialog = new AlertDialog.Builder(context, R.style.myDialogTheme);
-        alertDialog.setTitle("아이디 중복체크");
-        alertDialog.setMessage(message);
-        alertDialog.setPositiveButton
-                ("확인", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        int check_name=0;
-                    }
-                });
-        final AlertDialog dialog = alertDialog.create();
-        dialog.setOnShowListener(new DialogInterface.OnShowListener() {
-            @Override
-            public void onShow(DialogInterface dialogInterface) {
-                dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.BLACK);
-            }
-        });
-        alertDialog.setCancelable(false);
-        alertDialog.show();
-    }
-
-    public void alertDialog_checked(String message, Context context){
-        AlertDialog.Builder alertDialog = new AlertDialog.Builder(context, R.style.myDialogTheme);
-        alertDialog.setTitle("아이디 중복체크");
-        alertDialog.setMessage(message);
-        alertDialog.setPositiveButton
-                ("확인", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-
-                    }
-                });
-
-        final AlertDialog dialog = alertDialog.create();
-        dialog.setOnShowListener(new DialogInterface.OnShowListener() {
-            @Override
-            public void onShow(DialogInterface dialogInterface) {
-                dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.BLACK);
-            }
-        });
-        alertDialog.setCancelable(false);
-        alertDialog.show();
     }
 
     public void getUserPage1(Context context, int user_id, ImageView page_img_profile, TextView page_txt_userName,TextView page_txt_followerCnt,TextView page_txt_introduce){
@@ -866,7 +804,7 @@ public class VolleyApi {
                                             String strDate = df.format(date);
                                             String content = name+" 님이 게시물을 좋아합니다.\n"+strDate;
 
-                                            Alram alram = new Alram(post_id,photo,profile,content);
+                                            Alram alram = new Alram(post_id,photo,profile,content,1);
                                             list.add(alram);
 
                                         } catch (ParseException e) {
@@ -917,7 +855,7 @@ public class VolleyApi {
                                     for(int i=0; i<items.length(); i++){
                                         JSONObject jsonObject = items.getJSONObject(i);
 
-                                        int id = jsonObject.getInt("comment_id");
+                                        int id = jsonObject.getInt("post_id");
                                         String name = jsonObject.getString("user_name");
                                         String profile = jsonObject.getString("user_profilephoto");
                                         String comment = jsonObject.getString("comment");
@@ -938,7 +876,7 @@ public class VolleyApi {
 
                                             String content = name+" 님이 댓글을 달았습니다.\n"+comment+"\n"+strDate;
 
-                                            Alram alram = new Alram(id,photo,profile,content);
+                                            Alram alram = new Alram(id,photo,profile,content,2);
                                             list.add(alram);
 
                                         } catch (ParseException e) {
@@ -1004,7 +942,7 @@ public class VolleyApi {
 
                                             String content = name+" 님이 회원님을 팔로우 했습니다. \n"+strDate;
 
-                                            Alram alram = new Alram(id,profile,content);
+                                            Alram alram = new Alram(id,profile,content,3);
                                             list.add(alram);
 
                                         } catch (ParseException e) {
@@ -1081,4 +1019,49 @@ public class VolleyApi {
                 };
         requestQueue.add(request);
     }
+
+    public void deleteComment(Context context,int comment_id,String token) {
+        JSONObject body = new JSONObject();
+        try {
+            body.put("comment_id", comment_id);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        JsonObjectRequest request = new JsonObjectRequest(
+                Request.Method.POST,Util.DELETE_COMMENT,body,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            boolean success = response.getBoolean("success");
+                            if (success == false) {
+                                Toast.makeText(context, "떙", Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+                            Toast.makeText(context, R.string.delete_comment_complete, Toast.LENGTH_SHORT).show();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                    }
+                }
+        )  {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("Authorization", "Bearer " + token);
+                return params;
+            }
+        } ;
+        Volley.newRequestQueue(context).add(request);
+    }
+
+
+
+
 }

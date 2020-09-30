@@ -8,18 +8,18 @@
     android:background="@color/mainColor"
     tools:context=".fragment.Fragment_Write">
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/fw_topbtn_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
         <Button
-            android:id="@+id/button2"
+            android:id="@+id/fw_btn_cancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="300dp"
-            android:layout_weight="1"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
             android:background="@color/mainColor"
             android:text="취소"
             android:textColor="#E91E63"
@@ -29,13 +29,14 @@
             android:id="@+id/fw_btn_upload"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="top"
-            android:layout_weight="1"
+            android:layout_alignParentLeft="false"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
             android:background="@color/mainColor"
             android:text="업로드하기"
             android:textSize="14sp" />
 
-    </LinearLayout>
+    </RelativeLayout>
 
     <ScrollView
         android:layout_width="match_parent"
@@ -63,7 +64,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="업로드" />
+                android:text="사진 선택" />
 
             <EditText
                 android:id="@+id/fw_edit_content"

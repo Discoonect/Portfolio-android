@@ -19,7 +19,6 @@ import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.DocumentsContract;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -39,7 +38,7 @@ import com.kks.portfolio_android.R;
 import com.kks.portfolio_android.api.NetworkClient;
 import com.kks.portfolio_android.api.UserApi;
 import com.kks.portfolio_android.api.VolleyApi;
-import com.kks.portfolio_android.model.UserRes;
+import com.kks.portfolio_android.retrofitmodel.user.UserRes;
 import com.kks.portfolio_android.util.Util;
 
 import org.json.JSONObject;
@@ -171,6 +170,7 @@ public class SettingActivity extends AppCompatActivity {
                 }
 
                 Toast.makeText(SettingActivity.this, R.string.setting_complete, Toast.LENGTH_SHORT).show();
+                finish();
 
             }
         });

@@ -5,18 +5,16 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.android.volley.RequestQueue;
 import com.kks.portfolio_android.R;
-import com.kks.portfolio_android.api.VolleyApi;
+import com.kks.portfolio_android.api.RetrofitApi;
 import com.kks.portfolio_android.util.Util;
-
-import java.io.File;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -39,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        VolleyApi volleyApi = new VolleyApi();
+        RetrofitApi retrofitApi = new RetrofitApi();
 
         main_btn_login = findViewById(R.id.main_btn_login);
         main_btn_regist = findViewById(R.id.main_btn_regist);
@@ -51,10 +49,10 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-        SharedPreferences sharedPreferences =
-                getSharedPreferences(Util.PREFERENCE_NAME,MODE_PRIVATE);
-        auto = sharedPreferences.getString("auto",null);
-        token = sharedPreferences.getString("token",null);
+//        SharedPreferences sharedPreferences =
+//                getSharedPreferences(Util.PREFERENCE_NAME,MODE_PRIVATE);
+//        auto = sharedPreferences.getString("auto",null);
+//        token = sharedPreferences.getString("token",null);
 
         if(auto!=null){
             if(auto.equals(Util.AUTO_LOGIN_ON)){
@@ -78,12 +76,13 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 name = main_edit_name.getText().toString().trim();
                 passwd = main_edit_password.getText().toString().trim();
+                Log.i("aaa",name+passwd);
 
                 if(name.isEmpty()||passwd.isEmpty()){
                     Toast.makeText(MainActivity.this, R.string.please_enter_email_password, Toast.LENGTH_SHORT).show();
                     return;
                 }
-                volleyApi.login(name,passwd,MainActivity.this,auto_login_check);
+                retrofitApi.login(MainActivity.this,name,passwd,auto_login_check);
             }
         });
     }

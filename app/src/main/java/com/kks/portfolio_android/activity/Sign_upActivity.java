@@ -8,7 +8,6 @@ import androidx.core.content.ContextCompat;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -17,7 +16,6 @@ import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.DocumentsContract;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -25,24 +23,14 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
 import com.kks.portfolio_android.R;
+import com.kks.portfolio_android.alertDialog.CustomAlertDialog;
 import com.kks.portfolio_android.api.NetworkClient;
-import com.kks.portfolio_android.api.PostApi;
+import com.kks.portfolio_android.api.RetrofitApi;
 import com.kks.portfolio_android.api.UserApi;
-import com.kks.portfolio_android.api.VolleyApi;
-import com.kks.portfolio_android.fragment.Fragment_Home;
-import com.kks.portfolio_android.model.User;
-import com.kks.portfolio_android.model.UserRes;
-import com.kks.portfolio_android.util.Util;
-
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.kks.portfolio_android.retrofitmodel.user.UserReq;
+import com.kks.portfolio_android.retrofitmodel.user.UserRes;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -53,11 +41,9 @@ import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import okhttp3.MediaType;
-import okhttp3.MultipartBody;
-import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
+import retrofit2.Response;
 import retrofit2.Retrofit;
 
 public class Sign_upActivity extends AppCompatActivity {
@@ -83,7 +69,7 @@ public class Sign_upActivity extends AppCompatActivity {
     String password2;
     String phone;
 
-    VolleyApi volleyApi = new VolleyApi();
+    RetrofitApi retrofitApi = new RetrofitApi();
 
     int check_name=0;
 
@@ -104,7 +90,6 @@ public class Sign_upActivity extends AppCompatActivity {
         signup_btn_gallery = findViewById(R.id.signup_btn_gallery);
 
         signup_img_profile = findViewById(R.id.signup_img_profile);
-
 
         signup_btn_cancle.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -165,15 +150,50 @@ public class Sign_upActivity extends AppCompatActivity {
 
 
                 if(photoFile==null){
-                    volleyApi.signUp(name,password1,phone,Sign_upActivity.this);
+                    retrofitApi.signUp(Sign_upActivity.this,name,password1,phone);
                 }else{
-                    volleyApi.signUpWithProfile(name, password1, phone, Sign_upActivity.this,photoFile);
+                    retrofitApi.signUpWithProfile(Sign_upActivity.this,name,password1,phone,photoFile);
+                }
+            }
+        });
+    }
+
+    public void checkName(String name,Context context){
+        CustomAlertDialog customAlertDialog = new CustomAlertDialog();
+        UserReq userReq = new UserReq(name);
+
+        Retrofit retrofit = NetworkClient.getRetrofitClient(context);
+        UserApi userApi = retrofit.create(UserApi.class);
+
+        Call<UserRes> userResCall = userApi.checkName(userReq);
+        userResCall.enqueue(new Callback<UserRes>() {
+            @Override
+            public void onResponse(Call<UserRes> call, Response<UserRes> response) {
+
+                if(response.isSuccessful()) {
+                    String message = response.body().getMessage();
+                    customAlertDialog.alertDialog_checked(message,context);
+                    check_name=1;
+                }else{
+                    customAlertDialog.alertDialog_Unchecked("이미 사용중인 아이디 입니다",context);
+                    check_name=0;
                 }
 
-                finish();
+            }
+            @Override
+            public void onFailure(Call<UserRes> call, Throwable t) {
 
             }
         });
+    }
+
+    private boolean checkPermission(){
+        int result = ContextCompat.checkSelfPermission(Sign_upActivity.this,Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        if(result == PackageManager.PERMISSION_DENIED){
+            return true;
+        }else{
+            return false;
+        }
     }
 
     private void requestPermission() {
@@ -191,55 +211,6 @@ public class Sign_upActivity extends AppCompatActivity {
         i.setType("image/*");
         i.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(Intent.createChooser(i, "SELECT IMAGE"), 300);
-    }
-
-    public void checkName(String name,Context context){
-        JSONObject body = new JSONObject();
-        try {
-            body.put("user_name", name);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        RequestQueue requestQueue = Volley.newRequestQueue(context);
-        JsonObjectRequest request =
-                new JsonObjectRequest(Request.Method.POST,Util.CHECK_ID, body,
-                        new Response.Listener<JSONObject>() {
-                            @Override
-                            public void onResponse(JSONObject response) {
-                                try {
-
-                                    boolean success = response.getBoolean("success");
-                                    String message = response.getString("message");
-
-                                    if (success) {
-                                        volleyApi.alertDialog_checked(message,context);
-                                        check_name=1;
-                                    } else {
-                                        volleyApi.alertDialog_Unchecked(message,context);
-                                        check_name=0;
-                                    }
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        },
-                        new Response.ErrorListener() {
-                            @Override
-                            public void onErrorResponse(VolleyError error) {
-
-                            }
-                        }
-                );
-        requestQueue.add(request);
-    }
-
-    private boolean checkPermission(){
-        int result = ContextCompat.checkSelfPermission(Sign_upActivity.this,Manifest.permission.WRITE_EXTERNAL_STORAGE);
-        if(result == PackageManager.PERMISSION_DENIED){
-            return true;
-        }else{
-            return false;
-        }
     }
 
     @Override
@@ -344,4 +315,6 @@ public class Sign_upActivity extends AppCompatActivity {
             return null;
         }
     }
+
+
 }

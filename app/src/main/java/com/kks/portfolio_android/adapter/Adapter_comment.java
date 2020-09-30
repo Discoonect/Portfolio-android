@@ -22,6 +22,7 @@ import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.kks.portfolio_android.activity.PageActivity;
 import com.kks.portfolio_android.R;
+import com.kks.portfolio_android.api.VolleyApi;
 import com.kks.portfolio_android.model.Comments;
 import com.kks.portfolio_android.util.Util;
 
@@ -80,16 +81,17 @@ public class Adapter_comment extends RecyclerView.Adapter<Adapter_comment.ViewHo
         }
         SharedPreferences sharedPreferences =
                 context.getSharedPreferences(Util.PREFERENCE_NAME,MODE_PRIVATE);
-        int sp_user_id = sharedPreferences.getInt("user_id",1);
+        int sp_user_id = sharedPreferences.getInt("user_id",0);
 
-        if(sp_user_id!=commentArrayList.get(position).getUser_id()){
-            holder.cm_img_delete.setVisibility(View.GONE);
-        }else{
+        if(sp_user_id==commentArrayList.get(position).getUser_id() || sp_user_id==commentArrayList.get(position).getPost_user_id()){
             holder.cm_img_delete.setVisibility(VISIBLE);
+        }else{
+            holder.cm_img_delete.setVisibility(View.GONE);
+
         }
 
         if(comments.getUser_profile()!="null"){
-            Glide.with(context).load(Util.BASE_URL+"/public/uploads/"+comments.getUser_profile()).into(holder.cm_img_profile);
+            Glide.with(context).load(Util.IMAGE_PATH+comments.getUser_profile()).into(holder.cm_img_profile);
         }else{
             holder.cm_img_profile.setImageResource(R.drawable.ic_baseline_account_circle_24);
         }
@@ -120,6 +122,9 @@ public class Adapter_comment extends RecyclerView.Adapter<Adapter_comment.ViewHo
             cm_img_delete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+
+                    VolleyApi volleyApi = new VolleyApi();
+
                     Comments comments = commentArrayList.get(getBindingAdapterPosition());
                     int comment_id = comments.getComment_id();
 
@@ -127,7 +132,7 @@ public class Adapter_comment extends RecyclerView.Adapter<Adapter_comment.ViewHo
                             context.getSharedPreferences(Util.PREFERENCE_NAME,MODE_PRIVATE);
                     String token = sharedPreferences.getString("token",null);
 
-                    deleteComment(comment_id,token);
+                    volleyApi.deleteComment(context,comment_id,token);
                     commentArrayList.remove(comments);
                     notifyDataSetChanged();
                 }
@@ -154,54 +159,6 @@ public class Adapter_comment extends RecyclerView.Adapter<Adapter_comment.ViewHo
                     context.startActivity(i);
                 }
             });
-        }
-
-        private void deleteComment(int comment_id,String token) {
-            JSONObject body = new JSONObject();
-            try {
-                body.put("comment_id", comment_id);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            JsonObjectRequest request = new JsonObjectRequest(
-                    Request.Method.POST,
-                    Util.BASE_URL + "/api/v1/comment/deletecomment",
-                    body,
-                    new Response.Listener<JSONObject>() {
-                        @Override
-                        public void onResponse(JSONObject response) {
-                            try {
-                                boolean success = response.getBoolean("success");
-
-                                if (success == false) {
-                                    Toast.makeText(context, "떙", Toast.LENGTH_SHORT).show();
-                                    return;
-                                }
-
-                                Toast.makeText(context, "댓글 삭제 성공", Toast.LENGTH_SHORT).show();
-
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-
-                        }
-                    },
-                    new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                        }
-                    }
-            )  {
-                @Override
-                public Map<String, String> getHeaders() throws AuthFailureError {
-                    Map<String, String> params = new HashMap<>();
-                    params.put("Authorization", "Bearer " + token);
-                    return params;
-                }
-            } ;
-            Volley.newRequestQueue(context).add(request);
-
-
         }
     }
 }

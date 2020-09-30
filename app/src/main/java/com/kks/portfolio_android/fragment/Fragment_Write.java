@@ -17,7 +17,6 @@ import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.DocumentsContract;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,7 +31,7 @@ import com.kks.portfolio_android.activity.MainActivity;
 import com.kks.portfolio_android.R;
 import com.kks.portfolio_android.api.NetworkClient;
 import com.kks.portfolio_android.api.PostApi;
-import com.kks.portfolio_android.model.UserRes;
+import com.kks.portfolio_android.retrofitmodel.user.UserRes;
 import com.kks.portfolio_android.util.Util;
 
 import java.io.File;
@@ -113,8 +112,7 @@ public class Fragment_Write extends Fragment {
 
                 Retrofit retrofit = NetworkClient.getRetrofitClient(getContext());
                 RequestBody fileBody = RequestBody.create(MediaType.parse("image/*"), photoFile);
-                MultipartBody.Part part = MultipartBody.Part.createFormData("photo",
-                        photoFile.getName(), fileBody);
+                MultipartBody.Part part = MultipartBody.Part.createFormData("photo",photoFile.getName(), fileBody);
                 RequestBody textBody = RequestBody.create(MediaType.parse("text/plain"), content);
 
                 PostApi postApi = retrofit.create(PostApi.class);

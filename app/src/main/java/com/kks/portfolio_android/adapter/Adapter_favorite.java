@@ -1,6 +1,7 @@
 package com.kks.portfolio_android.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +14,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.kks.portfolio_android.R;
+import com.kks.portfolio_android.activity.CommentActivity;
+import com.kks.portfolio_android.activity.PageActivity;
+import com.kks.portfolio_android.activity.PostingActivity;
 import com.kks.portfolio_android.model.Alram;
 import com.kks.portfolio_android.model.Posting;
 import com.kks.portfolio_android.util.Util;
@@ -27,11 +31,11 @@ import java.util.TimeZone;
 public class Adapter_favorite extends RecyclerView.Adapter<Adapter_favorite.ViewHolder> {
 
     Context context;
-    ArrayList<Alram> postArrayList;
+    ArrayList<Alram> alramArrayList;
 
-    public Adapter_favorite(Context context, ArrayList<Alram> postArrayList) {
+    public Adapter_favorite(Context context, ArrayList<Alram> alramArrayList) {
         this.context = context;
-        this.postArrayList = postArrayList;
+        this.alramArrayList = alramArrayList;
     }
     @NonNull
     @Override
@@ -43,7 +47,8 @@ public class Adapter_favorite extends RecyclerView.Adapter<Adapter_favorite.View
 
     @Override
     public void onBindViewHolder(@NonNull Adapter_favorite.ViewHolder holder, int position) {
-        Alram alram = postArrayList.get(position);
+        Alram alram = alramArrayList.get(position);
+
 
         if(alram.getPhoto()!=null) {
             Glide.with(context).load(alram.getPhoto()).into(holder.ff_img_postImg);
@@ -52,7 +57,7 @@ public class Adapter_favorite extends RecyclerView.Adapter<Adapter_favorite.View
         }
 
         if(alram.getProfile()!="null"){
-            Glide.with(context).load(Util.BASE_URL+"/public/uploads/"+alram.getProfile()).into(holder.ff_profile);
+            Glide.with(context).load(Util.IMAGE_PATH+alram.getProfile()).into(holder.ff_profile);
         }else{
             holder.ff_profile.setImageResource(R.drawable.ic_baseline_account_circle_24);
         }
@@ -63,7 +68,7 @@ public class Adapter_favorite extends RecyclerView.Adapter<Adapter_favorite.View
 
     @Override
     public int getItemCount() {
-        return postArrayList.size();
+        return alramArrayList.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder{
@@ -78,6 +83,26 @@ public class Adapter_favorite extends RecyclerView.Adapter<Adapter_favorite.View
             ff_profile = itemView.findViewById(R.id.ff_profile);
             ff_img_postImg = itemView.findViewById(R.id.ff_img_postImg);
             ff_txt_content = itemView.findViewById(R.id.ff_txt_content);
+
+            ff_txt_content.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Alram alram = alramArrayList.get(getBindingAdapterPosition());
+                    if(alram.getStatus()==1){
+                        Intent i = new Intent(context, PostingActivity.class);
+                        i.putExtra("post_id",alram.getId());
+                        context.startActivity(i);
+                    }else if(alram.getStatus()==2){
+                        Intent i = new Intent(context, CommentActivity.class);
+                        i.putExtra("post_id",alram.getId());
+                        context.startActivity(i);
+                    }else if(alram.getStatus()==3){
+                        Intent i = new Intent(context, PageActivity.class);
+                        i.putExtra("user_id",alram.getId());
+                        context.startActivity(i);
+                    }
+                }
+            });
             
         }
     }
