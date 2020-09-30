@@ -37,7 +37,6 @@ import static android.content.Context.MODE_PRIVATE;
 public class RetrofitApi {
 
     UserReq userReq = new UserReq();
-    UserRes userRes = new UserRes();
 
     public void login(Context context, String name, String passwd, CheckBox auto_login_check){
         userReq = new UserReq(name, passwd);
@@ -194,5 +193,11 @@ public class RetrofitApi {
 
             }
         });
+    }
+
+    public void getUserPage1(Context context){
+        Retrofit retrofit = NetworkClient.getRetrofitClient(context);
+        UserApi userApi = retrofit.create(UserApi.class);
+
     }
 }

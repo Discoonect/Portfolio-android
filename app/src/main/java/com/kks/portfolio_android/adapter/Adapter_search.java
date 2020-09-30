@@ -16,6 +16,7 @@ import com.kks.portfolio_android.activity.PostingActivity;
 import com.kks.portfolio_android.R;
 import com.kks.portfolio_android.model.Posting;
 import com.kks.portfolio_android.retrofitmodel.Items;
+import com.kks.portfolio_android.util.Util;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,7 +42,7 @@ public class Adapter_search extends RecyclerView.Adapter<Adapter_search.ViewHold
     public void onBindViewHolder(@NonNull Adapter_search.ViewHolder holder, int position) {
         Items items = itemsList.get(position);
 
-        Glide.with(context).load(items.getPhoto_url()).into(holder.fs_img_posting);
+        Glide.with(context).load(Util.IMAGE_PATH+items.getPhoto_url()).into(holder.fs_img_posting);
 
         holder.fs_img_likeCnt.setText(""+items.getCnt_like());
     }
