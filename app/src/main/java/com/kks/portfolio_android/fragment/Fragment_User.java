@@ -28,6 +28,7 @@ import com.bumptech.glide.Glide;
 import com.kks.portfolio_android.activity.MainActivity;
 import com.kks.portfolio_android.R;
 import com.kks.portfolio_android.adapter.Adapter_user;
+import com.kks.portfolio_android.api.RetrofitApi;
 import com.kks.portfolio_android.follow.Follower_Activity;
 import com.kks.portfolio_android.follow.Following_Activity;
 import com.kks.portfolio_android.model.Posting;
@@ -56,15 +57,18 @@ public class Fragment_User extends Fragment {
     TextView fu_txt_introduce;
 
     RecyclerView recyclerView;
-    Adapter_user adapter_user;
 
     ArrayList<Posting> postingArrayList = new ArrayList<>();
 
     JSONObject jsonObject = new JSONObject();
 
+    RetrofitApi retrofitApi = new RetrofitApi();
+
     String token;
-    int offset=0;
+    int offset;
     int user_id;
+    int limit = 25;
+
 
     public static Fragment_User newInstance(){
         return new Fragment_User();
@@ -81,12 +85,11 @@ public class Fragment_User extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        postingArrayList.clear();
+
         recyclerView = getView().findViewById(R.id.fu_recyclerView);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(),3));
-
-
-
 
         SharedPreferences sharedPreferences =
                 getContext().getSharedPreferences(Util.PREFERENCE_NAME,MODE_PRIVATE);
@@ -111,77 +114,61 @@ public class Fragment_User extends Fragment {
                 getContext().startActivity(i);
             }
         });
+
+//        retrofitApi.getUserPage1(getContext(),user_id,fu_img_profile,fu_txt_userId,fu_txt_followerCnt,fu_txt_introduce);
+//        retrofitApi.getUserPage2(getContext(),user_id,fu_txt_postingCnt,fu_txt_followingCnt);
+        retrofitApi.getPagePhoto(getContext(),user_id,offset,limit,recyclerView);
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
+//    private void getMyPosting(int user_id) {
+//        requestQueue = Volley.newRequestQueue(getContext());
+//        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET,
+//                Util.BASE_URL + "/api/v1/post/getpostphotourl/"+user_id+"?offset="+offset+"&limit=25",
+//                null,
+//                new Response.Listener<JSONObject>() {
+//                    @Override
+//                    public void onResponse(JSONObject response) {
+//                        Log.i("aaa",response.toString());
+//
+//                        try {
+//                            boolean success = response.getBoolean("success");
+//                            if (success == false) {
+//                                Toast.makeText(getActivity(), "다시 시도 해주세요.", Toast.LENGTH_SHORT).show();
+//                                return;
+//                            }
+//
+//                            JSONArray items = response.getJSONArray("items");
+//
+//                            for(int i=0; i<items.length();i++){
+//                                jsonObject = items.getJSONObject(i);
+//
+//                                int post_id = jsonObject.getInt("id");
+//                                int user_id = jsonObject.getInt("user_id");
+//
+//                                String photo = jsonObject.getString("photo_url");
+//                                String photo_url = Util.BASE_URL+"/public/uploads/"+photo;
+//
+//                                Posting posting = new Posting(post_id,user_id,photo_url);
+//
+//                                postingArrayList.add(posting);
+//                            }
+//                            adapter_user = new Adapter_user(getActivity(), postingArrayList);
+//                            recyclerView.setAdapter(adapter_user);
+//                        } catch (JSONException e) {
+//                            e.printStackTrace();
+//                        }
+//                    }
+//                },
+//                new Response.ErrorListener() {
+//                    @Override
+//                    public void onErrorResponse(VolleyError error) {
+//                    }
+//                }
+//        );
+//        requestQueue.add(jsonObjectRequest);
+//    }
 
-        if (token == null) {
-            Toast.makeText(getContext(), "로그인을 해주세요", Toast.LENGTH_SHORT).show();
-            Intent i = new Intent(getContext(), MainActivity.class);
-            startActivity(i);
-            getActivity().finish();
-        }
-
-        Log.i("aaa","user_id : "+user_id+"    token : "+token);
-
-        postingArrayList.clear();
-
-        getUserData(token);
-        getUserData2(token);
-        getMyPosting(user_id);
-    }
-
-    private void getMyPosting(int user_id) {
-        requestQueue = Volley.newRequestQueue(getContext());
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET,
-                Util.BASE_URL + "/api/v1/post/getpostphotourl/"+user_id+"?offset="+offset+"&limit=25",
-                null,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        Log.i("aaa",response.toString());
-
-                        try {
-                            boolean success = response.getBoolean("success");
-                            if (success == false) {
-                                Toast.makeText(getActivity(), "다시 시도 해주세요.", Toast.LENGTH_SHORT).show();
-                                return;
-                            }
-
-                            JSONArray items = response.getJSONArray("items");
-
-                            for(int i=0; i<items.length();i++){
-                                jsonObject = items.getJSONObject(i);
-
-                                int post_id = jsonObject.getInt("id");
-                                int user_id = jsonObject.getInt("user_id");
-
-                                String photo = jsonObject.getString("photo_url");
-                                String photo_url = Util.BASE_URL+"/public/uploads/"+photo;
-
-                                Posting posting = new Posting(post_id,user_id,photo_url);
-
-                                postingArrayList.add(posting);
-                            }
-                            adapter_user = new Adapter_user(getActivity(), postingArrayList);
-                            recyclerView.setAdapter(adapter_user);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                    }
-                }
-        );
-        requestQueue.add(jsonObjectRequest);
-    }
     private void getUserData2(String token) {
-
         fu_txt_postingCnt = getView().findViewById(R.id.fu_txt_postingCnt);
         fu_txt_followingCnt = getView().findViewById(R.id.fu_txt_followingCnt);
 
@@ -208,8 +195,6 @@ public class Fragment_User extends Fragment {
 
                             fu_txt_postingCnt.setText(""+posting_cnt);
                             fu_txt_followingCnt.setText(""+following_cnt);
-
-
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }

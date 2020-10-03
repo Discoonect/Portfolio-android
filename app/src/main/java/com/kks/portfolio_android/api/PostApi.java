@@ -17,14 +17,14 @@ import retrofit2.http.Query;
 
 public interface PostApi {
 
-    @GET("/api/v1/post/getallpost")
+    @GET(Util.GET_ALL_POST)
     Call<PostRes> getAllPost(@Header("Authorization") String token,
                              @Query("offset") int offset,
                              @Query("limit") int limit);
 
     // 파일 전송을 가능하게 해준다. => @Multipart
     @Multipart
-    @POST("/api/v1/post/uploadpost")
+    @POST(Util.UPLOAD_POST)
     Call<UserRes> createPost(@Header("Authorization") String token,
                              @Part MultipartBody.Part file,
                              @Part("content") RequestBody requestBody);

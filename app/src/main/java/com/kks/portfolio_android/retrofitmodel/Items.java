@@ -4,6 +4,11 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class Items {
+
+    @SerializedName("id")
+    @Expose
+    private Integer id;
+
     @SerializedName("post_id")
     @Expose
     private Integer post_id;
@@ -55,6 +60,22 @@ public class Items {
     @SerializedName("cnt_like")
     @Expose
     private Integer cnt_like;
+
+    @SerializedName("cnt_post")
+    @Expose
+    private Integer cnt_post;
+
+    @SerializedName("following")
+    @Expose
+    private Integer following_cnt;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
     public Integer getCnt_like() {
         return cnt_like;
@@ -158,5 +179,21 @@ public class Items {
 
     public void setFollwer_cnt(Integer follwer_cnt) {
         this.follwer_cnt = follwer_cnt;
+    }
+
+    public Integer getCnt_post() {
+        return cnt_post;
+    }
+
+    public void setCnt_post(Integer cnt_post) {
+        this.cnt_post = cnt_post;
+    }
+
+    public Integer getFollowing_cnt() {
+        return following_cnt;
+    }
+
+    public void setFollowing_cnt(Integer following_cnt) {
+        this.following_cnt = following_cnt;
     }
 }

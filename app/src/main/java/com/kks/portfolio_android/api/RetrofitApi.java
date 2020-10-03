@@ -6,14 +6,18 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.util.Log;
 import android.widget.CheckBox;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.kks.portfolio_android.R;
 import com.kks.portfolio_android.activity.HomeActivity;
 import com.kks.portfolio_android.adapter.Adapter_home;
 import com.kks.portfolio_android.adapter.Adapter_search;
+import com.kks.portfolio_android.adapter.Adapter_user;
 import com.kks.portfolio_android.retrofitmodel.Items;
 import com.kks.portfolio_android.retrofitmodel.post.PostRes;
 import com.kks.portfolio_android.retrofitmodel.user.UserReq;
@@ -146,7 +150,6 @@ public class RetrofitApi {
     }
 
     public void getPostingData(Context context, String token, RecyclerView recyclerView){
-
         Retrofit retrofit = NetworkClient.getRetrofitClient(context);
         PostApi postApi = retrofit.create(PostApi.class);
 
@@ -155,7 +158,7 @@ public class RetrofitApi {
         postResCall.enqueue(new Callback<PostRes>() {
             @Override
             public void onResponse(Call<PostRes> call, Response<PostRes> response) {
-                Log.i("aaa",response.toString());
+
                 if(response.isSuccessful()) {
                     List<Items> itemsList = new ArrayList<>();
                     itemsList = response.body().getItems();
@@ -173,31 +176,110 @@ public class RetrofitApi {
     public void getBestPost(Context context,int offset, int limit,RecyclerView recyclerView){
         Retrofit retrofit = NetworkClient.getRetrofitClient(context);
         PostApi postApi = retrofit.create(PostApi.class);
-
         Call<PostRes> postResCall = postApi.bestPost(offset,limit);
-
         postResCall.enqueue(new Callback<PostRes>() {
             @Override
             public void onResponse(Call<PostRes> call, Response<PostRes> response) {
-                Log.i("aaa",response.toString());
                 if(response.isSuccessful()) {
-                    List<Items> itemsList = new ArrayList<>();
+                    List<Items> itemsList;
                     itemsList = response.body().getItems();
                     Adapter_search adapter_search = new Adapter_search(context,itemsList);
                     recyclerView.setAdapter(adapter_search);
                 }
             }
-
             @Override
             public void onFailure(Call<PostRes> call, Throwable t) {
-
             }
         });
     }
 
-    public void getUserPage1(Context context){
+    public void getUserPage1(Context context, int user_id, ImageView page_img_profile,
+                             TextView page_txt_userName,TextView page_txt_followerCnt,
+                             TextView page_txt_introduce){
         Retrofit retrofit = NetworkClient.getRetrofitClient(context);
         UserApi userApi = retrofit.create(UserApi.class);
 
+        Call<UserRes> userResCall = userApi.userPage1(user_id);
+
+        userResCall.enqueue(new Callback<UserRes>() {
+            @Override
+            public void onResponse(Call<UserRes> call, Response<UserRes> response) {
+                if(response.isSuccessful()) {
+
+                    String user_name = response.body().getItems().get(0).getUser_name();
+                    String profile = response.body().getItems().get(0).getUser_profilephoto();
+                    String profileUrl = Util.IMAGE_PATH + profile;
+                    String introduce = response.body().getItems().get(0).getIntroduce();
+                    int follower_cnt = response.body().getItems().get(0).getFollwer_cnt();
+
+                    if (introduce.equals("null")) {
+                        introduce = "";
+                    }
+
+                    if (!profile.equals("null")) {
+                        Glide.with(context).load(profileUrl).into(page_img_profile);
+                    } else {
+                        page_img_profile.setImageResource(R.drawable.ic_baseline_account_circle_24);
+                    }
+
+                    page_txt_userName.setText(user_name);
+                    page_txt_followerCnt.setText("" + follower_cnt);
+                    page_txt_introduce.setText(introduce);
+                }
+
+            }
+            @Override
+            public void onFailure(Call<UserRes> call, Throwable t) {
+            }
+        });
+
+    }
+
+    public void getUserPage2(Context context,int user_id,TextView page_txt_postingCnt,
+                             TextView page_txt_followingCnt){
+        Retrofit retrofit = NetworkClient.getRetrofitClient(context);
+        UserApi userApi = retrofit.create(UserApi.class);
+
+        Call<UserRes> userResCall = userApi.userPage2(user_id);
+
+        userResCall.enqueue(new Callback<UserRes>() {
+            @Override
+            public void onResponse(Call<UserRes> call, Response<UserRes> response) {
+                if(response.isSuccessful()) {
+                    int cnt_post = response.body().getItems().get(0).getCnt_post();
+                    int following_cnt = response.body().getItems().get(0).getFollowing_cnt();
+
+                    page_txt_postingCnt.setText(""+cnt_post);
+                    page_txt_followingCnt.setText(""+following_cnt);
+                }
+            }
+            @Override
+            public void onFailure(Call<UserRes> call, Throwable t) {
+            }
+        });
+    }
+
+    public void getPagePhoto(Context context,int user_id,int offset,int limit,RecyclerView recyclerView){
+        Retrofit retrofit = NetworkClient.getRetrofitClient(context);
+        UserApi userApi = retrofit.create(UserApi.class);
+
+        Call<UserRes> userResCall = userApi.getPagePhoto(user_id,offset,limit);
+
+        userResCall.enqueue(new Callback<UserRes>() {
+            @Override
+            public void onResponse(Call<UserRes> call, Response<UserRes> response) {
+
+                if(response.isSuccessful()) {
+                    ArrayList<Items> itemsList = response.body().getItems();
+                    Adapter_user adapter_user = new Adapter_user(context,itemsList);
+                    recyclerView.setAdapter(adapter_user);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<UserRes> call, Throwable t) {
+
+            }
+        });
     }
 }

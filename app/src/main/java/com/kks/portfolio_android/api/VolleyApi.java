@@ -292,55 +292,55 @@ public class VolleyApi {
         requestQueue.add(jsonObjectRequest);
     }
 
-    public void getUserPosting(Context context, int user_id, int offset, RecyclerView recyclerView){
-
-        ArrayList<Posting> postingArrayList = new ArrayList<>();
-
-        RequestQueue requestQueue = Volley.newRequestQueue(context);
-
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET,
-                Util.BASE_URL + "/api/v1/post/getpostphotourl/"+user_id+"?offset="+offset+"&limit=25",
-                null,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-
-                        try {
-                            boolean success = response.getBoolean("success");
-                            if (success == false) {
-                                Toast.makeText(context, "다시 시도 해주세요.", Toast.LENGTH_SHORT).show();
-                                return;
-                            }
-
-                            JSONArray items = response.getJSONArray("items");
-
-                            for(int i=0; i<items.length();i++){
-                                JSONObject jsonObject = items.getJSONObject(i);
-
-                                int post_id = jsonObject.getInt("id");
-
-                                String photo = jsonObject.getString("photo_url");
-                                String photo_url = Util.BASE_URL+"/public/uploads/"+photo;
-
-                                Posting posting = new Posting(post_id,photo_url);
-
-                                postingArrayList.add(posting);
-                            }
-                            Adapter_user  adapter_user = new Adapter_user(context, postingArrayList);
-                            recyclerView.setAdapter(adapter_user);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                    }
-                }
-        );
-        requestQueue.add(jsonObjectRequest);
-    }
+//    public void getUserPosting(Context context, int user_id, int offset, RecyclerView recyclerView){
+//
+//        ArrayList<Posting> postingArrayList = new ArrayList<>();
+//
+//        RequestQueue requestQueue = Volley.newRequestQueue(context);
+//
+//        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET,
+//                Util.BASE_URL + "/api/v1/post/getpostphotourl/"+user_id+"?offset="+offset+"&limit=25",
+//                null,
+//                new Response.Listener<JSONObject>() {
+//                    @Override
+//                    public void onResponse(JSONObject response) {
+//
+//                        try {
+//                            boolean success = response.getBoolean("success");
+//                            if (success == false) {
+//                                Toast.makeText(context, "다시 시도 해주세요.", Toast.LENGTH_SHORT).show();
+//                                return;
+//                            }
+//
+//                            JSONArray items = response.getJSONArray("items");
+//
+//                            for(int i=0; i<items.length();i++){
+//                                JSONObject jsonObject = items.getJSONObject(i);
+//
+//                                int post_id = jsonObject.getInt("id");
+//
+//                                String photo = jsonObject.getString("photo_url");
+//                                String photo_url = Util.BASE_URL+"/public/uploads/"+photo;
+//
+//                                Posting posting = new Posting(post_id,photo_url);
+//
+//                                postingArrayList.add(posting);
+//                            }
+//                            Adapter_user  adapter_user = new Adapter_user(context, postingArrayList);
+//                            recyclerView.setAdapter(adapter_user);
+//                        } catch (JSONException e) {
+//                            e.printStackTrace();
+//                        }
+//                    }
+//                },
+//                new Response.ErrorListener() {
+//                    @Override
+//                    public void onErrorResponse(VolleyError error) {
+//                    }
+//                }
+//        );
+//        requestQueue.add(jsonObjectRequest);
+//    }
 
     public void getSettingData(Context context, int user_id, TextView setting_txt_userName,ImageView setting_img_profile, EditText setting_edit_introduce){
         RequestQueue requestQueue = Volley.newRequestQueue(context);
@@ -448,7 +448,7 @@ public class VolleyApi {
                         new Response.Listener<JSONObject>() {
                             @Override
                             public void onResponse(JSONObject response) {
-                                Log.i("aaa",response.toString());
+
                                 try{
                                     boolean success = response.getBoolean("success");
                                     if(success==false){

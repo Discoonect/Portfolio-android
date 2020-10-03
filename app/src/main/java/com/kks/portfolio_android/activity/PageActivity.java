@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.android.volley.RequestQueue;
 import com.kks.portfolio_android.R;
+import com.kks.portfolio_android.api.RetrofitApi;
 import com.kks.portfolio_android.api.VolleyApi;
 import com.kks.portfolio_android.follow.Follower_Activity;
 import com.kks.portfolio_android.follow.Following_Activity;
@@ -45,10 +46,12 @@ public class PageActivity extends AppCompatActivity {
     Button page_btn_unFollow;
 
     VolleyApi volleyApi = new VolleyApi();
+    RetrofitApi retrofitApi = new RetrofitApi();
 
     int sp_user_id;
     int offset;
     int user_id;
+    int limit = 25;
 
 
     @Override
@@ -121,11 +124,11 @@ public class PageActivity extends AppCompatActivity {
         });
 
 
-        volleyApi.getUserPage1(PageActivity.this,user_id,page_img_profile,page_txt_userName,page_txt_followerCnt,page_txt_introduce);
+        retrofitApi.getUserPage1(PageActivity.this,user_id,page_img_profile,page_txt_userName,page_txt_followerCnt,page_txt_introduce);
 
-        volleyApi.getUserPage2(PageActivity.this,user_id,page_txt_postingCnt,page_txt_followingCnt);
+        retrofitApi.getUserPage2(PageActivity.this,user_id,page_txt_postingCnt,page_txt_followingCnt);
 
-        volleyApi.getUserPosting(PageActivity.this,user_id,offset,recyclerView);
+        retrofitApi.getPagePhoto(PageActivity.this,user_id,offset,limit,recyclerView);
 
         volleyApi.checkFollow(PageActivity.this,sp_user_id,user_id,token,page_btn_follow,page_btn_unFollow);
 
@@ -134,6 +137,5 @@ public class PageActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-
     }
 }

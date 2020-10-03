@@ -49,10 +49,10 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-//        SharedPreferences sharedPreferences =
-//                getSharedPreferences(Util.PREFERENCE_NAME,MODE_PRIVATE);
-//        auto = sharedPreferences.getString("auto",null);
-//        token = sharedPreferences.getString("token",null);
+        SharedPreferences sharedPreferences =
+                getSharedPreferences(Util.PREFERENCE_NAME,MODE_PRIVATE);
+        auto = sharedPreferences.getString("auto",null);
+        token = sharedPreferences.getString("token",null);
 
         if(auto!=null){
             if(auto.equals(Util.AUTO_LOGIN_ON)){
@@ -76,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 name = main_edit_name.getText().toString().trim();
                 passwd = main_edit_password.getText().toString().trim();
-                Log.i("aaa",name+passwd);
+
 
                 if(name.isEmpty()||passwd.isEmpty()){
                     Toast.makeText(MainActivity.this, R.string.please_enter_email_password, Toast.LENGTH_SHORT).show();

@@ -4,6 +4,7 @@ import android.content.ClipData;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.kks.portfolio_android.retrofitmodel.Items;
 
 import java.util.List;
 
@@ -14,7 +15,7 @@ public class PostRes {
     private Boolean success;
     @SerializedName("items")
     @Expose
-    private List<ClipData.Item> items = null;
+    private List<Items> items = null;
     @SerializedName("cnt")
     @Expose
     private Integer cnt;
@@ -27,11 +28,11 @@ public class PostRes {
         this.success = success;
     }
 
-    public List<ClipData.Item> getItems() {
+    public List<Items> getItems() {
         return items;
     }
 
-    public void setItems(List<ClipData.Item> items) {
+    public void setItems(List<Items> items) {
         this.items = items;
     }
 

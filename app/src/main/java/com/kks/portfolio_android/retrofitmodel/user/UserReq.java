@@ -18,6 +18,10 @@ public class UserReq {
         this.user_phone = user_phone;
     }
 
+    public UserReq(int user_id) {
+        this.user_id = user_id;
+    }
+
     public UserReq(String user_name) {
         this.user_name = user_name;
     }

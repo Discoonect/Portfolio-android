@@ -15,17 +15,20 @@ import com.bumptech.glide.Glide;
 import com.kks.portfolio_android.activity.PostingActivity;
 import com.kks.portfolio_android.R;
 import com.kks.portfolio_android.model.Posting;
+import com.kks.portfolio_android.retrofitmodel.Items;
+import com.kks.portfolio_android.util.Util;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Adapter_user extends RecyclerView.Adapter<Adapter_user.ViewHolder> {
 
     Context context;
-    ArrayList<Posting> postArrayList;
+    List<Items> itemsList;
 
-    public Adapter_user(Context context, ArrayList<Posting> postArrayList) {
+    public Adapter_user(Context context, List<Items> itemsArrayList) {
         this.context = context;
-        this.postArrayList = postArrayList;
+        this.itemsList = itemsArrayList;
     }
 
     @NonNull
@@ -37,16 +40,15 @@ public class Adapter_user extends RecyclerView.Adapter<Adapter_user.ViewHolder> 
 
     @Override
     public void onBindViewHolder(@NonNull Adapter_user.ViewHolder holder, int position) {
-        Posting posting = postArrayList.get(position);
+        Items items = itemsList.get(position);
 
-        Glide.with(context).load(posting.getPhoto_url()).into(holder.fu_img_postimg);
+        Glide.with(context).load(Util.IMAGE_PATH+items.getPhoto_url()).into(holder.fu_img_postimg);
     }
 
     @Override
     public int getItemCount() {
-        return postArrayList.size();
+        return itemsList.size();
     }
-
 
     public class ViewHolder extends RecyclerView.ViewHolder{
 
@@ -60,13 +62,12 @@ public class Adapter_user extends RecyclerView.Adapter<Adapter_user.ViewHolder> 
                 @Override
                 public void onClick(View view) {
                     int position = getBindingAdapterPosition();
-                    int post_id = postArrayList.get(position).getId();
-                    int user_id = postArrayList.get(position).getUser_id();
+                    int post_id = itemsList.get(position).getId();
+                    int user_id = itemsList.get(position).getUser_id();
 
                     Intent i = new Intent(context, PostingActivity.class);
                     i.putExtra("post_id",post_id);
                     i.putExtra("user_id",user_id);
-                    Log.i("aaa","post_id : "+post_id+"     user_id : "+user_id);
                     context.startActivity(i);
                 }
             });
