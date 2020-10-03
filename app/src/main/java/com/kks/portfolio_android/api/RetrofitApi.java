@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -15,13 +17,21 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.kks.portfolio_android.R;
 import com.kks.portfolio_android.activity.HomeActivity;
+import com.kks.portfolio_android.activity.PostingActivity;
+import com.kks.portfolio_android.adapter.Adapter_comment;
 import com.kks.portfolio_android.adapter.Adapter_home;
 import com.kks.portfolio_android.adapter.Adapter_search;
 import com.kks.portfolio_android.adapter.Adapter_user;
-import com.kks.portfolio_android.retrofitmodel.Items;
-import com.kks.portfolio_android.retrofitmodel.post.PostRes;
-import com.kks.portfolio_android.retrofitmodel.user.UserReq;
-import com.kks.portfolio_android.retrofitmodel.user.UserRes;
+import com.kks.portfolio_android.model.Items;
+import com.kks.portfolio_android.req.CommentReq;
+import com.kks.portfolio_android.req.FollowReq;
+import com.kks.portfolio_android.req.LikeReq;
+import com.kks.portfolio_android.res.CommentRes;
+import com.kks.portfolio_android.res.FollowRes;
+import com.kks.portfolio_android.res.LikeRes;
+import com.kks.portfolio_android.res.PostRes;
+import com.kks.portfolio_android.req.UserReq;
+import com.kks.portfolio_android.res.UserRes;
 import com.kks.portfolio_android.util.Util;
 
 import java.io.File;
@@ -39,11 +49,8 @@ import retrofit2.Retrofit;
 import static android.content.Context.MODE_PRIVATE;
 
 public class RetrofitApi {
-
-    UserReq userReq = new UserReq();
-
     public void login(Context context, String name, String passwd, CheckBox auto_login_check){
-        userReq = new UserReq(name, passwd);
+        UserReq userReq = new UserReq(name, passwd);
 
         Retrofit retrofit = NetworkClient.getRetrofitClient(context);
         UserApi userApi = retrofit.create(UserApi.class);
@@ -87,7 +94,7 @@ public class RetrofitApi {
     }
 
     public void signUp(Context context,String name, String passwd, String phone){
-        userReq = new UserReq(name,passwd,phone );
+        UserReq userReq = new UserReq(name,passwd,phone );
 
         Retrofit retrofit = NetworkClient.getRetrofitClient(context);
         UserApi userApi = retrofit.create(UserApi.class);
@@ -110,7 +117,7 @@ public class RetrofitApi {
     }
 
     public void signUpWithProfile(Context context, String name, String passwd, String phone, File photoFile){
-        userReq = new UserReq(name,passwd,phone );
+        UserReq userReq = new UserReq(name,passwd,phone );
 
         Retrofit retrofit = NetworkClient.getRetrofitClient(context);
         UserApi userApi = retrofit.create(UserApi.class);
@@ -158,14 +165,15 @@ public class RetrofitApi {
         postResCall.enqueue(new Callback<PostRes>() {
             @Override
             public void onResponse(Call<PostRes> call, Response<PostRes> response) {
-
                 if(response.isSuccessful()) {
                     List<Items> itemsList = new ArrayList<>();
                     itemsList = response.body().getItems();
                     Adapter_home adapter_home = new Adapter_home(context, itemsList);
                     recyclerView.setAdapter(adapter_home);
+
                 }
             }
+
             @Override
             public void onFailure(Call<PostRes> call, Throwable t) {
 
@@ -205,28 +213,25 @@ public class RetrofitApi {
             @Override
             public void onResponse(Call<UserRes> call, Response<UserRes> response) {
                 if(response.isSuccessful()) {
-
                     String user_name = response.body().getItems().get(0).getUser_name();
                     String profile = response.body().getItems().get(0).getUser_profilephoto();
                     String profileUrl = Util.IMAGE_PATH + profile;
                     String introduce = response.body().getItems().get(0).getIntroduce();
                     int follower_cnt = response.body().getItems().get(0).getFollwer_cnt();
 
-                    if (introduce.equals("null")) {
+                    if (introduce==null) {
                         introduce = "";
                     }
 
-                    if (!profile.equals("null")) {
+                    if (profile!=null) {
                         Glide.with(context).load(profileUrl).into(page_img_profile);
                     } else {
                         page_img_profile.setImageResource(R.drawable.ic_baseline_account_circle_24);
                     }
-
                     page_txt_userName.setText(user_name);
                     page_txt_followerCnt.setText("" + follower_cnt);
                     page_txt_introduce.setText(introduce);
                 }
-
             }
             @Override
             public void onFailure(Call<UserRes> call, Throwable t) {
@@ -270,16 +275,221 @@ public class RetrofitApi {
             public void onResponse(Call<UserRes> call, Response<UserRes> response) {
 
                 if(response.isSuccessful()) {
-                    ArrayList<Items> itemsList = response.body().getItems();
+                    List<Items> itemsList = response.body().getItems();
                     Adapter_user adapter_user = new Adapter_user(context,itemsList);
                     recyclerView.setAdapter(adapter_user);
                 }
             }
-
             @Override
             public void onFailure(Call<UserRes> call, Throwable t) {
+            }
+        });
+    }
+
+    public void checkFollow(Context context, String token, int following_id,
+                            int user_id, Button page_btn_follow,Button page_btn_unFollow){
+        Retrofit retrofit = NetworkClient.getRetrofitClient(context);
+        FollowApi followApi = retrofit.create(FollowApi.class);
+
+        Call<FollowRes> followResCall = followApi.checkFollow("Bearer " + token,following_id);
+
+        followResCall.enqueue(new Callback<FollowRes>() {
+            @Override
+            public void onResponse(Call<FollowRes> call, Response<FollowRes> response) {
+                if(response.isSuccessful()) {
+                    int follow = response.body().getFollow();
+
+                    if(user_id==following_id){
+                        page_btn_follow.setVisibility(View.GONE);
+                        page_btn_unFollow.setVisibility(View.GONE);
+                    }else if(follow == 0){
+                        page_btn_follow.setVisibility(View.VISIBLE);
+                    }else if(follow==1){
+                        page_btn_unFollow.setVisibility(View.VISIBLE);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<FollowRes> call, Throwable t) {
 
             }
         });
     }
+
+    public void followUser(Context context, int follow_id,String token,
+                           Button page_btn_follow,Button page_btn_unFollow,TextView page_txt_followerCnt){
+        FollowReq followReq = new FollowReq(follow_id);
+
+        Retrofit retrofit = NetworkClient.getRetrofitClient(context);
+        FollowApi followApi = retrofit.create(FollowApi.class);
+
+        Call<FollowRes> followResCall = followApi.followUser("Bearer " + token,followReq);
+
+        followResCall.enqueue(new Callback<FollowRes>() {
+            @Override
+            public void onResponse(Call<FollowRes> call, Response<FollowRes> response) {
+                if(response.isSuccessful()) {
+                    String message = response.body().getMessage();
+
+                    Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+
+                    page_btn_follow.setVisibility(View.INVISIBLE);
+                    page_btn_unFollow.setVisibility(View.VISIBLE);
+
+                    int follower_cnt = Integer.parseInt(page_txt_followerCnt.getText().toString().trim())+1;
+
+                    page_txt_followerCnt.setText(""+follower_cnt);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<FollowRes> call, Throwable t) {
+
+            }
+        });
+    }
+
+    public void cancelFollow(Context context, int follow_id,String token,
+                             Button page_btn_follow,Button page_btn_unFollow,TextView page_txt_followerCnt){
+        FollowReq followReq = new FollowReq(follow_id);
+
+        Retrofit retrofit = NetworkClient.getRetrofitClient(context);
+        FollowApi followApi = retrofit.create(FollowApi.class);
+
+        Call<FollowRes> followResCall = followApi.unFollow("Bearer " + token,followReq);
+
+        followResCall.enqueue(new Callback<FollowRes>() {
+            @Override
+            public void onResponse(Call<FollowRes> call, Response<FollowRes> response) {
+                if(response.isSuccessful()) {
+                    String message = response.body().getMessage();
+
+                    Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+
+                    page_btn_unFollow.setVisibility(View.INVISIBLE);
+                    page_btn_follow.setVisibility(View.VISIBLE);
+
+                    int follower_cnt = Integer.parseInt(page_txt_followerCnt.getText().toString().trim())-1;
+
+                    page_txt_followerCnt.setText(""+follower_cnt);
+                }
+            }
+            @Override
+            public void onFailure(Call<FollowRes> call, Throwable t) {
+            }
+        });
+    }
+
+    public void getCommentData(Context context,int post_id,int offset,int limit,RecyclerView recyclerView){
+        Retrofit retrofit = NetworkClient.getRetrofitClient(context);
+        CommentApi commentApi = retrofit.create(CommentApi.class);
+
+        Call<CommentRes> commentResCall = commentApi.getCommentData(post_id,offset,limit);
+
+        Log.i("aaa","1");
+
+        commentResCall.enqueue(new Callback<CommentRes>() {
+            @Override
+            public void onResponse(Call<CommentRes> call, Response<CommentRes> response) {
+                List<Items> itemsList = new ArrayList<>();
+                itemsList = response.body().getItems();
+                Log.i("aaa",response.body().getItems().get(0).getUser_name());
+                Adapter_comment adapter_comment = new Adapter_comment(context,itemsList);
+                recyclerView.setAdapter(adapter_comment);
+
+            }
+
+            @Override
+            public void onFailure(Call<CommentRes> call, Throwable t) {
+
+            }
+        });
+
+    }
+
+    public void uploadComment(Context context,int post_id,String comment,String token){
+        CommentReq commentReq = new CommentReq(post_id,comment);
+        Retrofit retrofit = NetworkClient.getRetrofitClient(context);
+        CommentApi commentApi =retrofit.create(CommentApi.class);
+
+        Call<CommentRes> commentResCall = commentApi.uploadComment(token,commentReq);
+
+        commentResCall.enqueue(new Callback<CommentRes>() {
+            @Override
+            public void onResponse(Call<CommentRes> call, Response<CommentRes> response) {
+                Toast.makeText(context, R.string.comment_complete, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFailure(Call<CommentRes> call, Throwable t) {
+
+            }
+        });
+
+    }
+
+    public void getLikeCntData(Context context,int post_id,TextView po_txt_cntFavorite){
+        Retrofit retrofit = NetworkClient.getRetrofitClient(context);
+        LikeApi likeApi = retrofit.create(LikeApi.class);
+
+        Call<LikeRes> likeResCall = likeApi.getLikeCntData(post_id);
+
+        likeResCall.enqueue(new Callback<LikeRes>() {
+            @Override
+            public void onResponse(Call<LikeRes> call, Response<LikeRes> response) {
+                int likecnt = response.body().getCnt();
+                Log.i("aaa",""+likecnt);
+                Log.i("aaa",response.toString());
+                String text = context.getString(R.string.how_many_like);
+                po_txt_cntFavorite.setText(String.format(text,likecnt));
+            }
+
+            @Override
+            public void onFailure(Call<LikeRes> call, Throwable t) {
+
+            }
+        });
+    }
+
+    public void clickLike(Context context,int post_id,String token,TextView po_txt_cntFavorite){
+        LikeReq likeReq = new LikeReq(post_id);
+        Retrofit retrofit = NetworkClient.getRetrofitClient(context);
+        LikeApi likeApi = retrofit.create(LikeApi.class);
+
+        Call<LikeRes> likeResCall = likeApi.clickLike(token,likeReq);
+
+        likeResCall.enqueue(new Callback<LikeRes>() {
+            @Override
+            public void onResponse(Call<LikeRes> call, Response<LikeRes> response) {
+                getLikeCntData(context,post_id,po_txt_cntFavorite);
+            }
+
+            @Override
+            public void onFailure(Call<LikeRes> call, Throwable t) {
+
+            }
+        });
+    }
+
+    public void clickDislike(Context context,int post_id,String token,TextView po_txt_cntFavorite){
+        LikeReq likeReq = new LikeReq(post_id);
+        Retrofit retrofit = NetworkClient.getRetrofitClient(context);
+        LikeApi likeApi = retrofit.create(LikeApi.class);
+
+        Call<LikeRes> likeResCall = likeApi.clickDislike(token,likeReq);
+
+        likeResCall.enqueue(new Callback<LikeRes>() {
+            @Override
+            public void onResponse(Call<LikeRes> call, Response<LikeRes> response) {
+                getLikeCntData(context,post_id,po_txt_cntFavorite);
+            }
+
+            @Override
+            public void onFailure(Call<LikeRes> call, Throwable t) {
+
+            }
+        });
+    }
+
 }

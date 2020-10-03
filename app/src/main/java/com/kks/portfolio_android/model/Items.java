@@ -1,4 +1,4 @@
-    package com.kks.portfolio_android.retrofitmodel;
+    package com.kks.portfolio_android.model;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -68,6 +68,42 @@ public class Items {
     @SerializedName("following")
     @Expose
     private Integer following_cnt;
+
+    @SerializedName("post_user_id")
+    @Expose
+    private Integer post_user_id;
+
+    @SerializedName("comment_id")
+    @Expose
+    private Integer comment_id;
+
+    @SerializedName("comment")
+    @Expose
+    private String comment;
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
+    public Integer getComment_id() {
+        return comment_id;
+    }
+
+    public void setComment_id(Integer comment_id) {
+        this.comment_id = comment_id;
+    }
+
+    public Integer getPost_user_id() {
+        return post_user_id;
+    }
+
+    public void setPost_user_id(Integer post_user_id) {
+        this.post_user_id = post_user_id;
+    }
 
     public Integer getId() {
         return id;
@@ -196,4 +232,6 @@ public class Items {
     public void setFollowing_cnt(Integer following_cnt) {
         this.following_cnt = following_cnt;
     }
+
+
 }

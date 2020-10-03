@@ -6,38 +6,26 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
 import com.kks.portfolio_android.activity.MainActivity;
 import com.kks.portfolio_android.R;
 import com.kks.portfolio_android.adapter.Adapter_home;
 import com.kks.portfolio_android.api.RetrofitApi;
-import com.kks.portfolio_android.model.Posting;
-import com.kks.portfolio_android.retrofitmodel.Items;
+import com.kks.portfolio_android.model.Items;
 import com.kks.portfolio_android.util.Util;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static android.content.Context.MODE_PRIVATE;
 

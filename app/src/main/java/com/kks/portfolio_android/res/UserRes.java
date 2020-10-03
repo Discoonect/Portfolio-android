@@ -1,8 +1,8 @@
-package com.kks.portfolio_android.retrofitmodel.user;
+package com.kks.portfolio_android.res;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-import com.kks.portfolio_android.retrofitmodel.Items;
+import com.kks.portfolio_android.model.Items;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +23,7 @@ public class UserRes {
 
     @SerializedName("items")
     @Expose
-    private ArrayList<Items> items = null;
+    private List<Items> items = null;
 
     @SerializedName("user_name")
     String user_name;
@@ -38,9 +38,7 @@ public class UserRes {
     int follwer_cnt;
 
     // 게터 세터 만들어야 함
-
-
-    public ArrayList<Items> getItems() {
+    public List<Items> getItems() {
         return items;
     }
 

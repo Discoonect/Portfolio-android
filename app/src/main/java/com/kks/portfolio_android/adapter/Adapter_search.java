@@ -14,11 +14,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.kks.portfolio_android.activity.PostingActivity;
 import com.kks.portfolio_android.R;
-import com.kks.portfolio_android.model.Posting;
-import com.kks.portfolio_android.retrofitmodel.Items;
+import com.kks.portfolio_android.model.Items;
 import com.kks.portfolio_android.util.Util;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class Adapter_search extends RecyclerView.Adapter<Adapter_search.ViewHolder> {

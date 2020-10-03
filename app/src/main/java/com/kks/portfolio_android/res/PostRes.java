@@ -1,10 +1,8 @@
-package com.kks.portfolio_android.retrofitmodel.post;
-
-import android.content.ClipData;
+package com.kks.portfolio_android.res;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-import com.kks.portfolio_android.retrofitmodel.Items;
+import com.kks.portfolio_android.model.Items;
 
 import java.util.List;
 

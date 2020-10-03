@@ -112,26 +112,20 @@ public class PageActivity extends AppCompatActivity {
         page_btn_follow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                volleyApi.followUser(PageActivity.this,user_id,token,page_btn_follow,page_btn_unFollow,page_txt_followerCnt);
+                retrofitApi.followUser(PageActivity.this,user_id,token,page_btn_follow,page_btn_unFollow,page_txt_followerCnt);
             }
         });
 
         page_btn_unFollow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                volleyApi.cancleFollow(PageActivity.this,user_id,token,page_btn_follow,page_btn_unFollow,page_txt_followerCnt);
+                retrofitApi.cancelFollow(PageActivity.this,user_id,token,page_btn_follow,page_btn_unFollow,page_txt_followerCnt);
             }
         });
-
-
         retrofitApi.getUserPage1(PageActivity.this,user_id,page_img_profile,page_txt_userName,page_txt_followerCnt,page_txt_introduce);
-
         retrofitApi.getUserPage2(PageActivity.this,user_id,page_txt_postingCnt,page_txt_followingCnt);
-
         retrofitApi.getPagePhoto(PageActivity.this,user_id,offset,limit,recyclerView);
-
-        volleyApi.checkFollow(PageActivity.this,sp_user_id,user_id,token,page_btn_follow,page_btn_unFollow);
-
+        retrofitApi.checkFollow(PageActivity.this,token,user_id,sp_user_id,page_btn_follow,page_btn_unFollow);
     }
 
     @Override

@@ -13,7 +13,7 @@ import android.widget.TextView;
 import com.kks.portfolio_android.R;
 import com.kks.portfolio_android.api.VolleyApi;
 
-public class PostLikeUser extends AppCompatActivity {
+public class PostLikeUserActivity extends AppCompatActivity {
 
     ImageView plu_img_back;
     TextView plu_txt_cnt;

@@ -28,10 +28,9 @@ import com.kks.portfolio_android.R;
 import com.kks.portfolio_android.adapter.Adapter_favorite;
 import com.kks.portfolio_android.adapter.Adapter_follow;
 import com.kks.portfolio_android.adapter.Adapter_plu;
-import com.kks.portfolio_android.adapter.Adapter_user;
 import com.kks.portfolio_android.model.Alram;
 import com.kks.portfolio_android.model.Posting;
-import com.kks.portfolio_android.retrofitmodel.user.UserRes;
+import com.kks.portfolio_android.res.UserRes;
 import com.kks.portfolio_android.util.Util;
 
 import org.json.JSONArray;
@@ -617,7 +616,7 @@ public class VolleyApi {
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        Log.i("aaa",response.toString());
+
                         try{
                             boolean success = response.getBoolean("success");
                             if (success == false) {

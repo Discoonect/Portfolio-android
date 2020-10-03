@@ -15,13 +15,13 @@ import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
-import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.kks.portfolio_android.R;
+import com.kks.portfolio_android.api.RetrofitApi;
 import com.kks.portfolio_android.model.Posting;
 import com.kks.portfolio_android.util.Util;
 
@@ -40,9 +40,10 @@ import java.util.TimeZone;
 
 public class PostingActivity extends AppCompatActivity {
 
-    RequestQueue requestQueue;
-    JSONObject jsonObject = new JSONObject();
+
     ArrayList<Posting> list = new ArrayList<>();
+
+    RetrofitApi retrofitApi = new RetrofitApi();
 
     ImageView po_img_profile;
     TextView po_txt_userName;
@@ -91,7 +92,7 @@ public class PostingActivity extends AppCompatActivity {
         po_txt_cntFavorite.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(PostingActivity.this,PostLikeUser.class);
+                Intent i = new Intent(PostingActivity.this, PostLikeUserActivity.class);
                 i.putExtra("post_id",post_id);
                 startActivity(i);
             }
@@ -126,9 +127,14 @@ public class PostingActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if(mylike==1){
-                    clickDislike(post_id,token);
+                    retrofitApi.clickDislike(PostingActivity.this, post_id, token,po_txt_cntFavorite);
+                    mylike=0;
+                    po_img_like.setImageResource(R.drawable.ic_baseline_favorite_border_24);
+
                 }else{
-                    clickLike(post_id,token);
+                    retrofitApi.clickLike(PostingActivity.this, post_id, token,po_txt_cntFavorite);
+                    mylike=1;
+                    po_img_like.setImageResource(R.drawable.ic_baseline_favorite_24);
                 }
             }
         });
@@ -220,13 +226,15 @@ public class PostingActivity extends AppCompatActivity {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST,Util.LIKE_POST,body,
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST,
+                Util.LIKE_POST,body,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
                         mylike=1;
+
                         po_img_like.setImageResource(R.drawable.ic_baseline_favorite_24);
-                        getLikeCntData(post_id);
+                        retrofitApi.getLikeCntData(PostingActivity.this,post_id,po_txt_cntFavorite);
                     }
                 },
                 new Response.ErrorListener() {
@@ -259,7 +267,7 @@ public class PostingActivity extends AppCompatActivity {
                     public void onResponse(JSONObject response) {
                         mylike=0;
                         po_img_like.setImageResource(R.drawable.ic_baseline_favorite_border_24);
-                        getLikeCntData(post_id);
+                        retrofitApi.getLikeCntData(PostingActivity.this,post_id,po_txt_cntFavorite);
                     }
                 },
                 new Response.ErrorListener() {
@@ -280,7 +288,8 @@ public class PostingActivity extends AppCompatActivity {
     }
 
     private void getLikeCntData(int post_id) {
-        JsonObjectRequest request1 = new JsonObjectRequest(Request.Method.GET, Util.COUNT_LIKE_POST + post_id,null,
+        JsonObjectRequest request1 = new JsonObjectRequest(Request.Method.GET,
+                Util.COUNT_LIKE_POST + post_id,null,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {

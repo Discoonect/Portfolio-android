@@ -26,9 +26,8 @@ import com.bumptech.glide.Glide;
 import com.kks.portfolio_android.activity.CommentActivity;
 import com.kks.portfolio_android.activity.PageActivity;
 import com.kks.portfolio_android.R;
-import com.kks.portfolio_android.activity.PostLikeUser;
-import com.kks.portfolio_android.model.Posting;
-import com.kks.portfolio_android.retrofitmodel.Items;
+import com.kks.portfolio_android.activity.PostLikeUserActivity;
+import com.kks.portfolio_android.model.Items;
 import com.kks.portfolio_android.util.Util;
 
 import org.json.JSONException;
@@ -36,7 +35,6 @@ import org.json.JSONObject;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -274,7 +272,7 @@ public class Adapter_home extends RecyclerView.Adapter<Adapter_home.ViewHolder> 
                 public void onClick(View v) {
                     int post_id = itemsList.get(getBindingAdapterPosition()).getPost_id();
 
-                    Intent i = new Intent(context, PostLikeUser.class);
+                    Intent i = new Intent(context, PostLikeUserActivity.class);
                     i.putExtra("post_id",post_id);
                     context.startActivity(i);
                 }

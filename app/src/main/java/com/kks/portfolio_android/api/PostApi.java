@@ -1,8 +1,8 @@
 package com.kks.portfolio_android.api;
 
 
-import com.kks.portfolio_android.retrofitmodel.post.PostRes;
-import com.kks.portfolio_android.retrofitmodel.user.UserRes;
+import com.kks.portfolio_android.res.PostRes;
+import com.kks.portfolio_android.res.UserRes;
 import com.kks.portfolio_android.util.Util;
 
 import okhttp3.MultipartBody;

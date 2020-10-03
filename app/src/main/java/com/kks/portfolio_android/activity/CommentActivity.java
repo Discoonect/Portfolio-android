@@ -23,6 +23,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.kks.portfolio_android.R;
 import com.kks.portfolio_android.adapter.Adapter_comment;
+import com.kks.portfolio_android.api.RetrofitApi;
 import com.kks.portfolio_android.model.Comments;
 import com.kks.portfolio_android.util.Util;
 
@@ -42,8 +43,7 @@ public class CommentActivity extends AppCompatActivity {
 
 
     RequestQueue requestQueue;
-    JSONObject jsonObject = new JSONObject();
-    ArrayList<Comments> list = new ArrayList<>();
+    RetrofitApi retrofitApi = new RetrofitApi();
 
     RecyclerView recyclerView;
     Adapter_comment adapter_comment;
@@ -86,10 +86,14 @@ public class CommentActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 String comment = cm_edit_comment.getText().toString().trim();
-                uploadComment(post_id,comment,token);
+                retrofitApi.uploadComment(CommentActivity.this,post_id,comment,token);
+                cm_edit_comment.setText(R.string.text_clear);
+                offset = 0;
+                retrofitApi.getCommentData(CommentActivity.this,post_id,offset,limit,recyclerView);
             }
         });
-        getCommentData(post_id,limit);
+
+        retrofitApi.getCommentData(CommentActivity.this,post_id,offset,limit,recyclerView);
     }
 
     @Override
@@ -103,102 +107,101 @@ public class CommentActivity extends AppCompatActivity {
         }
     }
 
-    private void uploadComment(int post_id, String comment, String token) {
-        JSONObject body = new JSONObject();
-        try {
-            body.put("post_id", post_id);
-            body.put("comment", comment);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        JsonObjectRequest request = new JsonObjectRequest(
-                Request.Method.POST, Util.ADD_COMMENT, body,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        try{
-                            boolean success = response.getBoolean("success");
+//    private void uploadComment(int post_id, String comment, String token) {
+//        JSONObject body = new JSONObject();
+//        try {
+//            body.put("post_id", post_id);
+//            body.put("comment", comment);
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
+//        JsonObjectRequest request = new JsonObjectRequest(
+//                Request.Method.POST, Util.ADD_COMMENT, body,
+//                new Response.Listener<JSONObject>() {
+//                    @Override
+//                    public void onResponse(JSONObject response) {
+//                        try{
+//                            boolean success = response.getBoolean("success");
+//
+//                            if (success == false) {
+//                                Toast.makeText(CommentActivity.this, R.string.success_fail, Toast.LENGTH_SHORT).show();
+//                                return;
+//                            }
+//
+//                            Toast.makeText(CommentActivity.this, R.string.comment_complete, Toast.LENGTH_SHORT).show();
+//
+//                            cm_edit_comment.setText(R.string.text_clear);
+//                            offset = 0;
+//                            retrofitApi.getCommentData(CommentActivity.this,post_id,offset,limit,recyclerView);
+//                        } catch (Exception e) {
+//                            e.printStackTrace();
+//                        }
+//                    }
+//                },
+//                new Response.ErrorListener() {
+//                    @Override
+//                    public void onErrorResponse(VolleyError error) {
+//                    }
+//                }
+//        )
+//        {
+//            @Override
+//            public Map<String, String> getHeaders() throws AuthFailureError {
+//                Map<String, String> stringStringMap = new HashMap<String, String>();
+//                stringStringMap.put("Authorization","Bearer "+token);
+//                return stringStringMap;
+//            }
+//        };
+//        Volley.newRequestQueue(CommentActivity.this).add(request);
+//
+//    }
 
-                            if (success == false) {
-                                Toast.makeText(CommentActivity.this, R.string.success_fail, Toast.LENGTH_SHORT).show();
-                                return;
-                            }
-
-                            Toast.makeText(CommentActivity.this, R.string.comment_complete, Toast.LENGTH_SHORT).show();
-
-                            cm_edit_comment.setText(R.string.text_clear);
-                            offset = 0;
-                            getCommentData(post_id,limit);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                    }
-                }
-        )
-        {
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                Map<String, String> stringStringMap = new HashMap<String, String>();
-                stringStringMap.put("Authorization","Bearer "+token);
-                return stringStringMap;
-            }
-        };
-        Volley.newRequestQueue(CommentActivity.this).add(request);
-
-    }
-
-    private void getCommentData(int post_id,int limit) {
-        list.clear();
-        JsonObjectRequest request = new JsonObjectRequest(
-                Request.Method.GET,
-                Util.GET_COMMENT+ post_id + Util.OFFSET + offset + Util.LIMIT + limit, null,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        Log.i("aaa",response.toString());
-                        try{
-                            boolean success = response.getBoolean("success");
-                            if (success == false) {
-                                Toast.makeText(CommentActivity.this, R.string.success_fail, Toast.LENGTH_SHORT).show();
-                                return;
-                            }
-                            JSONArray items = response.getJSONArray("items");
-
-                            for(int i=0; i<items.length(); i++){
-                                jsonObject = items.getJSONObject(i);
-                                int post_user_id = jsonObject.getInt("post_user_id");
-                                int post_id = jsonObject.getInt("post_id");
-                                int comment_id = jsonObject.getInt("comment_id");
-                                int user_id = jsonObject.getInt("user_id");
-                                String user_name = jsonObject.getString("user_name");
-                                String comment = jsonObject.getString("comment");
-                                String created_at = jsonObject.getString("created_at");
-                                String profile = jsonObject.getString("user_profilephoto");
-
-                                Comments comments = new Comments(post_user_id,post_id,comment_id,user_id,user_name,comment,created_at,profile);
-                                list.add(comments);
-                            }
-                            adapter_comment = new Adapter_comment(CommentActivity.this, list);
-                            recyclerView.setAdapter(adapter_comment);
-
-                            offset = offset + response.getInt("cnt");
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                    }
-                }
-        );
-        Volley.newRequestQueue(CommentActivity.this).add(request);
-    }
+//    private void getCommentData(int post_id,int limit) {
+//        list.clear();
+//        JsonObjectRequest request = new JsonObjectRequest(
+//                Request.Method.GET,
+//                Util.GET_COMMENT+ post_id + Util.OFFSET + offset + Util.LIMIT + limit, null,
+//                new Response.Listener<JSONObject>() {
+//                    @Override
+//                    public void onResponse(JSONObject response) {
+//                        try{
+//                            boolean success = response.getBoolean("success");
+//                            if (success == false) {
+//                                Toast.makeText(CommentActivity.this, R.string.success_fail, Toast.LENGTH_SHORT).show();
+//                                return;
+//                            }
+//                            JSONArray items = response.getJSONArray("items");
+//
+//                            for(int i=0; i<items.length(); i++){
+//                                jsonObject = items.getJSONObject(i);
+//                                int post_user_id = jsonObject.getInt("post_user_id");
+//                                int post_id = jsonObject.getInt("post_id");
+//                                int comment_id = jsonObject.getInt("comment_id");
+//                                int user_id = jsonObject.getInt("user_id");
+//                                String user_name = jsonObject.getString("user_name");
+//                                String comment = jsonObject.getString("comment");
+//                                String created_at = jsonObject.getString("created_at");
+//                                String profile = jsonObject.getString("user_profilephoto");
+//
+//                                Comments comments = new Comments(post_user_id,post_id,comment_id,user_id,user_name,comment,created_at,profile);
+//                                list.add(comments);
+//                            }
+//                            adapter_comment = new Adapter_comment(CommentActivity.this, list);
+//                            recyclerView.setAdapter(adapter_comment);
+//
+//                            offset = offset + response.getInt("cnt");
+//                        } catch (Exception e) {
+//                            e.printStackTrace();
+//                        }
+//                    }
+//                },
+//                new Response.ErrorListener() {
+//                    @Override
+//                    public void onErrorResponse(VolleyError error) {
+//                    }
+//                }
+//        );
+//        Volley.newRequestQueue(CommentActivity.this).add(request);
+//    }
 
 }

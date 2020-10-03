@@ -38,7 +38,7 @@ import com.kks.portfolio_android.R;
 import com.kks.portfolio_android.api.NetworkClient;
 import com.kks.portfolio_android.api.UserApi;
 import com.kks.portfolio_android.api.VolleyApi;
-import com.kks.portfolio_android.retrofitmodel.user.UserRes;
+import com.kks.portfolio_android.res.UserRes;
 import com.kks.portfolio_android.util.Util;
 
 import org.json.JSONObject;

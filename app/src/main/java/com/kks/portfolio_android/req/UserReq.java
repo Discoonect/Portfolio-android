@@ -1,4 +1,4 @@
-package com.kks.portfolio_android.retrofitmodel.user;
+package com.kks.portfolio_android.req;
 
 public class UserReq {
     private String user_name;

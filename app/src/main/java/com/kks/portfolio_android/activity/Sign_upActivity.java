@@ -29,8 +29,8 @@ import com.kks.portfolio_android.alertDialog.CustomAlertDialog;
 import com.kks.portfolio_android.api.NetworkClient;
 import com.kks.portfolio_android.api.RetrofitApi;
 import com.kks.portfolio_android.api.UserApi;
-import com.kks.portfolio_android.retrofitmodel.user.UserReq;
-import com.kks.portfolio_android.retrofitmodel.user.UserRes;
+import com.kks.portfolio_android.req.UserReq;
+import com.kks.portfolio_android.res.UserRes;
 
 import java.io.File;
 import java.io.FileNotFoundException;

@@ -2,7 +2,6 @@ package com.kks.portfolio_android.adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,11 +13,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.kks.portfolio_android.activity.PostingActivity;
 import com.kks.portfolio_android.R;
-import com.kks.portfolio_android.model.Posting;
-import com.kks.portfolio_android.retrofitmodel.Items;
+import com.kks.portfolio_android.model.Items;
 import com.kks.portfolio_android.util.Util;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class Adapter_user extends RecyclerView.Adapter<Adapter_user.ViewHolder> {

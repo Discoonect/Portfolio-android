@@ -31,7 +31,7 @@ import com.kks.portfolio_android.activity.MainActivity;
 import com.kks.portfolio_android.R;
 import com.kks.portfolio_android.api.NetworkClient;
 import com.kks.portfolio_android.api.PostApi;
-import com.kks.portfolio_android.retrofitmodel.user.UserRes;
+import com.kks.portfolio_android.res.UserRes;
 import com.kks.portfolio_android.util.Util;
 
 import java.io.File;
