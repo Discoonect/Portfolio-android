@@ -719,54 +719,54 @@ public class VolleyApi {
 
         RequestQueue requestQueue = Volley.newRequestQueue(context);
 
-        JsonObjectRequest request = new JsonObjectRequest(
-                Request.Method.GET,
-                Util.BASE_URL + "/api/v1/like/likepostuser/"+post_id, null,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        Log.i("aaa",response.toString());
-                        try{
-                            boolean success = response.getBoolean("success");
-                            if (success == false) {
-                                Toast.makeText(context, "떙", Toast.LENGTH_SHORT).show();
-                                return;
-                            }
-
-                            JSONArray items = response.getJSONArray("items");
-
-                            for(int i=0; i<items.length(); i++) {
-                                JSONObject jsonObject = items.getJSONObject(i);
-
-                                int id = jsonObject.getInt("id");
-                                String name = jsonObject.getString("user_name");
-                                String profile = jsonObject.getString("user_profilephoto");
-                                String time = jsonObject.getString("postliketime");
-
-                                Posting posting = new Posting(id,name,time,profile);
-
-                                list.add(posting);
-                            }
-
-                            int cnt = response.getInt("cnt");
-
-                            textView.setText("좋아요 ("+cnt+")");
-
-                            Adapter_plu adapter_plu = new Adapter_plu(context, list);
-                            recyclerView.setAdapter(adapter_plu);
-
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                    }
-                }
-        );
-        requestQueue.add(request);
+//        JsonObjectRequest request = new JsonObjectRequest(
+//                Request.Method.GET,
+//                Util.BASE_URL + "/api/v1/like/likepostuser/"+post_id, null,
+//                new Response.Listener<JSONObject>() {
+//                    @Override
+//                    public void onResponse(JSONObject response) {
+//                        Log.i("aaa",response.toString());
+//                        try{
+//                            boolean success = response.getBoolean("success");
+//                            if (success == false) {
+//                                Toast.makeText(context, "떙", Toast.LENGTH_SHORT).show();
+//                                return;
+//                            }
+//
+//                            JSONArray items = response.getJSONArray("items");
+//
+//                            for(int i=0; i<items.length(); i++) {
+//                                JSONObject jsonObject = items.getJSONObject(i);
+//
+//                                int id = jsonObject.getInt("id");
+//                                String name = jsonObject.getString("user_name");
+//                                String profile = jsonObject.getString("user_profilephoto");
+//                                String time = jsonObject.getString("postliketime");
+//
+//                                Posting posting = new Posting(id,name,time,profile);
+//
+//                                list.add(posting);
+//                            }
+//
+//                            int cnt = response.getInt("cnt");
+//
+//                            textView.setText("좋아요 ("+cnt+")");
+//
+//                            Adapter_plu adapter_plu = new Adapter_plu(context, list);
+//                            recyclerView.setAdapter(adapter_plu);
+//
+//                        } catch (Exception e) {
+//                            e.printStackTrace();
+//                        }
+//                    }
+//                },
+//                new Response.ErrorListener() {
+//                    @Override
+//                    public void onErrorResponse(VolleyError error) {
+//                    }
+//                }
+//        );
+//        requestQueue.add(request);
     }
 
     public void postLikeAlarm(Context context,int offset,int limit,String token,RecyclerView recyclerView){
@@ -978,7 +978,8 @@ public class VolleyApi {
     public void deleteProfilePhoto(Context context,String token,int user_id,TextView txt_userName,ImageView img_profile,EditText edit_introduce){
         RequestQueue requestQueue = Volley.newRequestQueue(context);
         JsonObjectRequest request =
-                new JsonObjectRequest(Request.Method.DELETE, Util.BASE_URL + "/api/v1/user/deleteprofilephoto",null,
+                new JsonObjectRequest(Request.Method.DELETE,
+                        Util.BASE_URL + "/api/v1/user/deleteprofilephoto",null,
                         new Response.Listener<JSONObject>() {
                             @Override
                             public void onResponse(JSONObject response) {

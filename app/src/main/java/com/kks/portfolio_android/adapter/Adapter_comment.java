@@ -23,6 +23,7 @@ import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.kks.portfolio_android.activity.PageActivity;
 import com.kks.portfolio_android.R;
+import com.kks.portfolio_android.api.RetrofitApi;
 import com.kks.portfolio_android.api.VolleyApi;
 import com.kks.portfolio_android.model.Comments;
 import com.kks.portfolio_android.model.Items;
@@ -48,6 +49,7 @@ public class Adapter_comment extends RecyclerView.Adapter<Adapter_comment.ViewHo
 
     Context context;
     List<Items> itemsList;
+    RetrofitApi retrofitApi = new RetrofitApi();
 
     public Adapter_comment(Context context, List<Items> itemsList) {
         this.context = context;
@@ -65,14 +67,14 @@ public class Adapter_comment extends RecyclerView.Adapter<Adapter_comment.ViewHo
     @Override
     public void onBindViewHolder(@NonNull Adapter_comment.ViewHolder holder, int position) {
         Items items = itemsList.get(position);
-        Log.i("aaa","어댑터: 1");
+
         holder.cm_txt_name.setText(items.getUser_name());
         holder.cm_txt_comment.setText(items.getComment());
 
         //시간 맞추기
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
         df.setTimeZone(TimeZone.getTimeZone("UTC"));
-        Log.i("aaa","어댑터: 2");
+
         //포스팅 작성시간 표시
         try {
             Date date = df.parse(items.getCreated_at());
@@ -82,7 +84,7 @@ public class Adapter_comment extends RecyclerView.Adapter<Adapter_comment.ViewHo
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        Log.i("aaa","어댑터: 3");
+
         SharedPreferences sharedPreferences =
                 context.getSharedPreferences(Util.PREFERENCE_NAME,MODE_PRIVATE);
         int sp_user_id = sharedPreferences.getInt("user_id",0);
@@ -92,13 +94,13 @@ public class Adapter_comment extends RecyclerView.Adapter<Adapter_comment.ViewHo
         }else{
             holder.cm_img_delete.setVisibility(View.GONE);
         }
-        Log.i("aaa","어댑터: 4");
+
         if(items.getUser_profilephoto()!=null){
             Glide.with(context).load(Util.IMAGE_PATH+items.getUser_profilephoto()).into(holder.cm_img_profile);
         }else{
             holder.cm_img_profile.setImageResource(R.drawable.ic_baseline_account_circle_24);
         }
-        Log.i("aaa","어댑터: 6");
+
     }
 
     @Override
@@ -135,7 +137,8 @@ public class Adapter_comment extends RecyclerView.Adapter<Adapter_comment.ViewHo
                             context.getSharedPreferences(Util.PREFERENCE_NAME,MODE_PRIVATE);
                     String token = sharedPreferences.getString("token",null);
 
-                    volleyApi.deleteComment(context,comment_id,token);
+//                    volleyApi.deleteComment(context,comment_id,token);
+                    retrofitApi.deleteComment(context,token,comment_id);
                     itemsList.remove(items);
                     notifyDataSetChanged();
                 }

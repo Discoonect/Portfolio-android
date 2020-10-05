@@ -31,6 +31,7 @@ import com.kks.portfolio_android.adapter.Adapter_user;
 import com.kks.portfolio_android.api.RetrofitApi;
 import com.kks.portfolio_android.follow.Follower_Activity;
 import com.kks.portfolio_android.follow.Following_Activity;
+import com.kks.portfolio_android.model.Items;
 import com.kks.portfolio_android.model.Posting;
 import com.kks.portfolio_android.util.Util;
 
@@ -40,6 +41,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static android.content.Context.MODE_PRIVATE;
@@ -52,13 +54,13 @@ public class Fragment_User extends Fragment {
     TextView fu_txt_postingCnt;
     TextView fu_txt_followerCnt;
     TextView fu_txt_followingCnt;
-    TextView fu_txt_userId;
+    TextView fu_txt_userName;
     ImageView fu_img_profile;
     TextView fu_txt_introduce;
 
     RecyclerView recyclerView;
 
-    ArrayList<Posting> postingArrayList = new ArrayList<>();
+    List<Items> itemsList = new ArrayList<>();
 
     JSONObject jsonObject = new JSONObject();
 
@@ -85,7 +87,7 @@ public class Fragment_User extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        postingArrayList.clear();
+        itemsList.clear();
 
         recyclerView = getView().findViewById(R.id.fu_recyclerView);
         recyclerView.setHasFixedSize(true);
@@ -98,6 +100,14 @@ public class Fragment_User extends Fragment {
 
         fu_txt_followerCnt = getView().findViewById(R.id.fu_txt_followerCnt);
         fu_txt_followingCnt = getView().findViewById(R.id.fu_txt_followingCnt);
+        fu_txt_introduce = getView().findViewById(R.id.fu_txt_introduce);
+        fu_img_profile = getView().findViewById(R.id.fu_img_profile);
+        fu_txt_userName = getView().findViewById(R.id.fu_txt_userName);
+        fu_txt_followerCnt = getView().findViewById(R.id.fu_txt_followerCnt);
+        fu_txt_postingCnt = getView().findViewById(R.id.fu_txt_postingCnt);
+        fu_txt_followingCnt = getView().findViewById(R.id.fu_txt_followingCnt);
+
+
 
         fu_txt_followerCnt.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -115,8 +125,8 @@ public class Fragment_User extends Fragment {
             }
         });
 
-//        retrofitApi.getUserPage1(getContext(),user_id,fu_img_profile,fu_txt_userId,fu_txt_followerCnt,fu_txt_introduce);
-//        retrofitApi.getUserPage2(getContext(),user_id,fu_txt_postingCnt,fu_txt_followingCnt);
+        retrofitApi.getMyPage1(getContext(),token,fu_txt_introduce,fu_img_profile,fu_txt_userName,fu_txt_followerCnt);
+        retrofitApi.getMyPage2(getContext(),token,fu_txt_postingCnt,fu_txt_followingCnt);
         retrofitApi.getPagePhoto(getContext(),user_id,offset,limit,recyclerView);
     }
 
@@ -169,8 +179,6 @@ public class Fragment_User extends Fragment {
 //    }
 
     private void getUserData2(String token) {
-        fu_txt_postingCnt = getView().findViewById(R.id.fu_txt_postingCnt);
-        fu_txt_followingCnt = getView().findViewById(R.id.fu_txt_followingCnt);
 
         requestQueue = Volley.newRequestQueue(getContext());
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET,
@@ -221,11 +229,6 @@ public class Fragment_User extends Fragment {
     }
 
     private void getUserData(String token) {
-        fu_txt_followerCnt = getView().findViewById(R.id.fu_txt_followerCnt);
-        fu_txt_userId =getView().findViewById(R.id.fu_txt_userId);
-        fu_img_profile = getView().findViewById(R.id.fu_img_profile);
-        fu_txt_introduce = getView().findViewById(R.id.fu_txt_introduce);
-
         requestQueue = Volley.newRequestQueue(getContext());
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET,
                 Util.BASE_URL + "/api/v1/user/mypage",
@@ -258,7 +261,7 @@ public class Fragment_User extends Fragment {
                                 fu_img_profile.setImageResource(R.drawable.ic_baseline_account_circle_24);
                             }
 
-                            fu_txt_userId.setText(user_name);
+                            fu_txt_userName.setText(user_name);
                             fu_txt_followerCnt.setText(""+follower_cnt);
                             if(introduce=="null"){
                                 fu_txt_introduce.setText("");

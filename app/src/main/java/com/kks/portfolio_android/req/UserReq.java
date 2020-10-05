@@ -6,6 +6,7 @@ public class UserReq {
     private String user_phone;
     private int post_id;
     private int user_id;
+    private String introduce;
 
     public UserReq(String user_name, String user_passwd) {
         this.user_name = user_name;
@@ -16,6 +17,14 @@ public class UserReq {
         this.user_name = user_name;
         this.user_passwd = user_passwd;
         this.user_phone = user_phone;
+    }
+
+    public String getIntroduce() {
+        return introduce;
+    }
+
+    public void setIntroduce(String introduce) {
+        this.introduce = introduce;
     }
 
     public UserReq(int user_id) {

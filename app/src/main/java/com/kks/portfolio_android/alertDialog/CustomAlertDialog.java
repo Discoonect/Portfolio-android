@@ -1,10 +1,17 @@
 package com.kks.portfolio_android.alertDialog;
 
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 
+import androidx.core.app.ActivityCompat;
+
 import com.kks.portfolio_android.R;
+import com.kks.portfolio_android.activity.MainActivity;
+import com.kks.portfolio_android.activity.SettingActivity;
 
 public class CustomAlertDialog {
 

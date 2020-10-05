@@ -7,6 +7,7 @@ import com.kks.portfolio_android.util.Util;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.POST;
@@ -22,7 +23,7 @@ public interface FollowApi {
     Call<FollowRes> followUser(@Header("Authorization") String token,
                                @Body FollowReq followReq);
 
-    @POST(Util.CANCEL_FOLLOW)
+    @DELETE(Util.CANCEL_FOLLOW)
     Call<FollowRes> unFollow(@Header("Authorization") String token,
                              @Body FollowReq followReq);
 

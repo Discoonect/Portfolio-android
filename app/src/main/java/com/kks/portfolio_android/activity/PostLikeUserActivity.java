@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.kks.portfolio_android.R;
+import com.kks.portfolio_android.api.RetrofitApi;
 import com.kks.portfolio_android.api.VolleyApi;
 
 public class PostLikeUserActivity extends AppCompatActivity {
@@ -21,6 +22,8 @@ public class PostLikeUserActivity extends AppCompatActivity {
     RecyclerView recyclerView;
 
     int post_id;
+
+    RetrofitApi retrofitApi = new RetrofitApi();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,8 +46,7 @@ public class PostLikeUserActivity extends AppCompatActivity {
             }
         });
 
-        VolleyApi volleyApi = new VolleyApi();
-        volleyApi.likePostUser(this,post_id,recyclerView,plu_txt_cnt);
+        retrofitApi.likePostUser(this,post_id,recyclerView);
 
     }
 

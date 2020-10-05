@@ -6,7 +6,9 @@ import com.kks.portfolio_android.util.Util;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
+import retrofit2.http.HTTP;
 import retrofit2.http.Header;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
@@ -21,5 +23,9 @@ public interface CommentApi {
 
     @POST(Util.ADD_COMMENT)
     Call<CommentRes> uploadComment(@Header("Authorization") String token,
+                                   @Body CommentReq commentReq);
+
+    @HTTP(method = "DELETE",path = Util.DELETE_COMMENT,hasBody = true)
+    Call<CommentRes> deleteComment(@Header("Authorization") String token,
                                    @Body CommentReq commentReq);
 }

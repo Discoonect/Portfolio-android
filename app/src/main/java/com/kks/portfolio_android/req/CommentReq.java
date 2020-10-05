@@ -4,6 +4,7 @@ public class CommentReq {
 
     int post_id;
     String comment;
+    int comment_id;
 
     public CommentReq() {
     }
@@ -13,8 +14,20 @@ public class CommentReq {
         this.comment = comment;
     }
 
+    public CommentReq(int comment_id) {
+        this.comment_id = comment_id;
+    }
+
     public int getPost_id() {
         return post_id;
+    }
+
+    public int getComment_id() {
+        return comment_id;
+    }
+
+    public void setComment_id(int comment_id) {
+        this.comment_id = comment_id;
     }
 
     public void setPost_id(int post_id) {

@@ -14,6 +14,7 @@ import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Part;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
@@ -53,7 +54,22 @@ public interface UserApi {
                                @Query("offset") int offset,
                                @Query("limit") int limit);
 
+    @GET(Util.MY_PAGE1)
+    Call<UserRes> getMyPage1(@Header("Authorization") String token);
 
+    @GET(Util.MY_PAGE2)
+    Call<UserRes> getMyPage2(@Header("Authorization") String token);
 
+    @DELETE(Util.ADIOS)
+    Call<UserRes> userAdios(@Header("Authorization") String token);
 
+    @DELETE(Util.LOGOUT)
+    Call<UserRes> userLogout(@Header("Authorization") String token);
+
+    @PUT(Util.WIRTE_INTRODUCE)
+    Call<UserRes> writeIntroduce(@Header("Authorization") String token,
+                                 @Body UserReq userReq);
+
+    @DELETE(Util.CHANGE_BASIC_PROFILE)
+    Call<UserRes> deleteProfilePhoto(@Header("Authorization") String token);
 }

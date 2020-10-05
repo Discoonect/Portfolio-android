@@ -50,7 +50,7 @@
             android:textSize="20dp" />
 
         <TextView
-            android:id="@+id/fu_txt_userId"
+            android:id="@+id/fu_txt_userName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
@@ -62,7 +62,7 @@
             android:id="@+id/fu_linearLayout_1"
             android:layout_width="match_parent"
             android:layout_height="100dp"
-            android:layout_below="@id/fu_txt_userId"
+            android:layout_below="@id/fu_txt_userName"
             android:orientation="horizontal">
 
             <androidx.cardview.widget.CardView

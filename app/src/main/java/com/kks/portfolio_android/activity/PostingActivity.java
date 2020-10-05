@@ -2,6 +2,7 @@ package com.kks.portfolio_android.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -21,8 +22,12 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.kks.portfolio_android.R;
+import com.kks.portfolio_android.api.NetworkClient;
+import com.kks.portfolio_android.api.PostApi;
 import com.kks.portfolio_android.api.RetrofitApi;
+import com.kks.portfolio_android.model.Items;
 import com.kks.portfolio_android.model.Posting;
+import com.kks.portfolio_android.res.PostRes;
 import com.kks.portfolio_android.util.Util;
 
 import org.json.JSONArray;
@@ -34,9 +39,14 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Retrofit;
 
 public class PostingActivity extends AppCompatActivity {
 
@@ -85,6 +95,7 @@ public class PostingActivity extends AppCompatActivity {
         SharedPreferences sharedPreferences =
                 getSharedPreferences(Util.PREFERENCE_NAME,MODE_PRIVATE);
         token = sharedPreferences.getString("token",null);
+        int sp_user_id = sharedPreferences.getInt("user_id",0);
 
         post_id = getIntent().getIntExtra("post_id",0);
         user_id = getIntent().getIntExtra("user_id",0);
@@ -154,7 +165,7 @@ public class PostingActivity extends AppCompatActivity {
                                 return true;
 
                             case R.id.fh_menu_delete:
-                                deletePosting(post_id,token);
+                                retrofitApi.deletePost(PostingActivity.this,token,post_id);
                                 return true;
 
                             default:
@@ -182,7 +193,8 @@ public class PostingActivity extends AppCompatActivity {
             }
         });
 
-        getPostData(post_id,token);
+        getPostData(this,token,post_id,sp_user_id,po_img_menu,po_img_profile,po_txt_userName,po_txt_content,po_txt_cntComment,po_txt_cntFavorite,po_img_photo,po_txt_created,po_img_like);
+
     }
 
     @Override
@@ -312,7 +324,8 @@ public class PostingActivity extends AppCompatActivity {
     }
 
     private void getPostData(int post_id,String token) {
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET,Util.GET_ONE_POST+post_id, null,
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET,
+                Util.GET_ONE_POST+post_id, null,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
@@ -332,6 +345,7 @@ public class PostingActivity extends AppCompatActivity {
                                     getSharedPreferences(Util.PREFERENCE_NAME,MODE_PRIVATE);
                             int sp_user_id = sharedPreferences.getInt("user_id",0);
                             int user_id = jsonObject.getInt("user_id");
+
                             Posting posting = new Posting(user_id);
                             list.add(posting);
 
@@ -407,5 +421,85 @@ public class PostingActivity extends AppCompatActivity {
             }
         };
         Volley.newRequestQueue(PostingActivity.this).add(request);
+    }
+
+    public void getPostData(Context context, String token, int post_id, int sp_user_id, ImageView po_img_menu,
+                           ImageView po_img_profile, TextView po_txt_userName, TextView po_txt_content,
+                           TextView po_txt_cntComment, TextView po_txt_cntFavorite, ImageView po_img_photo,
+                           TextView po_txt_created, ImageView po_img_like){
+
+        Retrofit retrofit = NetworkClient.getRetrofitClient(context);
+        PostApi postApi = retrofit.create(PostApi.class);
+
+        Call<PostRes> postResCall = postApi.getOnePost(token,post_id);
+
+        postResCall.enqueue(new Callback<PostRes>() {
+            @Override
+            public void onResponse(Call<PostRes> call, retrofit2.Response<PostRes> response) {
+                if(response.code()==200) {
+                    Items items = response.body().getItems().get(0);
+
+                    int user_id = items.getUser_id();
+
+                    if (sp_user_id == user_id) {
+                        po_img_menu.setVisibility(View.VISIBLE);
+                    } else {
+                        po_img_menu.setVisibility(View.INVISIBLE);
+                    }
+
+                    String profile = items.getUser_profilephoto();
+                    if (profile == null) {
+                        po_img_profile.setImageResource(R.drawable.ic_baseline_account_circle_24);
+                    } else {
+                        Glide.with(context).load(Util.IMAGE_PATH + profile).into(po_img_profile);
+                    }
+
+                    String name = items.getUser_name();
+                    po_txt_userName.setText(name);
+
+                    String content = items.getContent();
+                    po_txt_content.setText(content);
+
+                    int comment_cnt = items.getComment_cnt();
+                    String text = context.getString(R.string.how_many_comment);
+                    po_txt_cntComment.setText(String.format(text, comment_cnt));
+
+                    int like_cnt = items.getLike_cnt();
+                    String text1 = context.getString(R.string.how_many_like);
+                    po_txt_cntFavorite.setText(String.format(text1, like_cnt));
+
+                    String photo = items.getPhoto_url();
+                    Glide.with(context).load(Util.IMAGE_PATH + photo).into(po_img_photo);
+
+                    String created_at = items.getCreated_at();
+                    SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+                    df.setTimeZone(TimeZone.getTimeZone("UTC"));
+                    try {
+                        Date date = df.parse(created_at);
+                        df.setTimeZone(TimeZone.getDefault());
+                        String strDate = df.format(date);
+                        po_txt_created.setText(strDate);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+
+                    mylike = items.getMylike();
+                    if (mylike == 1) {
+                        po_img_like.setImageResource(R.drawable.ic_baseline_favorite_24);
+                        mylike = 1;
+                    } else {
+                        po_img_like.setImageResource(R.drawable.ic_baseline_favorite_border_24);
+                        mylike = 0;
+                    }
+                }else{
+                    Log.i("aaa",response.toString());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<PostRes> call, Throwable t) {
+
+            }
+        });
     }
 }

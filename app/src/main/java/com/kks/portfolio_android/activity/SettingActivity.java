@@ -6,7 +6,9 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -36,6 +38,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.kks.portfolio_android.R;
 import com.kks.portfolio_android.api.NetworkClient;
+import com.kks.portfolio_android.api.RetrofitApi;
 import com.kks.portfolio_android.api.UserApi;
 import com.kks.portfolio_android.api.VolleyApi;
 import com.kks.portfolio_android.res.UserRes;
@@ -80,6 +83,7 @@ public class SettingActivity extends AppCompatActivity {
 
     File photoFile;
 
+    RetrofitApi retrofitApi = new RetrofitApi();
     VolleyApi volleyApi = new VolleyApi();
 
     String token;
@@ -94,6 +98,13 @@ public class SettingActivity extends AppCompatActivity {
         token = sharedPreferences.getString("token",null);
         int user_id = sharedPreferences.getInt("user_id",0);
 
+        if (token == null) {
+            Toast.makeText(this, R.string.please_login, Toast.LENGTH_SHORT).show();
+            Intent i = new Intent(this, MainActivity.class);
+            startActivity(i);
+            finish();
+        }
+
         setting_btn_leaveMember = findViewById(R.id.setting_btn_leaveMember);
         setting_btn_logout = findViewById(R.id.setting_btn_logout);
         setting_btn_gallery = findViewById(R.id.setting_btn_gallery);
@@ -104,12 +115,12 @@ public class SettingActivity extends AppCompatActivity {
         setting_img_back = findViewById(R.id.setting_img_back);
         setting_txt_userName = findViewById(R.id.setting_txt_userName);
 
-        volleyApi.getSettingData(SettingActivity.this,user_id,setting_txt_userName,setting_img_profile,setting_edit_introduce);
+        retrofitApi.getUserPage1(SettingActivity.this,user_id,setting_img_profile,setting_txt_userName,null,setting_edit_introduce);
 
         setting_btn_logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                userLogout(token);
+                retrofitApi.userLogout(SettingActivity.this,SettingActivity.this,token);
             }
         });
 
@@ -147,38 +158,18 @@ public class SettingActivity extends AppCompatActivity {
                 String introduce = setting_edit_introduce.getText().toString().trim();
 
                 if(photoFile == null){
-                    volleyApi.writeIntroduce(SettingActivity.this,introduce,token);
+                    retrofitApi.writeIntroduce(SettingActivity.this,token,introduce);
                 }else{
-                    Retrofit retrofit = NetworkClient.getRetrofitClient(SettingActivity.this);
-                    RequestBody fileBody = RequestBody.create(MediaType.parse("image/*"), photoFile);
-                    MultipartBody.Part part = MultipartBody.Part.createFormData("photo",
-                            photoFile.getName(), fileBody);
-
-                    UserApi userApi = retrofit.create(UserApi.class);
-                    Call<UserRes> call = userApi.uploadProfile("Bearer " + token, part);
-                    call.enqueue(new Callback<UserRes>() {
-                        @Override
-                        public void onResponse(Call<UserRes> call, retrofit2.Response<UserRes> response) {
-                        }
-                        @Override
-                        public void onFailure(Call<UserRes> call, Throwable t) {
-                            Log.i("aaa", t.toString());
-                        }
-                    });
-
-                    volleyApi.writeIntroduce(SettingActivity.this,introduce,token);
+                    retrofitApi.uploadProfile(SettingActivity.this,photoFile,token,introduce);
                 }
-
-                Toast.makeText(SettingActivity.this, R.string.setting_complete, Toast.LENGTH_SHORT).show();
-                finish();
-
             }
         });
 
         setting_btn_basicPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                volleyApi.deleteProfilePhoto(SettingActivity.this,token,user_id,setting_txt_userName,setting_img_profile,setting_edit_introduce);
+                retrofitApi.deleteProfilePhoto(SettingActivity.this,token,user_id,setting_img_profile,
+                        setting_txt_userName,setting_edit_introduce);
             }
         });
 
@@ -188,96 +179,22 @@ public class SettingActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        if (token == null) {
-            Toast.makeText(this, R.string.please_login, Toast.LENGTH_SHORT).show();
-            Intent i = new Intent(this, MainActivity.class);
-            startActivity(i);
-            finish();
-        }
+
 
 
     }
 
-    private void userLogout(String token) {
-        requestQueue = Volley.newRequestQueue(SettingActivity.this);
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.DELETE,Util.LOGOUT,
-                null,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        SharedPreferences sharedPreferences = getSharedPreferences(Util.PREFERENCE_NAME,MODE_PRIVATE);
-                        SharedPreferences.Editor editor = sharedPreferences.edit();
-                        editor.clear();
-                        editor.apply();
-                        alertDialog(R.string.logout_complete,R.string.move_to_login);
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-
-                    }
-                }
-        )
-        {
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                   Map<String, String> stringStringMap = new HashMap<String, String>();
-                   stringStringMap.put("Authorization","Bearer "+token);
-                   return stringStringMap;
-            }
-        };
-        requestQueue.add(jsonObjectRequest);
-    }
-
-    private void userAdios(String token){
-        requestQueue = Volley.newRequestQueue(SettingActivity.this);
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.DELETE,
-                Util.BASE_URL + "/api/v1/user/adios",
-                null,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        SharedPreferences sharedPreferences = getSharedPreferences(Util.PREFERENCE_NAME,MODE_PRIVATE);
-                        SharedPreferences.Editor editor = sharedPreferences.edit();
-                        editor.clear();
-                        editor.apply();
-
-                        Intent i = new Intent(SettingActivity.this,MainActivity.class);
-                        startActivity(i);
-                        finish();
-
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-
-                    }
-                }
-        )
-        {
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                Map<String, String> stringStringMap = new HashMap<String, String>();
-                stringStringMap.put("Authorization","Bearer "+token);
-                return stringStringMap;
-            }
-        };
-        requestQueue.add(jsonObjectRequest);
-    }
-
-    void alertDialog(int title, int message){
-        AlertDialog.Builder alertDialog = new AlertDialog.Builder(SettingActivity.this,R.style.myDialogTheme);
+    public static void alertDialog(Context context, Activity activity, int title, int message){
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(context,R.style.myDialogTheme);
         alertDialog .setTitle(title);
         alertDialog .setMessage(message);
         alertDialog .setPositiveButton
                 ("확인", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Intent i = new Intent(SettingActivity.this,MainActivity.class);
-                        ActivityCompat.finishAffinity(SettingActivity.this);
-                        startActivity(i);
+                        Intent i = new Intent(context,MainActivity.class);
+                        ActivityCompat.finishAffinity(activity);
+                        context.startActivity(i);
                     }
                 });
         final AlertDialog dialog = alertDialog.create();
@@ -299,7 +216,7 @@ public class SettingActivity extends AppCompatActivity {
                 (R.string.yes, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        userAdios(token);
+                        retrofitApi.userAdios(SettingActivity.this,token);
                     }
                 });
         alertDialog .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {

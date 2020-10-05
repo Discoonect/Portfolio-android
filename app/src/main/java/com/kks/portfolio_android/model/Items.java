@@ -81,6 +81,17 @@ public class Items {
     @Expose
     private String comment;
 
+    @SerializedName("postliketime")
+    private String postliketime;
+
+    public String getPostliketime() {
+        return postliketime;
+    }
+
+    public void setPostliketime(String postliketime) {
+        this.postliketime = postliketime;
+    }
+
     public String getComment() {
         return comment;
     }
