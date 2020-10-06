@@ -84,6 +84,16 @@ public class Adapter_favorite extends RecyclerView.Adapter<Adapter_favorite.View
             ff_img_postImg = itemView.findViewById(R.id.ff_img_postImg);
             ff_txt_content = itemView.findViewById(R.id.ff_txt_content);
 
+            ff_profile.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Alram alram = alramArrayList.get(getBindingAdapterPosition());
+                    Intent i = new Intent(context,PageActivity.class);
+                    i.putExtra("user_id",alram.getUser_id());
+                    context.startActivity(i);
+                }
+            });
+
             ff_txt_content.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

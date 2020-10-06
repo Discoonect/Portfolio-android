@@ -31,9 +31,6 @@ public interface UserApi {
     @POST(Util.LOGIN)
     Call<UserRes> login(@Body UserReq userReq);
 
-    @DELETE(Util.LOGOUT)
-    Call<UserRes> logout(@Header("Authorization") String token);
-
     @POST(Util.CHECK_ID)
     Call<UserRes> checkName(@Body UserReq userReq);
 
@@ -66,7 +63,7 @@ public interface UserApi {
     @DELETE(Util.LOGOUT)
     Call<UserRes> userLogout(@Header("Authorization") String token);
 
-    @PUT(Util.WIRTE_INTRODUCE)
+    @POST(Util.WRITE_INTRODUCE)
     Call<UserRes> writeIntroduce(@Header("Authorization") String token,
                                  @Body UserReq userReq);
 

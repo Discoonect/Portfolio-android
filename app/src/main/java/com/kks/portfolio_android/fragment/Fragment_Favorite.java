@@ -36,7 +36,6 @@ public class Fragment_Favorite extends Fragment {
     Button ff_btn_posting;
     Button ff_btn_comment;
     Button ff_btn_follow;
-    Button ff_btn_tag;
 
 
     VolleyApi volleyApi = new VolleyApi();
@@ -63,7 +62,7 @@ public class Fragment_Favorite extends Fragment {
         ff_btn_posting = getView().findViewById(R.id.ff_btn_posting);
         ff_btn_comment = getView().findViewById(R.id.ff_btn_comment);
         ff_btn_follow = getView().findViewById(R.id.ff_btn_follow);
-        ff_btn_tag = getView().findViewById(R.id.ff_btn_tag);
+
 
         recyclerView = getView().findViewById(R.id.ff_recyclerView);
         recyclerView.setHasFixedSize(true);
@@ -73,6 +72,13 @@ public class Fragment_Favorite extends Fragment {
                 getActivity().getSharedPreferences(Util.PREFERENCE_NAME,MODE_PRIVATE);
         token = sharedPreferences.getString("token",null);
         user_id = sharedPreferences.getInt("user_id",user_id);
+
+        if (token == null) {
+            Toast.makeText(getContext(), "로그인을 해주세요", Toast.LENGTH_SHORT).show();
+            Intent i = new Intent(getContext(), MainActivity.class);
+            startActivity(i);
+            getActivity().finish();
+        }
 
         volleyApi.postLikeAlarm(getContext(),offset,limit,token,recyclerView);
 
@@ -103,11 +109,6 @@ public class Fragment_Favorite extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        if (token == null) {
-            Toast.makeText(getContext(), "로그인을 해주세요", Toast.LENGTH_SHORT).show();
-            Intent i = new Intent(getContext(), MainActivity.class);
-            startActivity(i);
-            getActivity().finish();
-        }
+
     }
 }

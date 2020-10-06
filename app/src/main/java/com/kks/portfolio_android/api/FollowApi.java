@@ -9,6 +9,7 @@ import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
+import retrofit2.http.HTTP;
 import retrofit2.http.Header;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
@@ -23,7 +24,7 @@ public interface FollowApi {
     Call<FollowRes> followUser(@Header("Authorization") String token,
                                @Body FollowReq followReq);
 
-    @DELETE(Util.CANCEL_FOLLOW)
+    @HTTP(method = "DELETE",path = Util.CANCEL_FOLLOW,hasBody = true)
     Call<FollowRes> unFollow(@Header("Authorization") String token,
                              @Body FollowReq followReq);
 

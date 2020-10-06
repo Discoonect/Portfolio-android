@@ -161,7 +161,10 @@ public class PostingActivity extends AppCompatActivity {
                     public boolean onMenuItemClick(MenuItem menuItem) {
                         switch (menuItem.getItemId()){
                             case R.id.fh_menu_edit:
-                                Toast.makeText(PostingActivity.this, "수정", Toast.LENGTH_SHORT).show();
+                                Intent i = new Intent(PostingActivity.this, RevisePostingActivity.class);
+                                i.putExtra("post_id",post_id);
+                                startActivity(i);
+                                finish();
                                 return true;
 
                             case R.id.fh_menu_delete:
@@ -474,6 +477,7 @@ public class PostingActivity extends AppCompatActivity {
                     String created_at = items.getCreated_at();
                     SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
                     df.setTimeZone(TimeZone.getTimeZone("UTC"));
+
                     try {
                         Date date = df.parse(created_at);
                         df.setTimeZone(TimeZone.getDefault());

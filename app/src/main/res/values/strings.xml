@@ -25,8 +25,9 @@
     <string name="sign_up_complete">회원가입 성공</string>
     <string name="check_id_overlap">아이디 중복체크</string>
     <string name="ok">확인</string>
-    <string name="plese_insert_20">20자 이내로 작성해주세요</string>
+    <string name="please_insert_20">20자 이내로 작성해주세요</string>
     <string name="change_basic_image_complete">기본 이미지 변경 완료</string>
+    <string name="revise_complete">수정되었습니다</string>
 
     <string name="action_settings">Settings</string>
     <string name="home_image">home_image</string>

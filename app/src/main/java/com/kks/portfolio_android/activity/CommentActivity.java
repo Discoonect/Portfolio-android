@@ -25,6 +25,7 @@ import com.kks.portfolio_android.R;
 import com.kks.portfolio_android.adapter.Adapter_comment;
 import com.kks.portfolio_android.api.RetrofitApi;
 import com.kks.portfolio_android.model.Comments;
+import com.kks.portfolio_android.model.Items;
 import com.kks.portfolio_android.util.Util;
 
 import org.json.JSONArray;
@@ -33,6 +34,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class CommentActivity extends AppCompatActivity {
@@ -40,13 +42,12 @@ public class CommentActivity extends AppCompatActivity {
     ImageView cm_btn_back;
     EditText cm_edit_comment;
     Button cm_btn_complete;
-
-
     RequestQueue requestQueue;
     RetrofitApi retrofitApi = new RetrofitApi();
+    List<Items> itemsList;
 
     RecyclerView recyclerView;
-    Adapter_comment adapter_comment;
+    Adapter_comment adapter_comment = new Adapter_comment(CommentActivity.this,itemsList);
 
     int post_id;
     int offset;
@@ -86,14 +87,12 @@ public class CommentActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 String comment = cm_edit_comment.getText().toString().trim();
-                retrofitApi.uploadComment(CommentActivity.this,post_id,comment,token);
-                cm_edit_comment.setText(R.string.text_clear);
-                offset = 0;
-                retrofitApi.getCommentData(CommentActivity.this,post_id,offset,limit,recyclerView);
+                retrofitApi.uploadComment(CommentActivity.this,post_id,comment,token,
+                        cm_edit_comment,adapter_comment,offset,limit,recyclerView);
+
             }
         });
-
-        retrofitApi.getCommentData(CommentActivity.this,post_id,offset,limit,recyclerView);
+        retrofitApi.getCommentData(CommentActivity.this,post_id,offset,limit,recyclerView,adapter_comment);
     }
 
     @Override

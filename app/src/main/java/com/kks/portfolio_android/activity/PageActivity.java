@@ -67,7 +67,6 @@ public class PageActivity extends AppCompatActivity {
 
         SharedPreferences sharedPreferences =
                 getSharedPreferences(Util.PREFERENCE_NAME,MODE_PRIVATE);
-
         token = sharedPreferences.getString("token",null);
         sp_user_id = sharedPreferences.getInt("user_id",0);
         user_id = getIntent().getIntExtra("user_id",0);
@@ -122,10 +121,16 @@ public class PageActivity extends AppCompatActivity {
                 retrofitApi.cancelFollow(PageActivity.this,user_id,token,page_btn_follow,page_btn_unFollow,page_txt_followerCnt);
             }
         });
+
         retrofitApi.getUserPage1(PageActivity.this,user_id,page_img_profile,page_txt_userName,page_txt_followerCnt,page_txt_introduce);
         retrofitApi.getUserPage2(PageActivity.this,user_id,page_txt_postingCnt,page_txt_followingCnt);
         retrofitApi.getPagePhoto(PageActivity.this,user_id,offset,limit,recyclerView);
         retrofitApi.checkFollow(PageActivity.this,token,user_id,sp_user_id,page_btn_follow,page_btn_unFollow);
+
+        String introduce = page_txt_introduce.getText().toString().trim();
+        if(introduce.equals(R.string.please_insert_20)){
+            page_txt_introduce.setText("");
+        }
     }
 
     @Override

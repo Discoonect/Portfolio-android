@@ -19,7 +19,6 @@ import com.bumptech.glide.Glide;
 import com.kks.portfolio_android.R;
 import com.kks.portfolio_android.activity.HomeActivity;
 import com.kks.portfolio_android.activity.MainActivity;
-import com.kks.portfolio_android.activity.PostingActivity;
 import com.kks.portfolio_android.activity.SettingActivity;
 import com.kks.portfolio_android.adapter.Adapter_comment;
 import com.kks.portfolio_android.adapter.Adapter_home;
@@ -30,6 +29,7 @@ import com.kks.portfolio_android.model.Items;
 import com.kks.portfolio_android.req.CommentReq;
 import com.kks.portfolio_android.req.FollowReq;
 import com.kks.portfolio_android.req.LikeReq;
+import com.kks.portfolio_android.req.PostReq;
 import com.kks.portfolio_android.res.CommentRes;
 import com.kks.portfolio_android.res.FollowRes;
 import com.kks.portfolio_android.res.LikeRes;
@@ -38,16 +38,9 @@ import com.kks.portfolio_android.req.UserReq;
 import com.kks.portfolio_android.res.UserRes;
 import com.kks.portfolio_android.util.Util;
 
-import org.w3c.dom.Text;
-
 import java.io.File;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
-import java.util.TimeZone;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -60,6 +53,7 @@ import retrofit2.Retrofit;
 import static android.content.Context.MODE_PRIVATE;
 
 public class RetrofitApi {
+
     public void login(Context context, String name, String passwd, CheckBox auto_login_check){
         UserReq userReq = new UserReq(name, passwd);
 
@@ -177,11 +171,11 @@ public class RetrofitApi {
             @Override
             public void onResponse(Call<PostRes> call, Response<PostRes> response) {
                 if(response.isSuccessful()) {
-                    List<Items> itemsList = new ArrayList<>();
+                    Log.i("aaa",response.toString());
+                    List<Items> itemsList;
                     itemsList = response.body().getItems();
                     Adapter_home adapter_home = new Adapter_home(context, itemsList);
                     recyclerView.setAdapter(adapter_home);
-
                 }
             }
 
@@ -214,7 +208,7 @@ public class RetrofitApi {
 
     public void getUserPage1(Context context, int user_id, ImageView page_img_profile,
                              TextView page_txt_userName,TextView page_txt_followerCnt,
-                             TextView page_txt_introduce){
+                             TextView txt_introduce){
         Retrofit retrofit = NetworkClient.getRetrofitClient(context);
         UserApi userApi = retrofit.create(UserApi.class);
 
@@ -237,10 +231,10 @@ public class RetrofitApi {
                         page_txt_followerCnt.setText("" + follower_cnt);
                     }
 
-                    if(items.getIntroduce()==null || items.getIntroduce().equals("")) {
-                        page_txt_introduce.setHint(R.string.plese_insert_20);
+                    if(items.getIntroduce()==null || items.getIntroduce().equals("")){
+                        txt_introduce.setHint(R.string.please_insert_20);
                     }else{
-                        page_txt_introduce.setText(introduce);
+                        txt_introduce.setText(introduce);
                     }
 
                     if (profile!=null) {
@@ -400,7 +394,7 @@ public class RetrofitApi {
         });
     }
 
-    public void getCommentData(Context context,int post_id,int offset,int limit,RecyclerView recyclerView){
+    public void getCommentData(Context context,int post_id,int offset,int limit,RecyclerView recyclerView,Adapter_comment adapter_comment){
         Retrofit retrofit = NetworkClient.getRetrofitClient(context);
         CommentApi commentApi = retrofit.create(CommentApi.class);
 
@@ -409,9 +403,9 @@ public class RetrofitApi {
         commentResCall.enqueue(new Callback<CommentRes>() {
             @Override
             public void onResponse(Call<CommentRes> call, Response<CommentRes> response) {
-                List<Items> itemsList = new ArrayList<>();
+                List<Items> itemsList;
                 itemsList = response.body().getItems();
-                Adapter_comment adapter_comment = new Adapter_comment(context,itemsList);
+                adapter_comment.setItemsList(itemsList);
                 recyclerView.setAdapter(adapter_comment);
             }
 
@@ -423,7 +417,8 @@ public class RetrofitApi {
 
     }
 
-    public void uploadComment(Context context,int post_id,String comment,String token){
+    public void uploadComment(Context context,int post_id,String comment,String token,EditText cm_edit_comment,
+                              Adapter_comment adapter_comment,int offset, int limit,RecyclerView recyclerView){
         CommentReq commentReq = new CommentReq(post_id,comment);
 
         Retrofit retrofit = NetworkClient.getRetrofitClient(context);
@@ -434,6 +429,8 @@ public class RetrofitApi {
         commentResCall.enqueue(new Callback<CommentRes>() {
             @Override
             public void onResponse(Call<CommentRes> call, Response<CommentRes> response) {
+                cm_edit_comment.setText(R.string.text_clear);
+                getCommentData(context,post_id,offset,limit,recyclerView,adapter_comment);
                 Toast.makeText(context, R.string.comment_complete, Toast.LENGTH_SHORT).show();
             }
 
@@ -753,7 +750,7 @@ public class RetrofitApi {
         });
     }
 
-    public void deleteComment(Context context, String token, int comment_id){
+    public void deleteComment(Context context, String token,int comment_id){
         CommentReq commentReq = new CommentReq(comment_id);
 
         Retrofit retrofit = NetworkClient.getRetrofitClient(context);
@@ -765,6 +762,7 @@ public class RetrofitApi {
             @Override
             public void onResponse(Call<CommentRes> call, Response<CommentRes> response) {
                 if(response.code()==200){
+
                     Toast.makeText(context, R.string.delete_comment_complete, Toast.LENGTH_SHORT).show();
                 }else{
                     Log.i("aaa",response.toString());
@@ -779,5 +777,29 @@ public class RetrofitApi {
 
     }
 
+    public void updatePost(Context context,String token,int post_id,String content){
+        PostReq postReq = new PostReq(content);
 
+        Retrofit retrofit = NetworkClient.getRetrofitClient(context);
+        PostApi postApi = retrofit.create(PostApi.class);
+
+        Call<PostRes> postResCall = postApi.updatePost(token,post_id,postReq);
+
+        postResCall.enqueue(new Callback<PostRes>() {
+            @Override
+            public void onResponse(Call<PostRes> call, Response<PostRes> response) {
+                if(response.code()==200) {
+                    Toast.makeText(context, R.string.revise_complete, Toast.LENGTH_SHORT).show();
+                    ((Activity) context).finish();
+                }else{
+                    Log.i("aaa",response.toString());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<PostRes> call, Throwable t) {
+
+            }
+        });
+    }
 }

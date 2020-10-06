@@ -65,7 +65,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="사진 선택" />
+                android:text="사진은 수정 할 수 없어요." />
 
             <EditText
                 android:id="@+id/rv_edit_content"

@@ -38,8 +38,6 @@ public class Fragment_Home extends Fragment {
     List<Items> postArrayList = new ArrayList<>();
 
     RequestQueue requestQueue;
-
-    String path = "/api/v1/post/getallpost";
     int offset;
 
     String token;

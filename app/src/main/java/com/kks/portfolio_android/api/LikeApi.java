@@ -9,6 +9,7 @@ import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
+import retrofit2.http.HTTP;
 import retrofit2.http.Header;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
@@ -22,7 +23,7 @@ public interface LikeApi {
     Call<LikeRes> clickLike(@Header("Authorization") String token,
                             @Body LikeReq likeReq);
 
-    @DELETE(Util.DELETE_LIKE_POST)
+    @HTTP(method = "DELETE",path = Util.DELETE_LIKE_POST,hasBody = true)
     Call<LikeRes> clickDislike(@Header("Authorization") String token,
                                @Body LikeReq likeReq);
 

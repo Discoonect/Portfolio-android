@@ -87,6 +87,7 @@ public class SettingActivity extends AppCompatActivity {
     VolleyApi volleyApi = new VolleyApi();
 
     String token;
+    int user_id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,8 +115,6 @@ public class SettingActivity extends AppCompatActivity {
         setting_img_profile = findViewById(R.id.setting_img_profile);
         setting_img_back = findViewById(R.id.setting_img_back);
         setting_txt_userName = findViewById(R.id.setting_txt_userName);
-
-        retrofitApi.getUserPage1(SettingActivity.this,user_id,setting_img_profile,setting_txt_userName,null,setting_edit_introduce);
 
         setting_btn_logout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -172,7 +171,7 @@ public class SettingActivity extends AppCompatActivity {
                         setting_txt_userName,setting_edit_introduce);
             }
         });
-
+        retrofitApi.getUserPage1(SettingActivity.this,user_id,setting_img_profile,setting_txt_userName,null,setting_edit_introduce);
     }
 
     @Override

@@ -51,6 +51,17 @@ public class Adapter_comment extends RecyclerView.Adapter<Adapter_comment.ViewHo
     List<Items> itemsList;
     RetrofitApi retrofitApi = new RetrofitApi();
 
+    public Adapter_comment() {
+    }
+
+    public List<Items> getItemsList() {
+        return itemsList;
+    }
+
+    public void setItemsList(List<Items> itemsList) {
+        this.itemsList = itemsList;
+    }
+
     public Adapter_comment(Context context, List<Items> itemsList) {
         this.context = context;
         this.itemsList = itemsList;
@@ -124,21 +135,18 @@ public class Adapter_comment extends RecyclerView.Adapter<Adapter_comment.ViewHo
             cm_txt_time = itemView.findViewById(R.id.cm_txt_time);
             cm_img_delete = itemView.findViewById(R.id.cm_img_delete);
 
+            SharedPreferences sharedPreferences =
+                    context.getSharedPreferences(Util.PREFERENCE_NAME,MODE_PRIVATE);
+            String token = sharedPreferences.getString("token",null);
+
             cm_img_delete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
-                    VolleyApi volleyApi = new VolleyApi();
-
                     Items items = itemsList.get(getBindingAdapterPosition());
                     int comment_id = items.getComment_id();
 
-                    SharedPreferences sharedPreferences =
-                            context.getSharedPreferences(Util.PREFERENCE_NAME,MODE_PRIVATE);
-                    String token = sharedPreferences.getString("token",null);
-
-//                    volleyApi.deleteComment(context,comment_id,token);
                     retrofitApi.deleteComment(context,token,comment_id);
+
                     itemsList.remove(items);
                     notifyDataSetChanged();
                 }

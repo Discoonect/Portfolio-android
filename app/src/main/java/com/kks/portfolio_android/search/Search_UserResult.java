@@ -80,7 +80,7 @@ public class Search_UserResult extends AppCompatActivity {
         list.clear();
         JsonObjectRequest request = new JsonObjectRequest(
                 Request.Method.GET,
-                Util.BASE_URL + "/api/v1/search/search?keyword="+keyword+"&offset="+offset+"&limit=30", null,
+                Util.BASE_URL + "/api/v1/search?keyword="+keyword+"&offset="+offset+"&limit=30", null,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {

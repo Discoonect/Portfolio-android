@@ -494,7 +494,7 @@ public class VolleyApi {
         ArrayList<Posting> postArrayList = new ArrayList<>();
         JsonObjectRequest request = new JsonObjectRequest(
                 Request.Method.GET,
-                Util.BASE_URL + "/api/v1/follow/userfollowing/"+user_id+"?offset="+offset+"&limit=25", null,
+                Util.BASE_URL + "/api/v1/follow/following/"+user_id+"?offset="+offset+"&limit=25", null,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
@@ -551,7 +551,7 @@ public class VolleyApi {
 
         JsonObjectRequest request = new JsonObjectRequest(
                 Request.Method.GET,
-                Util.BASE_URL + "/api/v1/follow/userfollower/"+user_id+"?offset="+offset+"&limit=25", null,
+                Util.BASE_URL + "/api/v1/follow/follower/"+user_id+"?offset="+offset+"&limit=25", null,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
@@ -774,7 +774,7 @@ public class VolleyApi {
         list.clear();
         RequestQueue requestQueue = Volley.newRequestQueue(context);
         JsonObjectRequest request =
-                new JsonObjectRequest(Request.Method.GET, Util.BASE_URL + "/api/v1/alarm/postlikealarm?offset="+offset+"&limit="+limit,null,
+                new JsonObjectRequest(Request.Method.GET, Util.BASE_URL + "/api/v1/alarm/postlike?offset="+offset+"&limit="+limit,null,
                         new Response.Listener<JSONObject>() {
                             @Override
                             public void onResponse(JSONObject response) {
@@ -791,6 +791,7 @@ public class VolleyApi {
                                         int post_id = jsonObject.getInt("post_id");
                                         String photo = Util.BASE_URL+"/public/uploads/"+jsonObject.getString("photo_url");
                                         String time = jsonObject.getString("created_at");
+                                        int user_id = jsonObject.getInt("user_id");
 
                                         //시간 맞추기
                                         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
@@ -803,7 +804,7 @@ public class VolleyApi {
                                             String strDate = df.format(date);
                                             String content = name+" 님이 게시물을 좋아합니다.\n"+strDate;
 
-                                            Alram alram = new Alram(post_id,photo,profile,content,1);
+                                            Alram alram = new Alram(user_id,post_id,photo,profile,content,1);
                                             list.add(alram);
 
                                         } catch (ParseException e) {
@@ -842,7 +843,7 @@ public class VolleyApi {
         list.clear();
         RequestQueue requestQueue = Volley.newRequestQueue(context);
         JsonObjectRequest request =
-                new JsonObjectRequest(Request.Method.GET, Util.BASE_URL + "/api/v1/alarm/commentalarm?offset="+offset+"&limit="+limit,null,
+                new JsonObjectRequest(Request.Method.GET, Util.BASE_URL + "/api/v1/alarm/comment?offset="+offset+"&limit="+limit,null,
                         new Response.Listener<JSONObject>() {
                             @Override
                             public void onResponse(JSONObject response) {
@@ -860,6 +861,7 @@ public class VolleyApi {
                                         String comment = jsonObject.getString("comment");
                                         String time = jsonObject.getString("created_at");
                                         String photo = Util.BASE_URL+"/public/uploads/"+jsonObject.getString("photo_url");
+                                        int user_id = jsonObject.getInt("user_id");
 
                                         if(comment.length()>13){
                                             comment = comment.substring(0,13)+"...";
@@ -875,7 +877,7 @@ public class VolleyApi {
 
                                             String content = name+" 님이 댓글을 달았습니다.\n"+comment+"\n"+strDate;
 
-                                            Alram alram = new Alram(id,photo,profile,content,2);
+                                            Alram alram = new Alram(user_id,id,photo,profile,content,2);
                                             list.add(alram);
 
                                         } catch (ParseException e) {
@@ -914,7 +916,7 @@ public class VolleyApi {
         list.clear();
         RequestQueue requestQueue = Volley.newRequestQueue(context);
         JsonObjectRequest request =
-                new JsonObjectRequest(Request.Method.GET, Util.BASE_URL + "/api/v1/alarm/followalarm?offset="+offset+"&limit="+limit,null,
+                new JsonObjectRequest(Request.Method.GET, Util.BASE_URL + "/api/v1/alarm/follow?offset="+offset+"&limit="+limit,null,
                         new Response.Listener<JSONObject>() {
                             @Override
                             public void onResponse(JSONObject response) {
@@ -930,6 +932,7 @@ public class VolleyApi {
                                         String name = jsonObject.getString("user_name");
                                         String profile = jsonObject.getString("user_profilephoto");
                                         String time = jsonObject.getString("created_at");
+                                        int user_id = jsonObject.getInt("user_id");
 
                                         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
                                         df.setTimeZone(TimeZone.getTimeZone("UTC"));
@@ -941,7 +944,7 @@ public class VolleyApi {
 
                                             String content = name+" 님이 회원님을 팔로우 했습니다. \n"+strDate;
 
-                                            Alram alram = new Alram(id,profile,content,3);
+                                            Alram alram = new Alram(user_id,id,profile,content,3);
                                             list.add(alram);
 
                                         } catch (ParseException e) {

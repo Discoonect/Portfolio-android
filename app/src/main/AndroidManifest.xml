@@ -28,6 +28,7 @@
         <activity android:name=".activity.SettingActivity" />
         <activity android:name=".activity.HomeActivity" />
         <activity android:name=".activity.Sign_upActivity" />
+        <activity android:name=".activity.RevisePostingActivity"/>
         <activity android:name=".activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

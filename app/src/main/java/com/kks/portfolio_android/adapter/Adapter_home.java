@@ -27,6 +27,7 @@ import com.kks.portfolio_android.activity.CommentActivity;
 import com.kks.portfolio_android.activity.PageActivity;
 import com.kks.portfolio_android.R;
 import com.kks.portfolio_android.activity.PostLikeUserActivity;
+import com.kks.portfolio_android.activity.RevisePostingActivity;
 import com.kks.portfolio_android.model.Items;
 import com.kks.portfolio_android.util.Util;
 
@@ -119,7 +120,9 @@ public class Adapter_home extends RecyclerView.Adapter<Adapter_home.ViewHolder> 
                     public boolean onMenuItemClick(MenuItem menuItem) {
                         switch (menuItem.getItemId()){
                             case R.id.fh_menu_edit:
-                                Toast.makeText(context, "수정", Toast.LENGTH_SHORT).show();
+                                Intent i = new Intent(context, RevisePostingActivity.class);
+                                i.putExtra("post_id",post_id);
+                                context.startActivity(i);
                                 return true;
 
                             case R.id.fh_menu_delete:

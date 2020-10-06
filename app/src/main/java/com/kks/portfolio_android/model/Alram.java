@@ -3,6 +3,7 @@ package com.kks.portfolio_android.model;
 public class Alram {
 
     int id;
+    int user_id;
     String photo;
     String profile;
     String content;
@@ -11,7 +12,8 @@ public class Alram {
 
     public Alram(){}
 
-    public Alram(int id, String photo, String profile, String content,int status) {
+    public Alram(int user_id,int id, String photo, String profile, String content,int status) {
+        this.user_id = user_id;
         this.id = id;
         this.photo = photo;
         this.profile = profile;
@@ -19,11 +21,20 @@ public class Alram {
         this.status = status;
     }
 
-    public Alram(int id, String profile, String content,int status) {
+    public Alram(int user_id,int id, String profile, String content,int status) {
+        this.user_id = user_id;
         this.id = id;
         this.profile = profile;
         this.content = content;
         this.status = status;
+    }
+
+    public int getUser_id() {
+        return user_id;
+    }
+
+    public void setUser_id(int user_id) {
+        this.user_id = user_id;
     }
 
     public int getStatus() {

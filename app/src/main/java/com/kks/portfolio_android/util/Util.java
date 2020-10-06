@@ -19,29 +19,30 @@ public class Util {
     public static final String MY_PAGE1 = "/api/v1/user/mypage";
     public static final String MY_PAGE2 = "/api/v1/user/mypage2";
     public static final String ADIOS = "/api/v1/user/adios";
-    public static final String WIRTE_INTRODUCE = "/api/v1/user/myintroduce";
-    public static final String CHANGE_BASIC_PROFILE = "/api/v1/user/deleteprofilephoto";
+    public static final String WRITE_INTRODUCE = "/api/v1/user/myintroduce";
+    public static final String CHANGE_BASIC_PROFILE = "/api/v1/user/profilephoto";
 
-    public static final String GET_ALL_POST = "/api/v1/post/getallpost";
-    public static final String UPLOAD_POST = "/api/v1/post/uploadpost";
-    public static final String DELETE_POSTING = "/api/v1/post/deletepost";
-    public static final String GET_ONE_POST = "/api/v1/post/getonepost";
-    public static final String BEST_POST = "/api/v1/post/bestpost";
-    public static final String GET_PAGE_PHOTO = "/api/v1/post/getpostphotourl";
+    public static final String GET_ALL_POST = "/api/v1/post/all";
+    public static final String UPLOAD_POST = "/api/v1/post/upload";
+    public static final String DELETE_POSTING = "/api/v1/post";
+    public static final String GET_ONE_POST = "/api/v1/post";
+    public static final String BEST_POST = "/api/v1/post/best";
+    public static final String GET_PAGE_PHOTO = "/api/v1/post/photourl";
+    public static final String UPDATE_POST = "/api/v1/post";
 
     public static final String ADD_COMMENT = "/api/v1/comment/addcomment";
     public static final String COUNT_COMMENT = BASE_URL+"/api/v1/comment/countcomment/";
-    public static final String GET_COMMENT = "/api/v1/comment/getcomment";
-    public static final String DELETE_COMMENT = "/api/v1/comment/deletecomment";
+    public static final String GET_COMMENT = "/api/v1/comment";
+    public static final String DELETE_COMMENT = "/api/v1/comment/addcomment";
 
-    public static final String LIKE_POST = "/api/v1/like/likepost";
-    public static final String DELETE_LIKE_POST = "/api/v1/like/deletelikepost";
-    public static final String COUNT_LIKE_POST = "/api/v1/like/countlikepost";
+    public static final String LIKE_POST = "/api/v1/like/post";
+    public static final String DELETE_LIKE_POST = "/api/v1/like/post";
+    public static final String COUNT_LIKE_POST = "/api/v1/like/countpost";
     public static final String LIKE_POST_USER = "/api/v1/like/likepostuser";
 
-    public static final String CHECK_FOLLOW = "/api/v1/follow/checkfollow";
-    public static final String FOLLOW_USER = "/api/v1/follow/following";
-    public static final String CANCEL_FOLLOW = "/api/v1/follow/deletefollow";
+    public static final String CHECK_FOLLOW = "/api/v1/follow/check";
+    public static final String FOLLOW_USER = "/api/v1/follow/";
+    public static final String CANCEL_FOLLOW = "/api/v1/follow/";
 
 
 

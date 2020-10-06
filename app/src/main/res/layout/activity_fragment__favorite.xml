@@ -39,13 +39,6 @@
             android:layout_weight="1"
             android:text="팔로우" />
 
-        <Button
-            android:id="@+id/ff_btn_tag"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="태그" />
-
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
