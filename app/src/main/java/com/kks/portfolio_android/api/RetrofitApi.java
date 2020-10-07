@@ -495,6 +495,7 @@ public class RetrofitApi {
         likeResCall.enqueue(new Callback<LikeRes>() {
             @Override
             public void onResponse(Call<LikeRes> call, Response<LikeRes> response) {
+                Log.i("aaa",response.toString());
                 getLikeCntData(context,post_id,po_txt_cntFavorite);
             }
 

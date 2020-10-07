@@ -774,7 +774,7 @@ public class VolleyApi {
         list.clear();
         RequestQueue requestQueue = Volley.newRequestQueue(context);
         JsonObjectRequest request =
-                new JsonObjectRequest(Request.Method.GET, Util.BASE_URL + "/api/v1/alarm/postlike?offset="+offset+"&limit="+limit,null,
+                new JsonObjectRequest(Request.Method.GET, Util.BASE_URL + "/api/v1/alarm/postlikealarm?offset="+offset+"&limit="+limit,null,
                         new Response.Listener<JSONObject>() {
                             @Override
                             public void onResponse(JSONObject response) {

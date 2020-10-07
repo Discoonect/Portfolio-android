@@ -28,6 +28,7 @@ import com.kks.portfolio_android.activity.PageActivity;
 import com.kks.portfolio_android.R;
 import com.kks.portfolio_android.activity.PostLikeUserActivity;
 import com.kks.portfolio_android.activity.RevisePostingActivity;
+import com.kks.portfolio_android.api.RetrofitApi;
 import com.kks.portfolio_android.model.Items;
 import com.kks.portfolio_android.util.Util;
 
@@ -168,7 +169,7 @@ public class Adapter_home extends RecyclerView.Adapter<Adapter_home.ViewHolder> 
 
         });
 
-        if(items.getUser_profilephoto()!="null"){
+        if(items.getUser_profilephoto()!=null){
             Glide.with(context).load(Util.IMAGE_PATH+items.getUser_profilephoto()).into(holder.fh_img_profilePhoto);
         }else{
             holder.fh_img_profilePhoto.setImageResource(R.drawable.ic_baseline_account_circle_24);
@@ -193,6 +194,8 @@ public class Adapter_home extends RecyclerView.Adapter<Adapter_home.ViewHolder> 
         TextView fh_txt_cntComment;
         TextView fh_txt_cntFavorite;
         ImageView fh_img_menu;
+
+        RetrofitApi retrofitApi = new RetrofitApi();
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -220,12 +223,15 @@ public class Adapter_home extends RecyclerView.Adapter<Adapter_home.ViewHolder> 
                     Items items = itemsList.get(position);
 
                     if(is_like==1){
-
                         int post_id = items.getPost_id();
-                        clickDislike(post_id,position,token);
+                        retrofitApi.clickDislike(context,post_id,token,fh_txt_cntFavorite);
+                        items.setMylike(0);
+                        notifyDataSetChanged();
                     }else{
                         int post_id = items.getPost_id();
-                        clickLike(post_id,position,token);
+                        retrofitApi.clickLike(context,post_id,token,fh_txt_cntFavorite);
+                        items.setMylike(1);
+                        notifyDataSetChanged();
                     }
                 }
             });

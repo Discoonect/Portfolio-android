@@ -30,15 +30,14 @@ public class Util {
     public static final String GET_PAGE_PHOTO = "/api/v1/post/photourl";
     public static final String UPDATE_POST = "/api/v1/post";
 
-    public static final String ADD_COMMENT = "/api/v1/comment/addcomment";
-    public static final String COUNT_COMMENT = BASE_URL+"/api/v1/comment/countcomment/";
+    public static final String ADD_COMMENT = "/api/v1/comment";
     public static final String GET_COMMENT = "/api/v1/comment";
-    public static final String DELETE_COMMENT = "/api/v1/comment/addcomment";
+    public static final String DELETE_COMMENT = "/api/v1/comment";
 
     public static final String LIKE_POST = "/api/v1/like/post";
     public static final String DELETE_LIKE_POST = "/api/v1/like/post";
-    public static final String COUNT_LIKE_POST = "/api/v1/like/countpost";
-    public static final String LIKE_POST_USER = "/api/v1/like/likepostuser";
+    public static final String COUNT_LIKE_POST = "/api/v1/like/count";
+    public static final String LIKE_POST_USER = "/api/v1/like/user";
 
     public static final String CHECK_FOLLOW = "/api/v1/follow/check";
     public static final String FOLLOW_USER = "/api/v1/follow/";
