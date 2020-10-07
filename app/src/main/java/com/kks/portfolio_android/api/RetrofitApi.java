@@ -25,6 +25,7 @@ import com.kks.portfolio_android.adapter.Adapter_home;
 import com.kks.portfolio_android.adapter.Adapter_plu;
 import com.kks.portfolio_android.adapter.Adapter_search;
 import com.kks.portfolio_android.adapter.Adapter_user;
+import com.kks.portfolio_android.model.Alram;
 import com.kks.portfolio_android.model.Items;
 import com.kks.portfolio_android.req.CommentReq;
 import com.kks.portfolio_android.req.FollowReq;
@@ -193,6 +194,7 @@ public class RetrofitApi {
         postResCall.enqueue(new Callback<PostRes>() {
             @Override
             public void onResponse(Call<PostRes> call, Response<PostRes> response) {
+                Log.i("aaa",response.toString());
                 if(response.isSuccessful()) {
                     List<Items> itemsList;
                     itemsList = response.body().getItems();
@@ -791,6 +793,7 @@ public class RetrofitApi {
                 if(response.code()==200) {
                     Toast.makeText(context, R.string.revise_complete, Toast.LENGTH_SHORT).show();
                     ((Activity) context).finish();
+
                 }else{
                     Log.i("aaa",response.toString());
                 }

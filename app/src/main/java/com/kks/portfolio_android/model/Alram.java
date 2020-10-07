@@ -9,6 +9,7 @@ public class Alram {
     String content;
     int comment_id;
     int status;
+    int position;
 
     public Alram(){}
 
@@ -27,6 +28,14 @@ public class Alram {
         this.profile = profile;
         this.content = content;
         this.status = status;
+    }
+
+    public int getPosition() {
+        return position;
+    }
+
+    public void setPosition(int position) {
+        this.position = position;
     }
 
     public int getUser_id() {

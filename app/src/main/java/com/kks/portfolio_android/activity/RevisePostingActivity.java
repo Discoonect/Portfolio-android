@@ -67,6 +67,7 @@ public class RevisePostingActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String content = rv_edit_content.getText().toString().trim();
                 retrofitApi.updatePost(RevisePostingActivity.this,token,post_id,content);
+
             }
         });
 

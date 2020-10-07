@@ -89,6 +89,7 @@ public class Adapter_favorite extends RecyclerView.Adapter<Adapter_favorite.View
                 public void onClick(View v) {
                     Alram alram = alramArrayList.get(getBindingAdapterPosition());
                     Intent i = new Intent(context,PageActivity.class);
+                    alram.setPosition(getBindingAdapterPosition());
                     i.putExtra("user_id",alram.getUser_id());
                     context.startActivity(i);
                 }

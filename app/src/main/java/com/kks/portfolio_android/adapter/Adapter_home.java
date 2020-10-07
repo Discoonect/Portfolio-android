@@ -139,7 +139,7 @@ public class Adapter_home extends RecyclerView.Adapter<Adapter_home.ViewHolder> 
 
             private void deletePosting(int post_id,String token) {
                 JsonObjectRequest request = new JsonObjectRequest(
-                        Request.Method.POST, Util.BASE_URL + "/api/v1/post/deletepost/"+post_id,
+                        Request.Method.POST, Util.BASE_URL + "/api/v1/post/"+post_id,
                         null,
                         new Response.Listener<JSONObject>() {
                             @Override
