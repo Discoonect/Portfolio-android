@@ -2,7 +2,7 @@ package com.kks.portfolio_android.util;
 
 public class Util {
     public static final String BASE_URL = "http://test-env.eba-gegdfakf.ap-northeast-2.elasticbeanstalk.com";
-    public static final String IMAGE_PATH = BASE_URL+"/public/uploads/";
+    public static final String IMAGE_PATH = "https://wassup-sns.s3.ap-northeast-2.amazonaws.com/";
     public static final String OFFSET = "?offset=";
     public static final String LIMIT = "&limit=";
     public static final String AUTO_LOGIN_ON = "on";

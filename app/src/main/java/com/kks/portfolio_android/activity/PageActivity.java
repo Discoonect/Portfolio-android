@@ -127,10 +127,6 @@ public class PageActivity extends AppCompatActivity {
         retrofitApi.getPagePhoto(PageActivity.this,user_id,offset,limit,recyclerView);
         retrofitApi.checkFollow(PageActivity.this,token,user_id,sp_user_id,page_btn_follow,page_btn_unFollow);
 
-        String introduce = page_txt_introduce.getText().toString().trim();
-        if(introduce.equals(R.string.please_insert_20)){
-            page_txt_introduce.setText("");
-        }
     }
 
     @Override

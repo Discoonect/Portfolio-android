@@ -66,13 +66,10 @@ public class Adapter_plu extends RecyclerView.Adapter<Adapter_plu.ViewHolder> {
         }
 
         if(items.getUser_profilephoto()!=null){
-            Glide.with(context).load(Util.BASE_URL+Util.IMAGE_PATH+items.getUser_profilephoto()).into(holder.plu_profile);
+            Glide.with(context).load(Util.IMAGE_PATH+items.getUser_profilephoto()).into(holder.plu_profile);
         }else{
             holder.plu_profile.setImageResource(R.drawable.ic_baseline_account_circle_24);
         }
-
-
-
     }
 
     @Override
