@@ -162,20 +162,22 @@ public class RetrofitApi {
         });
     }
 
-    public void getPostingData(Context context, String token, RecyclerView recyclerView){
+    public void getPostingData(Context context, String token,int offset,int limit,RecyclerView recyclerView){
+
         Retrofit retrofit = NetworkClient.getRetrofitClient(context);
         PostApi postApi = retrofit.create(PostApi.class);
 
-        Call<PostRes> postResCall = postApi.getAllPost("Bearer "+ token,0,25);
+        Call<PostRes> postResCall = postApi.getAllPost(token,offset,limit);
 
         postResCall.enqueue(new Callback<PostRes>() {
             @Override
             public void onResponse(Call<PostRes> call, Response<PostRes> response) {
-                if(response.isSuccessful()) {
+                if(response.code()==200) {
                     Log.i("aaa",response.toString());
+                    Log.i("aaa","cnt : "+response.body().getCnt());
                     List<Items> itemsList;
                     itemsList = response.body().getItems();
-                    Adapter_home adapter_home = new Adapter_home(context, itemsList);
+                    Adapter_home adapter_home = new Adapter_home(context,itemsList);
                     recyclerView.setAdapter(adapter_home);
                 }
             }
@@ -806,4 +808,31 @@ public class RetrofitApi {
             }
         });
     }
+
+    public void addPostData(Context context, String token,int offset,int limit){
+        Retrofit retrofit = NetworkClient.getRetrofitClient(context);
+        PostApi postApi = retrofit.create(PostApi.class);
+
+        Call<PostRes> postResCall = postApi.getAllPost(token,offset,limit);
+
+        postResCall.enqueue(new Callback<PostRes>() {
+            @Override
+            public void onResponse(Call<PostRes> call, Response<PostRes> response) {
+                if(response.code()==200) {
+                    Log.i("aaa","cnt : "+response.body().getCnt());
+                    List<Items> itemsList;
+                    itemsList = response.body().getItems();
+                    Adapter_home adapter_home = new Adapter_home(context,itemsList);
+                    adapter_home.notifyDataSetChanged();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<PostRes> call, Throwable t) {
+
+            }
+        });
+    }
+
+
 }

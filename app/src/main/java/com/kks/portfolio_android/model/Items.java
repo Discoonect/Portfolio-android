@@ -3,7 +3,9 @@
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Items {
+import java.util.List;
+
+    public class Items {
 
     @SerializedName("id")
     @Expose
@@ -83,6 +85,43 @@ public class Items {
 
     @SerializedName("postliketime")
     private String postliketime;
+
+    @SerializedName("cnt")
+    private Integer cnt;
+
+    public Items(Integer post_id, Integer user_id, String photo_url, String content, String created_at, String user_profilephoto, String user_name, Integer mylike, Integer comment_cnt, Integer like_cnt) {
+        this.post_id = post_id;
+        this.user_id = user_id;
+        this.photo_url = photo_url;
+        this.content = content;
+        this.created_at = created_at;
+        this.user_profilephoto = user_profilephoto;
+        this.user_name = user_name;
+        this.mylike = mylike;
+        this.comment_cnt = comment_cnt;
+        this.like_cnt = like_cnt;
+    }
+
+    public Items(Integer post_id, Integer user_id, String photo_url, Integer cnt_like) {
+        this.post_id = post_id;
+        this.user_id = user_id;
+        this.photo_url = photo_url;
+        this.cnt_like = cnt_like;
+    }
+
+    public Items(Integer id, Integer user_id, String photo_url) {
+        this.id = id;
+        this.user_id = user_id;
+        this.photo_url = photo_url;
+    }
+
+    public Integer getCnt() {
+    return cnt;
+}
+
+    public void setCnt(Integer cnt) {
+        this.cnt = cnt;
+    }
 
     public String getPostliketime() {
         return postliketime;

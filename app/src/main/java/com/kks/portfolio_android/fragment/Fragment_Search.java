@@ -4,8 +4,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -19,13 +21,16 @@ import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.kks.portfolio_android.activity.MainActivity;
 import com.kks.portfolio_android.R;
+import com.kks.portfolio_android.api.NetworkClient;
+import com.kks.portfolio_android.api.PostApi;
 import com.kks.portfolio_android.api.RetrofitApi;
+import com.kks.portfolio_android.model.Items;
+import com.kks.portfolio_android.res.PostRes;
 import com.kks.portfolio_android.search.Search_PostingResult;
 import com.kks.portfolio_android.search.Search_UserResult;
 import com.kks.portfolio_android.adapter.Adapter_search;
@@ -37,6 +42,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -45,13 +56,11 @@ public class Fragment_Search extends Fragment {
     ImageButton fs_img_search;
     TextView fs_edit_search;
 
-    ArrayList<Posting> postingArrayList = new ArrayList<>();
-
     int offset;
     int limit = 25;
+    int cnt;
 
-    RequestQueue requestQueue;
-    JSONObject jsonObject;
+    List<Items> itemsList;
 
     Adapter_search adapter_search;
     RecyclerView recyclerView;
@@ -72,6 +81,8 @@ public class Fragment_Search extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        offset=0;
+
         SharedPreferences sharedPreferences =
                 getActivity().getSharedPreferences(Util.PREFERENCE_NAME,MODE_PRIVATE);
         token = sharedPreferences.getString("token",null);
@@ -83,8 +94,6 @@ public class Fragment_Search extends Fragment {
             getActivity().finish();
         }
 
-        postingArrayList.clear();
-
         recyclerView = getView().findViewById(R.id.fs_recyclerview);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(),3));
@@ -92,8 +101,7 @@ public class Fragment_Search extends Fragment {
         fs_img_search = getView().findViewById(R.id.fs_img_search);
         fs_edit_search = getView().findViewById(R.id.fs_edit_search);
 
-        RetrofitApi retrofitApi = new RetrofitApi();
-        retrofitApi.getBestPost(getContext(),offset,limit,recyclerView);
+        getBestPost(getContext(),limit,recyclerView);
 
         fs_img_search.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -115,13 +123,93 @@ public class Fragment_Search extends Fragment {
                 fs_edit_search.setText("");
             }
         });
+
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                int lastPosition = ((LinearLayoutManager) recyclerView.getLayoutManager()).findLastCompletelyVisibleItemPosition();
+                int totalCount = recyclerView.getAdapter().getItemCount();
+
+                if (lastPosition+1 == totalCount) {
+                    if(cnt==limit){
+                        addBestPost(getContext(),limit);
+                    }else{
+                        Toast.makeText(getContext(), "마지막 게시물입니다.", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+        });
     }
 
     @Override
     public void onResume() {
         super.onResume();
 
+    }
 
+    public void getBestPost(Context context,int limit, RecyclerView recyclerView){
+        Retrofit retrofit = NetworkClient.getRetrofitClient(context);
+        PostApi postApi = retrofit.create(PostApi.class);
+        Call<PostRes> postResCall = postApi.bestPost(offset,limit);
+        postResCall.enqueue(new Callback<PostRes>() {
+            @Override
+            public void onResponse(Call<PostRes> call, Response<PostRes> response) {
+                Log.i("aaa",response.toString());
+                if(response.isSuccessful()) {
+                    itemsList = response.body().getItems();
+                    adapter_search = new Adapter_search(context,itemsList);
+                    recyclerView.setAdapter(adapter_search);
+
+                    offset = offset+response.body().getCnt();
+                    cnt = response.body().getCnt();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<PostRes> call, Throwable t) {
+            }
+        });
+    }
+
+    public void addBestPost(Context context,int limit){
+        Retrofit retrofit = NetworkClient.getRetrofitClient(context);
+        PostApi postApi = retrofit.create(PostApi.class);
+        Call<PostRes> postResCall = postApi.bestPost(offset,limit);
+        postResCall.enqueue(new Callback<PostRes>() {
+            @Override
+            public void onResponse(Call<PostRes> call, Response<PostRes> response) {
+                Log.i("aaa",response.toString());
+                if(response.code()==200) {
+
+                    for(int i=0; i<response.body().getItems().size(); i++){
+                        Items item = response.body().getItems().get(i);
+
+                        int post_id = item.getPost_id();
+                        int user_id = item.getUser_id();
+                        String photo_url = item.getPhoto_url();
+                        int cnt_like = item.getCnt_like();
+
+                        Items items = new Items(post_id,user_id,photo_url,cnt_like);
+                        itemsList.add(items);
+                    }
+
+                    adapter_search.notifyDataSetChanged();
+
+                    offset = offset+response.body().getCnt();
+                    cnt = response.body().getCnt();
+                }
+            }
+            @Override
+            public void onFailure(Call<PostRes> call, Throwable t) {
+            }
+        });
     }
 
 //    private void getFamousPosting(){

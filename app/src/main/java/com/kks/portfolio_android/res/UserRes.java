@@ -37,9 +37,24 @@ public class UserRes {
     @SerializedName("follower")
     int follwer_cnt;
 
+    @SerializedName("cnt")
+    int cnt;
+
     // 게터 세터 만들어야 함
     public List<Items> getItems() {
         return items;
+    }
+
+    public void setItems(List<Items> items) {
+        this.items = items;
+    }
+
+    public int getCnt() {
+        return cnt;
+    }
+
+    public void setCnt(int cnt) {
+        this.cnt = cnt;
     }
 
     public void setItems(ArrayList<Items> items) {

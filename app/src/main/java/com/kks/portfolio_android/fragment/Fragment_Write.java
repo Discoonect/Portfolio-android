@@ -5,8 +5,10 @@ import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.loader.content.AsyncTaskLoader;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -24,6 +26,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.kks.portfolio_android.activity.HomeActivity;
@@ -158,6 +161,8 @@ public class Fragment_Write extends Fragment {
         }
     }
 
+
+
     private void displayFileChoose() {
         Intent i = new Intent();
         i.setType("image/*");
@@ -288,4 +293,25 @@ public class Fragment_Write extends Fragment {
             return null;
         }
     }
+
+//    private class UploadPosting extends AsyncTaskLoader<>{
+//        ProgressBar fw_progressBar;
+//        Context context;
+//
+//        public UploadPosting(Context context) {
+//            super(context);
+//            this.context = context;
+//            fw_progressBar = getView().findViewById(R.id.fw_progressBar);
+//        }
+//
+//        @Nullable
+//        @Override
+//        public void loadInBackground() {
+//            return null;
+//        }
+//
+//
+//
+//
+//    }
 }
