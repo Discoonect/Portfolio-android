@@ -56,7 +56,7 @@ public class Adapter_favorite extends RecyclerView.Adapter<Adapter_favorite.View
             holder.ff_img_postImg.setVisibility(View.GONE);
         }
 
-        if(alram.getProfile()!=null){
+        if(!alram.getProfile().equals("null")){
             Glide.with(context).load(Util.IMAGE_PATH+alram.getProfile()).into(holder.ff_profile);
         }else{
             holder.ff_profile.setImageResource(R.drawable.ic_baseline_account_circle_24);

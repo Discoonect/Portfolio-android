@@ -785,7 +785,11 @@ public class VolleyApi {
                                     if(cnt==0){
                                         ff_textView.setVisibility(View.VISIBLE);
                                         ff_textView.setText("좋아요를 누른 사람이 없어요!");
+                                        recyclerView.setVisibility(View.GONE);
                                         return;
+                                    }else{
+                                        ff_textView.setVisibility(View.GONE);
+                                        recyclerView.setVisibility(View.VISIBLE);
                                     }
 
                                     JSONArray items = response.getJSONArray("items");
@@ -861,7 +865,11 @@ public class VolleyApi {
                                     if(cnt==0){
                                         ff_textView.setVisibility(View.VISIBLE);
                                         ff_textView.setText("댓글 작성한 사람이 없어요!");
+                                        recyclerView.setVisibility(View.GONE);
                                         return;
+                                    }else{
+                                        ff_textView.setVisibility(View.GONE);
+                                        recyclerView.setVisibility(View.VISIBLE);
                                     }
                                     JSONArray items = response.getJSONArray("items");
 
@@ -940,7 +948,11 @@ public class VolleyApi {
                                     if(cnt==0){
                                         ff_textView.setVisibility(View.VISIBLE);
                                         ff_textView.setText("팔로우 한 사람이 없어요!");
+                                        recyclerView.setVisibility(View.GONE);
                                         return;
+                                    }else{
+                                        ff_textView.setVisibility(View.GONE);
+                                        recyclerView.setVisibility(View.VISIBLE);
                                     }
 
                                     JSONArray items = response.getJSONArray("items");

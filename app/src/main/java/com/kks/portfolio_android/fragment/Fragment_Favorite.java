@@ -109,6 +109,5 @@ public class Fragment_Favorite extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-
     }
 }
