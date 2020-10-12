@@ -203,6 +203,8 @@ public class PostingActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+
+
     }
 
     private void deletePosting(int post_id, String token) {

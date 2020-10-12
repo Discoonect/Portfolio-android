@@ -43,6 +43,10 @@ public class Util {
     public static final String FOLLOW_USER = "/api/v1/follow/";
     public static final String CANCEL_FOLLOW = "/api/v1/follow/";
 
+    public static final String ALARM_POST = "/api/v1/alarm/postlike";
+    public static final String ALARM_COMMENT = "api/v1/alarm/comment";
+    public static final String ALARM_FOLLOW = "/api/v1/alarm/follow";
+
 
 
 }

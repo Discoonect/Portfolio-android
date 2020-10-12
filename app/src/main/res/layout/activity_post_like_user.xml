@@ -23,6 +23,7 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:gravity="center"
+            android:text="좋아요"
             android:textSize="30sp" />
 
         <ImageView

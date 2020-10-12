@@ -94,7 +94,7 @@ public class Search_PostingResult extends AppCompatActivity {
                                 int post_id = jsonObject.getInt("id");
                                 String content = jsonObject.getString("content");
                                 String photo = jsonObject.getString("photo_url");
-                                String photo_url = Util.BASE_URL+"/public/uploads/"+photo;
+                                String photo_url = Util.IMAGE_PATH+photo;
 
                                 Posting posting = new Posting(post_id,user_id,photo_url,content);
                                 list.add(posting);

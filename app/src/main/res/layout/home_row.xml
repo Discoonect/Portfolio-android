@@ -76,6 +76,7 @@
                 android:layout_marginBottom="10dp"
                 android:adjustViewBounds="true"
                 android:contentDescription="@string/home_image"
+                android:scaleType="fitStart"
                 app:srcCompat="@drawable/ic_launcher_background" />
 
             <LinearLayout

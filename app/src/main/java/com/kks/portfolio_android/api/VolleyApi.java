@@ -769,246 +769,246 @@ public class VolleyApi {
 //        requestQueue.add(request);
     }
 
-    public void postLikeAlarm(Context context,int offset,int limit,String token,RecyclerView recyclerView,TextView ff_textView){
-        ArrayList<Alram> list = new ArrayList<>();
-        list.clear();
-        RequestQueue requestQueue = Volley.newRequestQueue(context);
-        JsonObjectRequest request =
-                new JsonObjectRequest(Request.Method.GET, Util.BASE_URL + "/api/v1/alarm/postlike?offset="+offset+"&limit="+limit,null,
-                        new Response.Listener<JSONObject>() {
-                            @Override
-                            public void onResponse(JSONObject response) {
-                                Log.i("aaa",response.toString());
-
-                                try {
-                                    int cnt = response.getInt("cnt");
-                                    if(cnt==0){
-                                        ff_textView.setVisibility(View.VISIBLE);
-                                        ff_textView.setText("좋아요를 누른 사람이 없어요!");
-                                        recyclerView.setVisibility(View.GONE);
-                                        return;
-                                    }else{
-                                        ff_textView.setVisibility(View.GONE);
-                                        recyclerView.setVisibility(View.VISIBLE);
-                                    }
-
-                                    JSONArray items = response.getJSONArray("items");
-
-                                    for(int i=0; i<items.length(); i++){
-                                        JSONObject jsonObject = items.getJSONObject(i);
-
-                                        String profile = jsonObject.getString("user_profilephoto");
-                                        String name = jsonObject.getString("user_name");
-                                        int post_id = jsonObject.getInt("post_id");
-                                        String photo = Util.IMAGE_PATH+jsonObject.getString("photo_url");
-                                        String time = jsonObject.getString("created_at");
-                                        int user_id = jsonObject.getInt("user_id");
-
+//    public void postLikeAlarm(Context context,int offset,int limit,String token,RecyclerView recyclerView,TextView ff_textView){
+//        ArrayList<Alram> list = new ArrayList<>();
+//        list.clear();
+//        RequestQueue requestQueue = Volley.newRequestQueue(context);
+//        JsonObjectRequest request =
+//                new JsonObjectRequest(Request.Method.GET, Util.BASE_URL + "/api/v1/alarm/postlike?offset="+offset+"&limit="+limit,null,
+//                        new Response.Listener<JSONObject>() {
+//                            @Override
+//                            public void onResponse(JSONObject response) {
+//                                Log.i("aaa",response.toString());
+//
+//                                try {
+//                                    int cnt = response.getInt("cnt");
+//                                    if(cnt==0){
+//                                        ff_textView.setVisibility(View.VISIBLE);
+//                                        ff_textView.setText("좋아요를 누른 사람이 없어요!");
+//                                        recyclerView.setVisibility(View.GONE);
+//                                        return;
+//                                    }else{
+//                                        ff_textView.setVisibility(View.GONE);
+//                                        recyclerView.setVisibility(View.VISIBLE);
+//                                    }
+//
+//                                    JSONArray items = response.getJSONArray("items");
+//
+//                                    for(int i=0; i<items.length(); i++){
+//                                        JSONObject jsonObject = items.getJSONObject(i);
+//
+//                                        String profile = jsonObject.getString("user_profilephoto");
+//                                        String name = jsonObject.getString("user_name");
+//                                        int post_id = jsonObject.getInt("post_id");
+//                                        String photo = Util.IMAGE_PATH+jsonObject.getString("photo_url");
+//                                        String time = jsonObject.getString("created_at");
+//                                        int user_id = jsonObject.getInt("user_id");
+//
                                         //시간 맞추기
-                                        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-                                        df.setTimeZone(TimeZone.getTimeZone("UTC"));
+//                                        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+//                                        df.setTimeZone(TimeZone.getTimeZone("UTC"));
+//
+//                                        //포스팅 작성시간 표시
+//                                        try {
+//                                            Date date = df.parse(time);
+//                                            df.setTimeZone(TimeZone.getDefault());
+//                                            String strDate = df.format(date);
+//                                            String content = name+" 님이 게시물을 좋아합니다.\n"+strDate;
+//
+//                                            Alram alram = new Alram(user_id,post_id,photo,profile,content,1);
+//                                            list.add(alram);
+//
+//                                        } catch (ParseException e) {
+//                                            e.printStackTrace();
+//                                        }
+////                                    }
+//
+//                                    Adapter_favorite adapter_favorite = new Adapter_favorite(context, list);
+//                                    recyclerView.setAdapter(adapter_favorite);
+//
+//                                } catch (JSONException e) {
+//                                    e.printStackTrace();
+//                                }
+//                            }
+//                        },
+//                        new Response.ErrorListener() {
+//                            @Override
+//                            public void onErrorResponse(VolleyError error) {
+//                                Log.i("aaa",error.toString());
+//                            }
+//                        }
+//                )
+//                {
+//                    @Override
+//                    public Map<String, String> getHeaders() throws AuthFailureError {
+//                        Map<String, String> stringStringMap = new HashMap<String, String>();
+//                        stringStringMap.put("Authorization","Bearer "+token);
+//                        return stringStringMap;
+//                    }
+//                };
+//        requestQueue.add(request);
+//    }
 
-                                        //포스팅 작성시간 표시
-                                        try {
-                                            Date date = df.parse(time);
-                                            df.setTimeZone(TimeZone.getDefault());
-                                            String strDate = df.format(date);
-                                            String content = name+" 님이 게시물을 좋아합니다.\n"+strDate;
+//    public void postCommentAlarm(Context context,int offset,int limit,String token, RecyclerView recyclerView,TextView ff_textView){
+//        ArrayList<Alram> list = new ArrayList<>();
+//        list.clear();
+//        RequestQueue requestQueue = Volley.newRequestQueue(context);
+//        JsonObjectRequest request =
+//                new JsonObjectRequest(Request.Method.GET, Util.BASE_URL + "/api/v1/alarm/comment?offset="+offset+"&limit="+limit,null,
+//                        new Response.Listener<JSONObject>() {
+//                            @Override
+//                            public void onResponse(JSONObject response) {
+//                                Log.i("aaa",response.toString());
+//
+//                                try {
+//                                    int cnt = response.getInt("cnt");
+//                                    if(cnt==0){
+//                                        ff_textView.setVisibility(View.VISIBLE);
+//                                        ff_textView.setText("댓글 작성한 사람이 없어요!");
+//                                        recyclerView.setVisibility(View.GONE);
+//                                        return;
+//                                    }else{
+//                                        ff_textView.setVisibility(View.GONE);
+//                                        recyclerView.setVisibility(View.VISIBLE);
+//                                    }
+//                                    JSONArray items = response.getJSONArray("items");
+//
+//                                    for(int i=0; i<items.length(); i++){
+//                                        JSONObject jsonObject = items.getJSONObject(i);
+//
+//                                        int id = jsonObject.getInt("post_id");
+//                                        String name = jsonObject.getString("user_name");
+//                                        String profile = jsonObject.getString("user_profilephoto");
+//                                        String comment = jsonObject.getString("comment");
+//                                        String time = jsonObject.getString("created_at");
+//                                        String photo = Util.BASE_URL+"/public/uploads/"+jsonObject.getString("photo_url");
+//                                        int user_id = jsonObject.getInt("user_id");
+//
+//                                        if(comment.length()>13){
+//                                            comment = comment.substring(0,13)+"...";
+//                                        }
+//
+//                                        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+//                                        df.setTimeZone(TimeZone.getTimeZone("UTC"));
+//
+//                                        try {
+//                                            Date date = df.parse(time);
+//                                            df.setTimeZone(TimeZone.getDefault());
+//                                            String strDate = df.format(date);
+//
+//                                            String content = name+" 님이 댓글을 달았습니다.\n"+comment+"\n"+strDate;
+//
+//                                            Alram alram = new Alram(user_id,id,photo,profile,content,2);
+//                                            list.add(alram);
+//
+//                                        } catch (ParseException e) {
+//                                            e.printStackTrace();
+//                                        }
+//                                    }
+//
+//                                    Adapter_favorite adapter_favorite = new Adapter_favorite(context, list);
+//                                    recyclerView.setAdapter(adapter_favorite);
+//
+//                                } catch (JSONException e) {
+//                                    e.printStackTrace();
+//                                }
+//                            }
+//                        },
+//                        new Response.ErrorListener() {
+//                            @Override
+//                            public void onErrorResponse(VolleyError error) {
+//                                Log.i("aaa",error.toString());
+//                            }
+//                        }
+//                )
+//                {
+//                    @Override
+//                    public Map<String, String> getHeaders() throws AuthFailureError {
+//                        Map<String, String> stringStringMap = new HashMap<String, String>();
+//                        stringStringMap.put("Authorization","Bearer "+token);
+//                        return stringStringMap;
+//                    }
+//                };
+//        requestQueue.add(request);
+//    }
 
-                                            Alram alram = new Alram(user_id,post_id,photo,profile,content,1);
-                                            list.add(alram);
-
-                                        } catch (ParseException e) {
-                                            e.printStackTrace();
-                                        }
-                                    }
-
-                                    Adapter_favorite adapter_favorite = new Adapter_favorite(context, list);
-                                    recyclerView.setAdapter(adapter_favorite);
-
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        },
-                        new Response.ErrorListener() {
-                            @Override
-                            public void onErrorResponse(VolleyError error) {
-                                Log.i("aaa",error.toString());
-                            }
-                        }
-                )
-                {
-                    @Override
-                    public Map<String, String> getHeaders() throws AuthFailureError {
-                        Map<String, String> stringStringMap = new HashMap<String, String>();
-                        stringStringMap.put("Authorization","Bearer "+token);
-                        return stringStringMap;
-                    }
-                };
-        requestQueue.add(request);
-    }
-
-    public void postCommentAlarm(Context context,int offset,int limit,String token, RecyclerView recyclerView,TextView ff_textView){
-        ArrayList<Alram> list = new ArrayList<>();
-        list.clear();
-        RequestQueue requestQueue = Volley.newRequestQueue(context);
-        JsonObjectRequest request =
-                new JsonObjectRequest(Request.Method.GET, Util.BASE_URL + "/api/v1/alarm/comment?offset="+offset+"&limit="+limit,null,
-                        new Response.Listener<JSONObject>() {
-                            @Override
-                            public void onResponse(JSONObject response) {
-                                Log.i("aaa",response.toString());
-
-                                try {
-                                    int cnt = response.getInt("cnt");
-                                    if(cnt==0){
-                                        ff_textView.setVisibility(View.VISIBLE);
-                                        ff_textView.setText("댓글 작성한 사람이 없어요!");
-                                        recyclerView.setVisibility(View.GONE);
-                                        return;
-                                    }else{
-                                        ff_textView.setVisibility(View.GONE);
-                                        recyclerView.setVisibility(View.VISIBLE);
-                                    }
-                                    JSONArray items = response.getJSONArray("items");
-
-                                    for(int i=0; i<items.length(); i++){
-                                        JSONObject jsonObject = items.getJSONObject(i);
-
-                                        int id = jsonObject.getInt("post_id");
-                                        String name = jsonObject.getString("user_name");
-                                        String profile = jsonObject.getString("user_profilephoto");
-                                        String comment = jsonObject.getString("comment");
-                                        String time = jsonObject.getString("created_at");
-                                        String photo = Util.BASE_URL+"/public/uploads/"+jsonObject.getString("photo_url");
-                                        int user_id = jsonObject.getInt("user_id");
-
-                                        if(comment.length()>13){
-                                            comment = comment.substring(0,13)+"...";
-                                        }
-
-                                        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-                                        df.setTimeZone(TimeZone.getTimeZone("UTC"));
-
-                                        try {
-                                            Date date = df.parse(time);
-                                            df.setTimeZone(TimeZone.getDefault());
-                                            String strDate = df.format(date);
-
-                                            String content = name+" 님이 댓글을 달았습니다.\n"+comment+"\n"+strDate;
-
-                                            Alram alram = new Alram(user_id,id,photo,profile,content,2);
-                                            list.add(alram);
-
-                                        } catch (ParseException e) {
-                                            e.printStackTrace();
-                                        }
-                                    }
-
-                                    Adapter_favorite adapter_favorite = new Adapter_favorite(context, list);
-                                    recyclerView.setAdapter(adapter_favorite);
-
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        },
-                        new Response.ErrorListener() {
-                            @Override
-                            public void onErrorResponse(VolleyError error) {
-                                Log.i("aaa",error.toString());
-                            }
-                        }
-                )
-                {
-                    @Override
-                    public Map<String, String> getHeaders() throws AuthFailureError {
-                        Map<String, String> stringStringMap = new HashMap<String, String>();
-                        stringStringMap.put("Authorization","Bearer "+token);
-                        return stringStringMap;
-                    }
-                };
-        requestQueue.add(request);
-    }
-
-    public void followAlram(Context context,int offset,int limit,String token,RecyclerView recyclerView,TextView ff_textView){
-        ArrayList<Alram> list = new ArrayList<>();
-        list.clear();
-        RequestQueue requestQueue = Volley.newRequestQueue(context);
-        JsonObjectRequest request =
-                new JsonObjectRequest(Request.Method.GET, Util.BASE_URL + "/api/v1/alarm/follow?offset="+offset+"&limit="+limit,null,
-                        new Response.Listener<JSONObject>() {
-                            @Override
-                            public void onResponse(JSONObject response) {
-                                Log.i("aaa",response.toString());
-
-                                try {
-                                    int cnt = response.getInt("cnt");
-                                    if(cnt==0){
-                                        ff_textView.setVisibility(View.VISIBLE);
-                                        ff_textView.setText("팔로우 한 사람이 없어요!");
-                                        recyclerView.setVisibility(View.GONE);
-                                        return;
-                                    }else{
-                                        ff_textView.setVisibility(View.GONE);
-                                        recyclerView.setVisibility(View.VISIBLE);
-                                    }
-
-                                    JSONArray items = response.getJSONArray("items");
-
-                                    for(int i=0; i<items.length(); i++){
-                                        JSONObject jsonObject = items.getJSONObject(i);
-
-                                        int id = jsonObject.getInt("user_id");
-                                        String name = jsonObject.getString("user_name");
-                                        String profile = jsonObject.getString("user_profilephoto");
-                                        String time = jsonObject.getString("created_at");
-                                        int user_id = jsonObject.getInt("user_id");
-
-                                        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-                                        df.setTimeZone(TimeZone.getTimeZone("UTC"));
-
-                                        try {
-                                            Date date = df.parse(time);
-                                            df.setTimeZone(TimeZone.getDefault());
-                                            String strDate = df.format(date);
-
-                                            String content = name+" 님이 회원님을 팔로우 했습니다. \n"+strDate;
-
-                                            Alram alram = new Alram(user_id,id,profile,content,3);
-                                            list.add(alram);
-
-                                        } catch (ParseException e) {
-                                            e.printStackTrace();
-                                        }
-                                    }
-
-                                    Adapter_favorite adapter_favorite = new Adapter_favorite(context, list);
-                                    recyclerView.setAdapter(adapter_favorite);
-
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        },
-                        new Response.ErrorListener() {
-                            @Override
-                            public void onErrorResponse(VolleyError error) {
-                                Log.i("aaa",error.toString());
-                            }
-                        }
-                )
-                {
-                    @Override
-                    public Map<String, String> getHeaders() throws AuthFailureError {
-                        Map<String, String> stringStringMap = new HashMap<String, String>();
-                        stringStringMap.put("Authorization","Bearer "+token);
-                        return stringStringMap;
-                    }
-                };
-        requestQueue.add(request);
-    }
+//    public void followAlram(Context context,int offset,int limit,String token,RecyclerView recyclerView,TextView ff_textView){
+//        ArrayList<Alram> list = new ArrayList<>();
+//        list.clear();
+//        RequestQueue requestQueue = Volley.newRequestQueue(context);
+//        JsonObjectRequest request =
+//                new JsonObjectRequest(Request.Method.GET, Util.BASE_URL + "/api/v1/alarm/follow?offset="+offset+"&limit="+limit,null,
+//                        new Response.Listener<JSONObject>() {
+//                            @Override
+//                            public void onResponse(JSONObject response) {
+//                                Log.i("aaa",response.toString());
+//
+//                                try {
+//                                    int cnt = response.getInt("cnt");
+//                                    if(cnt==0){
+//                                        ff_textView.setVisibility(View.VISIBLE);
+//                                        ff_textView.setText("팔로우 한 사람이 없어요!");
+//                                        recyclerView.setVisibility(View.GONE);
+//                                        return;
+//                                    }else{
+//                                        ff_textView.setVisibility(View.GONE);
+//                                        recyclerView.setVisibility(View.VISIBLE);
+//                                    }
+//
+//                                    JSONArray items = response.getJSONArray("items");
+//
+//                                    for(int i=0; i<items.length(); i++){
+//                                        JSONObject jsonObject = items.getJSONObject(i);
+//
+//                                        int id = jsonObject.getInt("user_id");
+//                                        String name = jsonObject.getString("user_name");
+//                                        String profile = jsonObject.getString("user_profilephoto");
+//                                        String time = jsonObject.getString("created_at");
+//                                        int user_id = jsonObject.getInt("user_id");
+//
+//                                        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+//                                        df.setTimeZone(TimeZone.getTimeZone("UTC"));
+//
+//                                        try {
+//                                            Date date = df.parse(time);
+//                                            df.setTimeZone(TimeZone.getDefault());
+//                                            String strDate = df.format(date);
+//
+//                                            String content = name+" 님이 회원님을 팔로우 했습니다. \n"+strDate;
+//
+//                                            Alram alram = new Alram(user_id,id,profile,content,3);
+//                                            list.add(alram);
+//
+//                                        } catch (ParseException e) {
+//                                            e.printStackTrace();
+//                                        }
+//                                    }
+//
+//                                    Adapter_favorite adapter_favorite = new Adapter_favorite(context, list);
+//                                    recyclerView.setAdapter(adapter_favorite);
+//
+//                                } catch (JSONException e) {
+//                                    e.printStackTrace();
+//                                }
+//                            }
+//                        },
+//                        new Response.ErrorListener() {
+//                            @Override
+//                            public void onErrorResponse(VolleyError error) {
+//                                Log.i("aaa",error.toString());
+//                            }
+//                        }
+//                )
+//                {
+//                    @Override
+//                    public Map<String, String> getHeaders() throws AuthFailureError {
+//                        Map<String, String> stringStringMap = new HashMap<String, String>();
+//                        stringStringMap.put("Authorization","Bearer "+token);
+//                        return stringStringMap;
+//                    }
+//                };
+//        requestQueue.add(request);
+//    }
 
     public void deleteProfilePhoto(Context context,String token,int user_id,TextView txt_userName,ImageView img_profile,EditText edit_introduce){
         RequestQueue requestQueue = Volley.newRequestQueue(context);

@@ -18,6 +18,7 @@ import com.kks.portfolio_android.activity.CommentActivity;
 import com.kks.portfolio_android.activity.PageActivity;
 import com.kks.portfolio_android.activity.PostingActivity;
 import com.kks.portfolio_android.model.Alram;
+import com.kks.portfolio_android.model.Items;
 import com.kks.portfolio_android.model.Posting;
 import com.kks.portfolio_android.util.Util;
 
@@ -25,17 +26,18 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 
 public class Adapter_favorite extends RecyclerView.Adapter<Adapter_favorite.ViewHolder> {
 
     Context context;
-    ArrayList<Alram> alramArrayList;
+    List<Items> itemsList;
 
-    public Adapter_favorite(Context context, ArrayList<Alram> alramArrayList) {
+    public Adapter_favorite(Context context, List<Items> itemsList) {
         this.context = context;
-        this.alramArrayList = alramArrayList;
+        this.itemsList = itemsList;
     }
     @NonNull
     @Override
@@ -47,28 +49,26 @@ public class Adapter_favorite extends RecyclerView.Adapter<Adapter_favorite.View
 
     @Override
     public void onBindViewHolder(@NonNull Adapter_favorite.ViewHolder holder, int position) {
-        Alram alram = alramArrayList.get(position);
+        Items items = itemsList.get(position);
 
-
-        if(alram.getPhoto()!=null) {
-            Glide.with(context).load(alram.getPhoto()).into(holder.ff_img_postImg);
+        if(items.getPhoto_url()!=null) {
+            Glide.with(context).load(Util.IMAGE_PATH+items.getPhoto_url()).into(holder.ff_img_postImg);
         }else{
             holder.ff_img_postImg.setVisibility(View.GONE);
         }
 
-        if(!alram.getProfile().equals("null")){
-            Glide.with(context).load(Util.IMAGE_PATH+alram.getProfile()).into(holder.ff_profile);
+        if(items.getUser_profilephoto()!=null){
+            Glide.with(context).load(Util.IMAGE_PATH+items.getUser_profilephoto()).into(holder.ff_profile);
         }else{
             holder.ff_profile.setImageResource(R.drawable.ic_baseline_account_circle_24);
         }
 
-        holder.ff_txt_content.setText(alram.getContent());
-
+        holder.ff_txt_content.setText(items.getCreated_at());
     }
 
     @Override
     public int getItemCount() {
-        return alramArrayList.size();
+        return itemsList.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder{
@@ -87,10 +87,9 @@ public class Adapter_favorite extends RecyclerView.Adapter<Adapter_favorite.View
             ff_profile.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Alram alram = alramArrayList.get(getBindingAdapterPosition());
+                    Items items = itemsList.get(getBindingAdapterPosition());
                     Intent i = new Intent(context,PageActivity.class);
-                    alram.setPosition(getBindingAdapterPosition());
-                    i.putExtra("user_id",alram.getUser_id());
+                    i.putExtra("user_id",items.getUser_id());
                     context.startActivity(i);
                 }
             });
@@ -98,18 +97,18 @@ public class Adapter_favorite extends RecyclerView.Adapter<Adapter_favorite.View
             ff_txt_content.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Alram alram = alramArrayList.get(getBindingAdapterPosition());
-                    if(alram.getStatus()==1){
-                        Intent i = new Intent(context, PostingActivity.class);
-                        i.putExtra("post_id",alram.getId());
-                        context.startActivity(i);
-                    }else if(alram.getStatus()==2){
-                        Intent i = new Intent(context, CommentActivity.class);
-                        i.putExtra("post_id",alram.getId());
-                        context.startActivity(i);
-                    }else if(alram.getStatus()==3){
+                    Items items = itemsList.get(getBindingAdapterPosition());
+                    if(items.getComment()==null && items.getPost_id()==null){
                         Intent i = new Intent(context, PageActivity.class);
-                        i.putExtra("user_id",alram.getId());
+                        i.putExtra("user_id",items.getUser_id());
+                        context.startActivity(i);
+                    }else if(items.getPost_id()!=null && items.getComment()==null){
+                        Intent i = new Intent(context, PostingActivity.class);
+                        i.putExtra("post_id",items.getPost_id());
+                        context.startActivity(i);
+                    }else{
+                        Intent i = new Intent(context, CommentActivity.class);
+                        i.putExtra("post_id",items.getPost_id());
                         context.startActivity(i);
                     }
                 }

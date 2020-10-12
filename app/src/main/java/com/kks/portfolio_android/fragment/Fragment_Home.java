@@ -47,7 +47,7 @@ public class Fragment_Home extends Fragment {
     List<Items> itemsList = new ArrayList<>();
 
     int offset;
-    int limit=6;
+    int limit=4;
     int cnt;
 
     TextView fh_textView;

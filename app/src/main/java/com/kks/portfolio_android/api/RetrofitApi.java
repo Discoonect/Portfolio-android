@@ -236,8 +236,9 @@ public class RetrofitApi {
                     }
 
                     if(items.getIntroduce()==null || items.getIntroduce().equals("")){
-                        txt_introduce.setHint(R.string.please_insert_20);
+                        txt_introduce.setText("");
                     }else{
+                        Log.i("aaa",introduce);
                         txt_introduce.setText(introduce);
                     }
 
@@ -833,6 +834,7 @@ public class RetrofitApi {
             }
         });
     }
+
 
 
 }
