@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment;
 import androidx.loader.content.AsyncTaskLoader;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -19,6 +20,8 @@ import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -53,11 +56,15 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
+import retrofit2.http.Part;
 
 import static android.app.Activity.RESULT_OK;
 import static android.content.Context.MODE_PRIVATE;
+import static com.kks.portfolio_android.api.NetworkClient.retrofit;
 
 public class Fragment_Write extends Fragment {
+
+    ProgressDialog progressDialog;
 
     File photoFile;
 
@@ -118,32 +125,32 @@ public class Fragment_Write extends Fragment {
                 MultipartBody.Part part = MultipartBody.Part.createFormData("photo",photoFile.getName(), fileBody);
                 RequestBody textBody = RequestBody.create(MediaType.parse("text/plain"), content);
 
-                PostApi postApi = retrofit.create(PostApi.class);
-
                 SharedPreferences sp = getActivity().getSharedPreferences(Util.PREFERENCE_NAME, MODE_PRIVATE);
                 String token = sp.getString("token", null);
 
-                Call<UserRes> call = postApi.createPost("Bearer " + token, part, textBody);
+                createPost(getContext(),token,part,textBody);
 
-                call.enqueue(new Callback<UserRes>() {
-                    @Override
-                    public void onResponse(Call<UserRes> call, Response<UserRes> response) {
-                        Log.i("AAA", response.toString());
-                        if(response.isSuccessful()){
-                            if(response.body().isSuccess()){
-                                Toast.makeText(getContext(), "업로드성공", Toast.LENGTH_SHORT).show();
-                                fw_edit_content.setText("");
-
-                                ((HomeActivity)getActivity()).replaceFragment(Fragment_Home.newInstance());
-                            }
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<UserRes> call, Throwable t) {
-                        Log.i("aaa", t.toString());
-                    }
-                });
+//                Call<UserRes> call = postApi.createPost(token, part, textBody);
+//
+//                call.enqueue(new Callback<UserRes>() {
+//                    @Override
+//                    public void onResponse(Call<UserRes> call, Response<UserRes> response) {
+//                        Log.i("AAA", response.toString());
+//                        if(response.isSuccessful()){
+//                            if(response.body().isSuccess()){
+//                                Toast.makeText(getContext(), "업로드성공", Toast.LENGTH_SHORT).show();
+//                                fw_edit_content.setText("");
+//
+//                                ((HomeActivity)getActivity()).replaceFragment(Fragment_Home.newInstance());
+//                            }
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onFailure(Call<UserRes> call, Throwable t) {
+//                        Log.i("aaa", t.toString());
+//                    }
+//                });
             }
         });
         return view;
@@ -294,24 +301,62 @@ public class Fragment_Write extends Fragment {
         }
     }
 
-//    private class UploadPosting extends AsyncTaskLoader<>{
-//        ProgressBar fw_progressBar;
-//        Context context;
-//
-//        public UploadPosting(Context context) {
-//            super(context);
-//            this.context = context;
-//            fw_progressBar = getView().findViewById(R.id.fw_progressBar);
-//        }
-//
-//        @Nullable
-//        @Override
-//        public void loadInBackground() {
-//            return null;
-//        }
-//
-//
-//
-//
-//    }
+    public void createPost(Context context, String token, MultipartBody.Part photo, RequestBody content) {
+        Handler mHandler = new Handler(Looper.getMainLooper());
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                progressDialog = new ProgressDialog(context);
+                progressDialog.setTitle("포스팅");
+                progressDialog.setMessage("작성중");
+                progressDialog.setIndeterminate(true);
+                progressDialog.setCancelable(true);
+                progressDialog.show();
+
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            PostApi postApi = retrofit.create(PostApi.class);
+                            Call<UserRes> call = postApi.createPost(token, photo, content);
+
+                            call.enqueue(new Callback<UserRes>() {
+                                @Override
+                                public void onResponse(Call<UserRes> call, Response<UserRes> response) {
+                                    Log.i("AAA", response.toString());
+                                    if(response.isSuccessful()){
+                                        if(response.body().isSuccess()){
+//                                            Toast.makeText(getContext(), "업로드성공", Toast.LENGTH_SHORT).show();
+                                            fw_edit_content.setText("");
+
+                                            ((HomeActivity)getActivity()).replaceFragment(Fragment_Home.newInstance());
+                                        }
+                                    }
+                                }
+
+                                @Override
+                                public void onFailure(Call<UserRes> call, Throwable t) {
+                                    Log.i("aaa", t.toString());
+                                }
+                            });
+                        } catch (Exception e) {
+
+                        }
+                        progressDialog.dismiss();
+                        Looper.prepare();
+
+                        Toast.makeText(context, "작성 성공했습니다.", Toast.LENGTH_SHORT).show();
+
+
+                        Looper.loop();
+
+
+                    }
+
+                    private void sleep(int i) {
+                    }
+                }).start();
+            }
+        }, 0);
+    }
 }

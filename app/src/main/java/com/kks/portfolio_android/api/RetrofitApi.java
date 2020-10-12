@@ -110,7 +110,7 @@ public class RetrofitApi {
             @Override
             public void onResponse(Call<UserRes> call, Response<UserRes> response) {
                 if(response.isSuccessful()) {
-                    Toast.makeText(context, R.string.sign_up_complete, Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(context, R.string.sign_up_complete, Toast.LENGTH_SHORT).show();
                     ((Activity)context).finish();
                 }
             }
@@ -144,7 +144,7 @@ public class RetrofitApi {
                     call1.enqueue(new Callback<UserRes>() {
                         @Override
                         public void onResponse(Call<UserRes> call, retrofit2.Response<UserRes> response) {
-                            Toast.makeText(context, R.string.sign_up_complete, Toast.LENGTH_SHORT).show();
+//                            Toast.makeText(context, R.string.sign_up_complete, Toast.LENGTH_SHORT).show();
                             ((Activity)context).finish();
                         }
                         @Override

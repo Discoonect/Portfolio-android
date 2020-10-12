@@ -50,4 +50,12 @@
         android:layout_marginTop="15dp"
         android:layout_marginEnd="15dp"
         android:layout_marginBottom="15dp" />
+
+    <TextView
+        android:id="@+id/ff_textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:textSize="26sp"
+        android:visibility="gone" />
 </RelativeLayout>

@@ -62,6 +62,7 @@ public class Fragment_User extends Fragment {
     TextView fu_txt_userName;
     ImageView fu_img_profile;
     TextView fu_txt_introduce;
+    TextView fu_textView;
 
     RecyclerView recyclerView;
 
@@ -111,6 +112,8 @@ public class Fragment_User extends Fragment {
         fu_txt_followerCnt = getView().findViewById(R.id.fu_txt_followerCnt);
         fu_txt_postingCnt = getView().findViewById(R.id.fu_txt_postingCnt);
         fu_txt_followingCnt = getView().findViewById(R.id.fu_txt_followingCnt);
+        fu_textView = getView().findViewById(R.id.fu_textView);
+
 
         fu_txt_followerCnt.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -130,7 +133,7 @@ public class Fragment_User extends Fragment {
 
         retrofitApi.getMyPage1(getContext(),token,fu_txt_introduce,fu_img_profile,fu_txt_userName,fu_txt_followerCnt);
         retrofitApi.getMyPage2(getContext(),token,fu_txt_postingCnt,fu_txt_followingCnt);
-        getPagePhoto(getContext(),user_id,limit,recyclerView);
+        getPagePhoto(getContext(),user_id,limit,recyclerView,fu_textView);
 
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -146,11 +149,9 @@ public class Fragment_User extends Fragment {
                 int totalCount = recyclerView.getAdapter().getItemCount();
 
                 if (lastPosition+1 == totalCount) {
-                    Log.i("aaa","라스트 포지션 : "+lastPosition+ "   토탈 카운트 : "+totalCount);
 
                     if(cnt==limit){
                         addPagePhoto(getContext(),user_id,limit);
-                        Log.i("aaa","토탈 : "+totalCount+ " 라스트 : "+lastPosition);
                     }else{
                         Toast.makeText(getContext(), "마지막 게시물입니다.", Toast.LENGTH_SHORT).show();
                     }
@@ -159,7 +160,7 @@ public class Fragment_User extends Fragment {
         });
     }
 
-    public void getPagePhoto(Context context, int user_id, int limit, RecyclerView recyclerView){
+    public void getPagePhoto(Context context, int user_id, int limit, RecyclerView recyclerView,TextView fu_textView){
         Retrofit retrofit = NetworkClient.getRetrofitClient(context);
         UserApi userApi = retrofit.create(UserApi.class);
 
@@ -175,6 +176,15 @@ public class Fragment_User extends Fragment {
 
                     offset = offset+response.body().getCnt();
                     cnt = response.body().getCnt();
+
+                    if(cnt==0){
+                        recyclerView.setVisibility(View.GONE);
+                        fu_textView.setVisibility(View.VISIBLE);
+                    }else{
+                        recyclerView.setVisibility(View.VISIBLE);
+                        fu_textView.setVisibility(View.GONE);
+                    }
+
                 }
             }
             @Override

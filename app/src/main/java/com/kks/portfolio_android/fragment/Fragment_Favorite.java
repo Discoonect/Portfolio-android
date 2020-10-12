@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.kks.portfolio_android.activity.MainActivity;
@@ -36,6 +37,7 @@ public class Fragment_Favorite extends Fragment {
     Button ff_btn_posting;
     Button ff_btn_comment;
     Button ff_btn_follow;
+    TextView ff_textView;
 
 
     VolleyApi volleyApi = new VolleyApi();
@@ -62,7 +64,7 @@ public class Fragment_Favorite extends Fragment {
         ff_btn_posting = getView().findViewById(R.id.ff_btn_posting);
         ff_btn_comment = getView().findViewById(R.id.ff_btn_comment);
         ff_btn_follow = getView().findViewById(R.id.ff_btn_follow);
-
+        ff_textView = getView().findViewById(R.id.ff_textView);
 
         recyclerView = getView().findViewById(R.id.ff_recyclerView);
         recyclerView.setHasFixedSize(true);
@@ -80,30 +82,28 @@ public class Fragment_Favorite extends Fragment {
             getActivity().finish();
         }
 
-        volleyApi.postLikeAlarm(getContext(),offset,limit,token,recyclerView);
+        volleyApi.postLikeAlarm(getContext(),offset,limit,token,recyclerView,ff_textView);
 
         ff_btn_posting.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                volleyApi.postLikeAlarm(getContext(),offset,limit,token,recyclerView);
+                volleyApi.postLikeAlarm(getContext(),offset,limit,token,recyclerView,ff_textView);
             }
         });
 
         ff_btn_comment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                volleyApi.postCommentAlarm(getContext(),offset,limit,token,recyclerView);
+                volleyApi.postCommentAlarm(getContext(),offset,limit,token,recyclerView,ff_textView);
             }
         });
 
         ff_btn_follow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                volleyApi.followAlram(getContext(),offset,limit,token,recyclerView);
+                volleyApi.followAlram(getContext(),offset,limit,token,recyclerView,ff_textView);
             }
         });
-
-
     }
 
     @Override

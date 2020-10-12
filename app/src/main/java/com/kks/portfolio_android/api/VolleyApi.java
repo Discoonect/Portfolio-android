@@ -769,7 +769,7 @@ public class VolleyApi {
 //        requestQueue.add(request);
     }
 
-    public void postLikeAlarm(Context context,int offset,int limit,String token,RecyclerView recyclerView){
+    public void postLikeAlarm(Context context,int offset,int limit,String token,RecyclerView recyclerView,TextView ff_textView){
         ArrayList<Alram> list = new ArrayList<>();
         list.clear();
         RequestQueue requestQueue = Volley.newRequestQueue(context);
@@ -781,6 +781,13 @@ public class VolleyApi {
                                 Log.i("aaa",response.toString());
 
                                 try {
+                                    int cnt = response.getInt("cnt");
+                                    if(cnt==0){
+                                        ff_textView.setVisibility(View.VISIBLE);
+                                        ff_textView.setText("좋아요를 누른 사람이 없어요!");
+                                        return;
+                                    }
+
                                     JSONArray items = response.getJSONArray("items");
 
                                     for(int i=0; i<items.length(); i++){
@@ -789,7 +796,7 @@ public class VolleyApi {
                                         String profile = jsonObject.getString("user_profilephoto");
                                         String name = jsonObject.getString("user_name");
                                         int post_id = jsonObject.getInt("post_id");
-                                        String photo = Util.BASE_URL+"/public/uploads/"+jsonObject.getString("photo_url");
+                                        String photo = Util.IMAGE_PATH+jsonObject.getString("photo_url");
                                         String time = jsonObject.getString("created_at");
                                         int user_id = jsonObject.getInt("user_id");
 
@@ -838,7 +845,7 @@ public class VolleyApi {
         requestQueue.add(request);
     }
 
-    public void postCommentAlarm(Context context,int offset,int limit,String token, RecyclerView recyclerView){
+    public void postCommentAlarm(Context context,int offset,int limit,String token, RecyclerView recyclerView,TextView ff_textView){
         ArrayList<Alram> list = new ArrayList<>();
         list.clear();
         RequestQueue requestQueue = Volley.newRequestQueue(context);
@@ -850,6 +857,12 @@ public class VolleyApi {
                                 Log.i("aaa",response.toString());
 
                                 try {
+                                    int cnt = response.getInt("cnt");
+                                    if(cnt==0){
+                                        ff_textView.setVisibility(View.VISIBLE);
+                                        ff_textView.setText("댓글 작성한 사람이 없어요!");
+                                        return;
+                                    }
                                     JSONArray items = response.getJSONArray("items");
 
                                     for(int i=0; i<items.length(); i++){
@@ -911,7 +924,7 @@ public class VolleyApi {
         requestQueue.add(request);
     }
 
-    public void followAlram(Context context,int offset,int limit,String token,RecyclerView recyclerView){
+    public void followAlram(Context context,int offset,int limit,String token,RecyclerView recyclerView,TextView ff_textView){
         ArrayList<Alram> list = new ArrayList<>();
         list.clear();
         RequestQueue requestQueue = Volley.newRequestQueue(context);
@@ -923,6 +936,13 @@ public class VolleyApi {
                                 Log.i("aaa",response.toString());
 
                                 try {
+                                    int cnt = response.getInt("cnt");
+                                    if(cnt==0){
+                                        ff_textView.setVisibility(View.VISIBLE);
+                                        ff_textView.setText("팔로우 한 사람이 없어요!");
+                                        return;
+                                    }
+
                                     JSONArray items = response.getJSONArray("items");
 
                                     for(int i=0; i<items.length(); i++){

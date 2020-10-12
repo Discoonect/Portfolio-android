@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
@@ -49,6 +50,8 @@ public class Fragment_Home extends Fragment {
     int limit=6;
     int cnt;
 
+    TextView fh_textView;
+
     Adapter_home adapter_home;
     String token;
 
@@ -73,6 +76,8 @@ public class Fragment_Home extends Fragment {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
+        fh_textView = getView().findViewById(R.id.fh_textView);
+
         SharedPreferences sharedPreferences =
                 getActivity().getSharedPreferences(Util.PREFERENCE_NAME,MODE_PRIVATE);
         token = sharedPreferences.getString("token",null);
@@ -83,10 +88,6 @@ public class Fragment_Home extends Fragment {
             startActivity(i);
             getActivity().finish();
         }
-
-//        requestQueue = Volley.newRequestQueue(getActivity());
-//        getPostingData(getContext(),token);
-
 
         getPostingData(getContext(),token,limit,recyclerView);
 
@@ -104,11 +105,9 @@ public class Fragment_Home extends Fragment {
                 int totalCount = recyclerView.getAdapter().getItemCount();
 
                 if (lastPosition+1 == totalCount) {
-                    Log.i("aaa","라스트 포지션 : "+lastPosition+ "   토탈 카운트 : "+totalCount);
 
                     if(cnt==limit){
                         addPostData(getContext(),token,limit);
-                        Log.i("aaa","토탈 : "+totalCount+ " 라스트 : "+lastPosition);
                     }else{
                         Toast.makeText(getContext(), "마지막 게시물입니다.", Toast.LENGTH_SHORT).show();
                     }
@@ -142,6 +141,14 @@ public class Fragment_Home extends Fragment {
 
                     offset = offset+response.body().getCnt();
                     cnt = response.body().getCnt();
+
+                    if(cnt==0){
+                        fh_textView.setVisibility(View.VISIBLE);
+                        recyclerView.setVisibility(View.GONE);
+                    }else{
+                        recyclerView.setVisibility(View.VISIBLE);
+                        fh_textView.setVisibility(View.GONE);
+                    }
                 }
             }
             @Override
@@ -185,6 +192,8 @@ public class Fragment_Home extends Fragment {
 
                     offset = offset + response.body().getCnt();
                     cnt = response.body().getCnt();
+
+
                 }
             }
 

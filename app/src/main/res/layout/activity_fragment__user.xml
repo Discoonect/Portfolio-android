@@ -173,6 +173,17 @@
             android:layout_marginTop="5dp"
             android:layout_marginRight="10dp"
             android:layout_marginBottom="15dp" />
+
+        <TextView
+            android:id="@+id/fu_textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/fu_linearLayout_2"
+            android:layout_centerInParent="true"
+            android:layout_marginTop="50dp"
+            android:text="아직 작성한 포스팅이 없어요!"
+            android:textSize="26sp"
+            android:visibility="gone" />
     </RelativeLayout>
 
 </ScrollView>

@@ -6,6 +6,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -16,6 +17,8 @@ import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -48,7 +51,7 @@ import retrofit2.Retrofit;
 
 public class Sign_upActivity extends AppCompatActivity {
 
-    RequestQueue requestQueue;
+    ProgressDialog progressDialog;
 
     File photoFile;
     EditText signup_edit_password1;
@@ -148,11 +151,10 @@ public class Sign_upActivity extends AppCompatActivity {
                     return;
                 }
 
-
                 if(photoFile==null){
-                    retrofitApi.signUp(Sign_upActivity.this,name,password1,phone);
+                    signUp(Sign_upActivity.this,name,password1,phone);
                 }else{
-                    retrofitApi.signUpWithProfile(Sign_upActivity.this,name,password1,phone,photoFile);
+                    signUpWithProfile(Sign_upActivity.this,name,password1,phone,photoFile);
                 }
             }
         });
@@ -169,7 +171,6 @@ public class Sign_upActivity extends AppCompatActivity {
         userResCall.enqueue(new Callback<UserRes>() {
             @Override
             public void onResponse(Call<UserRes> call, Response<UserRes> response) {
-
                 if(response.isSuccessful()) {
                     String message = response.body().getMessage();
                     customAlertDialog.alertDialog_checked(message,context);
@@ -178,7 +179,6 @@ public class Sign_upActivity extends AppCompatActivity {
                     customAlertDialog.alertDialog_Unchecked("이미 사용중인 아이디 입니다",context);
                     check_name=0;
                 }
-
             }
             @Override
             public void onFailure(Call<UserRes> call, Throwable t) {
@@ -314,6 +314,81 @@ public class Sign_upActivity extends AppCompatActivity {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public void signUp(Context context,String name, String password, String phone) {
+        Handler mHandler = new Handler(Looper.getMainLooper());
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                progressDialog = new ProgressDialog(Sign_upActivity.this);
+                progressDialog.setTitle("회원가입");
+                progressDialog.setMessage("처리중");
+                progressDialog.setIndeterminate(true);
+                progressDialog.setCancelable(true);
+                progressDialog.show();
+
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            retrofitApi.signUp(context,name,password,phone);
+                        } catch (Exception e) {
+                            Log.i("aaa",e.toString());
+                        }
+                        progressDialog.dismiss();
+                        Looper.prepare();
+
+                        Toast.makeText(context, "회원가입에 성공했습니다.", Toast.LENGTH_SHORT).show();
+
+
+                        Looper.loop();
+
+
+                    }
+
+                    private void sleep(int i) {
+                    }
+                }).start();
+            }
+        }, 0);
+    }
+
+    public void signUpWithProfile(Context context,String name, String password, String phone,File photoFile) {
+        Handler mHandler = new Handler(Looper.getMainLooper());
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                progressDialog = new ProgressDialog(context);
+                progressDialog.setTitle("회원가입");
+                progressDialog.setMessage("처리중");
+                progressDialog.setIndeterminate(true);
+                progressDialog.setCancelable(true);
+                progressDialog.show();
+
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            retrofitApi.signUpWithProfile(context,name,password,phone,photoFile);
+                        } catch (Exception e) {
+                            Log.i("aaa",e.toString());
+                        }
+                        progressDialog.dismiss();
+                        Looper.prepare();
+
+                        Toast.makeText(context, "회원가입에 성공했습니다.", Toast.LENGTH_SHORT).show();
+
+
+                        Looper.loop();
+
+                    }
+
+                    private void sleep(int i) {
+                    }
+                }).start();
+            }
+        }, 0);
     }
 
 
