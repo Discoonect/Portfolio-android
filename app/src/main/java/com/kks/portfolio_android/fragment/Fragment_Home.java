@@ -47,7 +47,7 @@ public class Fragment_Home extends Fragment {
     List<Items> itemsList = new ArrayList<>();
 
     int offset;
-    int limit=4;
+    int limit=6;
     int cnt;
 
     TextView fh_textView;
@@ -103,9 +103,8 @@ public class Fragment_Home extends Fragment {
 
                 int lastPosition = ((LinearLayoutManager) recyclerView.getLayoutManager()).findLastCompletelyVisibleItemPosition();
                 int totalCount = recyclerView.getAdapter().getItemCount();
-
+                Log.i("aaa","last : "+lastPosition+ "  total : "+totalCount);
                 if (lastPosition+1 == totalCount) {
-
                     if(cnt==limit){
                         addPostData(getContext(),token,limit);
                     }else{
@@ -134,7 +133,7 @@ public class Fragment_Home extends Fragment {
             @Override
             public void onResponse(Call<PostRes> call, Response<PostRes> response) {
                 if(response.code()==200) {
-                    Log.i("aaa","cnt : "+response.body().getCnt()+"  offset : "+offset);
+                    Log.i("aaa","cnt : "+response.body().getCnt()+"  offset : "+offset+"   limit : "+limit);
                     itemsList = response.body().getItems();
                     adapter_home = new Adapter_home(context,itemsList);
                     recyclerView.setAdapter(adapter_home);
@@ -167,7 +166,6 @@ public class Fragment_Home extends Fragment {
             @Override
             public void onResponse(Call<PostRes> call, Response<PostRes> response) {
                 if(response.code()==200) {
-                    Log.i("aaa",response.toString());
                     Log.i("aaa","cnt : "+response.body().getCnt()+"   offset : "+offset+"   limit : "+limit);
 
                     for(int i=0; i<response.body().getItems().size(); i++){
@@ -187,13 +185,10 @@ public class Fragment_Home extends Fragment {
                                 user_name,mylike,comment_cnt,like_cnt);
                         itemsList.add(items);
                     }
-
                     adapter_home.notifyDataSetChanged();
 
                     offset = offset + response.body().getCnt();
                     cnt = response.body().getCnt();
-
-
                 }
             }
 

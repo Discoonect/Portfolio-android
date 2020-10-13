@@ -127,7 +127,10 @@ public class Adapter_home extends RecyclerView.Adapter<Adapter_home.ViewHolder> 
                                 return true;
 
                             case R.id.fh_menu_delete:
-                                deletePosting(post_id,token);
+                                RetrofitApi retrofitApi = new RetrofitApi();
+                                retrofitApi.deletePost(context,token,post_id);
+                                itemsList.remove(position);
+                                notifyDataSetChanged();
                                 return true;
 
                             default:
@@ -136,35 +139,6 @@ public class Adapter_home extends RecyclerView.Adapter<Adapter_home.ViewHolder> 
                     }
                 });
                 popupMenu.show();
-            }
-
-            private void deletePosting(int post_id,String token) {
-                JsonObjectRequest request = new JsonObjectRequest(
-                        Request.Method.POST, Util.BASE_URL + "/api/v1/post/"+post_id,
-                        null,
-                        new Response.Listener<JSONObject>() {
-                            @Override
-                            public void onResponse(JSONObject response) {
-                                Toast.makeText(context, "포스팅 삭제 성공", Toast.LENGTH_SHORT).show();
-                                notifyDataSetChanged();
-                            }
-                        },
-                        new Response.ErrorListener() {
-                            @Override
-                            public void onErrorResponse(VolleyError error) {
-
-                            }
-                        }
-                )
-                {
-                    @Override
-                    public Map<String, String> getHeaders() throws AuthFailureError {
-                        Map<String, String> stringStringMap = new HashMap<String, String>();
-                        stringStringMap.put("Authorization","Bearer "+token);
-                        return stringStringMap;
-                    }
-                };
-                Volley.newRequestQueue(context).add(request);
             }
 
         });

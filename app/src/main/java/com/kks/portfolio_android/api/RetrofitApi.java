@@ -66,7 +66,7 @@ public class RetrofitApi {
         userResCall.enqueue(new Callback<UserRes>() {
             @Override
             public void onResponse(Call<UserRes> call, Response<UserRes> response) {
-                if(response.isSuccessful()) {
+                if(response.code()==200) {
                     Log.i("aaa",response.toString());
                     String token = response.body().getToken();
                     int user_id = response.body().getUser_id();
@@ -88,6 +88,10 @@ public class RetrofitApi {
                     Intent i = new Intent(context, HomeActivity.class);
                     context.startActivity(i);
                     ((Activity)context).finish();
+                }else if(response.code()==401){
+                    Toast.makeText(context, "아이디 or 비밀번호가 맞지 않습니다.", Toast.LENGTH_SHORT).show();
+                }else{
+                    Toast.makeText(context, "서버 오류", Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -592,7 +596,6 @@ public class RetrofitApi {
             public void onResponse(Call<PostRes> call, Response<PostRes> response) {
                 if(response.code()==200) {
                     Toast.makeText(context, R.string.delete_posting_complete, Toast.LENGTH_SHORT).show();
-                    ((Activity) context).finish();
                 }else{
                     Log.i("aaa", response.toString());
                 }

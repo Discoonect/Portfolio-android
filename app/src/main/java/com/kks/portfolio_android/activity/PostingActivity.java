@@ -169,6 +169,7 @@ public class PostingActivity extends AppCompatActivity {
 
                             case R.id.fh_menu_delete:
                                 retrofitApi.deletePost(PostingActivity.this,token,post_id);
+                                finish();
                                 return true;
 
                             default:
