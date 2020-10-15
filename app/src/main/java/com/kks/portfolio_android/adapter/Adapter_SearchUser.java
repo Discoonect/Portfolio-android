@@ -47,8 +47,7 @@ public class Adapter_SearchUser extends RecyclerView.Adapter<Adapter_SearchUser.
         if(posting.getUser_profilephoto()=="null"){
             holder.su_img_profile.setImageResource(R.drawable.ic_baseline_account_circle_24);
         }else{
-            String profile_url = Util.BASE_URL+"/public/uploads/"+posting.getUser_profilephoto();
-            Glide.with(context).load(profile_url).into(holder.su_img_profile);
+            Glide.with(context).load(Util.IMAGE_PATH+posting.getUser_profilephoto()).into(holder.su_img_profile);
         }
     }
 

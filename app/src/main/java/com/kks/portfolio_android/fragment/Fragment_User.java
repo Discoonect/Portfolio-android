@@ -133,7 +133,7 @@ public class Fragment_User extends Fragment {
 
         retrofitApi.getMyPage1(getContext(),token,fu_txt_introduce,fu_img_profile,fu_txt_userName,fu_txt_followerCnt);
         retrofitApi.getMyPage2(getContext(),token,fu_txt_postingCnt,fu_txt_followingCnt);
-        getPagePhoto(getContext(),user_id,limit,recyclerView,fu_textView);
+        getPagePhoto(getContext(),user_id,limit,fu_textView);
 
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -149,8 +149,9 @@ public class Fragment_User extends Fragment {
                 int totalCount = recyclerView.getAdapter().getItemCount();
 
                 if (lastPosition+1 == totalCount) {
-
+                    Log.i("aaa","last : "+lastPosition+"  total : "+ totalCount);
                     if(cnt==limit){
+                        Log.i("aaa",cnt+"   "+limit);
                         addPagePhoto(getContext(),user_id,limit);
                     }else{
                         Toast.makeText(getContext(), "마지막 게시물입니다.", Toast.LENGTH_SHORT).show();
@@ -160,7 +161,7 @@ public class Fragment_User extends Fragment {
         });
     }
 
-    public void getPagePhoto(Context context, int user_id, int limit, RecyclerView recyclerView,TextView fu_textView){
+    public void getPagePhoto(Context context, int user_id, int limit,TextView fu_textView){
         Retrofit retrofit = NetworkClient.getRetrofitClient(context);
         UserApi userApi = retrofit.create(UserApi.class);
 
@@ -169,8 +170,9 @@ public class Fragment_User extends Fragment {
         userResCall.enqueue(new Callback<UserRes>() {
             @Override
             public void onResponse(Call<UserRes> call, Response<UserRes> response) {
+                Log.i("aaa",response.toString());
                 if(response.code()==200) {
-                    List<Items> itemsList = response.body().getItems();
+                    itemsList = response.body().getItems();
                     adapter_user = new Adapter_user(context,itemsList);
                     recyclerView.setAdapter(adapter_user);
 

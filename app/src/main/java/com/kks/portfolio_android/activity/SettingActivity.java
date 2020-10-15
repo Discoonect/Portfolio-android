@@ -171,6 +171,7 @@ public class SettingActivity extends AppCompatActivity {
                         setting_txt_userName,setting_edit_introduce);
             }
         });
+
         retrofitApi.getUserPage1(SettingActivity.this,user_id,setting_img_profile,setting_txt_userName,null,setting_edit_introduce);
     }
 
