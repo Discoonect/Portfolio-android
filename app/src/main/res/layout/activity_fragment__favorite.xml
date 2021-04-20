@@ -8,19 +8,54 @@
     android:background="@color/mainColor"
     tools:context=".fragment.Fragment_Favorite" >
 
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/ff_layout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerInParent="true"
+        android:layout_marginStart="15dp"
         android:layout_marginTop="15dp"
-        android:text="나의 좋아요 게시물"
-        android:textSize="24sp" />
+        android:layout_marginEnd="15dp"
+        android:orientation="horizontal"
+        android:padding="5dp">
+
+        <Button
+            android:id="@+id/ff_btn_posting"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="게시물" />
+
+        <Button
+            android:id="@+id/ff_btn_comment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="댓글" />
+
+        <Button
+            android:id="@+id/ff_btn_follow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="팔로우" />
+
+    </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/ff_recyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/textView3"
-        android:layout_margin="15dp" />
+        android:layout_below="@id/ff_layout"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="15dp"
+        android:layout_marginBottom="15dp" />
+
+    <TextView
+        android:id="@+id/ff_textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:textSize="26sp"
+        android:visibility="gone" />
 </RelativeLayout>

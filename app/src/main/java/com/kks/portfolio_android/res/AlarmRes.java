@@ -1,23 +1,22 @@
-package com.kks.portfolio_android.model;
-
-import android.content.ClipData;
+package com.kks.portfolio_android.res;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.kks.portfolio_android.model.Items;
 
 import java.util.List;
 
-public class PostRes {
+public class AlarmRes {
 
     @SerializedName("success")
-    @Expose
     private Boolean success;
+
+    @SerializedName("cnt")
+    private Integer cnt;
+
     @SerializedName("items")
     @Expose
-    private List<ClipData.Item> items = null;
-    @SerializedName("cnt")
-    @Expose
-    private Integer cnt;
+    private List<Items> items = null;
 
     public Boolean getSuccess() {
         return success;
@@ -27,19 +26,19 @@ public class PostRes {
         this.success = success;
     }
 
-    public List<ClipData.Item> getItems() {
-        return items;
-    }
-
-    public void setItems(List<ClipData.Item> items) {
-        this.items = items;
-    }
-
     public Integer getCnt() {
         return cnt;
     }
 
     public void setCnt(Integer cnt) {
         this.cnt = cnt;
+    }
+
+    public List<Items> getItems() {
+        return items;
+    }
+
+    public void setItems(List<Items> items) {
+        this.items = items;
     }
 }

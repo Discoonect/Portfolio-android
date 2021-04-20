@@ -1,73 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="#FFFFFF"
-    android:orientation="vertical">
+    android:layout_height="70dp"
+    android:background="@color/mainColor"
+    android:orientation="vertical"
+    android:padding="5dp">
 
     <androidx.cardview.widget.CardView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:cardBackgroundColor="@color/mainColor">
+        android:id="@+id/cm_cardview"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_alignParentLeft="true"
+        android:layout_centerInParent="true"
+        app:cardBackgroundColor="@color/mainColor"
+        app:cardCornerRadius="50dp"
+        app:cardElevation="0dp">
 
-        <LinearLayout
+        <ImageView
+            android:id="@+id/cm_img_profile"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:id="@+id/cm_img_profile"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="2"
-                app:srcCompat="@drawable/ic_baseline_account_circle_24" />
-
-            <TextView
-                android:id="@+id/cm_txt_name"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center|left"
-                android:text="TextView" />
-
-            <TextView
-                android:id="@+id/cm_txt_comment"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="7"
-                android:gravity="center|left"
-                android:text="TextView" />
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="2"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/cm_txt_time"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="TextView" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal">
-
-                    <ImageView
-                        android:id="@+id/cm_img_delete"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:visibility="visible"
-                        app:srcCompat="@drawable/ic_baseline_clear_24" />
-                </LinearLayout>
-
-            </LinearLayout>
-        </LinearLayout>
-
+            android:scaleType="centerCrop"
+            app:srcCompat="@drawable/ic_baseline_account_circle_24" />
     </androidx.cardview.widget.CardView>
-</LinearLayout>
+
+    <TextView
+        android:id="@+id/cm_txt_name"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_centerInParent="true"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="7dp"
+        android:layout_toRightOf="@id/cm_cardview"
+        android:gravity="center|left" />
+
+    <TextView
+        android:id="@+id/cm_txt_comment"
+        android:layout_width="180dp"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
+        android:layout_toRightOf="@id/cm_txt_name"
+        android:gravity="center|left" />
+
+    <ImageView
+        android:id="@+id/cm_img_delete"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_below="@id/cm_txt_time"
+        android:layout_centerInParent="true"
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@id/cm_txt_comment"
+        android:layout_weight="1"
+        android:visibility="gone"
+        app:srcCompat="@drawable/ic_baseline_clear_24" />
+
+    <TextView
+        android:id="@+id/cm_txt_time"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerInParent="true"
+        android:layout_toRightOf="@id/cm_txt_comment"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:textSize="12sp" />
+
+</RelativeLayout>

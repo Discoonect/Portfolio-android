@@ -2,12 +2,14 @@ package com.kks.portfolio_android.fragment;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.loader.content.AsyncTaskLoader;
 
 import android.Manifest;
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -18,7 +20,8 @@ import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.DocumentsContract;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,13 +29,15 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.kks.portfolio_android.activity.HomeActivity;
+import com.kks.portfolio_android.activity.MainActivity;
 import com.kks.portfolio_android.R;
 import com.kks.portfolio_android.api.NetworkClient;
 import com.kks.portfolio_android.api.PostApi;
-import com.kks.portfolio_android.model.Posting;
-import com.kks.portfolio_android.model.UserRes;
+import com.kks.portfolio_android.res.UserRes;
 import com.kks.portfolio_android.util.Util;
 
 import java.io.File;
@@ -41,6 +46,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -49,11 +56,15 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
+import retrofit2.http.Part;
 
 import static android.app.Activity.RESULT_OK;
 import static android.content.Context.MODE_PRIVATE;
+import static com.kks.portfolio_android.api.NetworkClient.retrofit;
 
 public class Fragment_Write extends Fragment {
+
+    ProgressDialog progressDialog;
 
     File photoFile;
 
@@ -64,22 +75,27 @@ public class Fragment_Write extends Fragment {
 
     EditText fw_edit_content;
 
+    String token;
+
+    public static Fragment_Write newInstance(){
+        return new Fragment_Write();
+    }
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.activity_fragment__write,container,false);
-    }
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+        View view = inflater.inflate(R.layout.activity_fragment__write, null);
 
-        fw_btn_gallery = getView().findViewById(R.id.fw_btn_gallery);
-        fw_img_img = getView().findViewById(R.id.fw_img_img);
-        fw_btn_upload = getView().findViewById(R.id.fw_btn_upload);
-        fw_edit_content = getView().findViewById(R.id.fw_edit_content);
+        SharedPreferences sharedPreferences =
+                getContext().getSharedPreferences(Util.PREFERENCE_NAME,MODE_PRIVATE);
+        token = sharedPreferences.getString("token",null);
+
+        fw_btn_upload = view.findViewById(R.id.fw_btn_upload);
+        fw_btn_gallery = view.findViewById(R.id.fw_btn_gallery);
+        fw_img_img = view.findViewById(R.id.fw_img_img);
+        fw_btn_upload = view.findViewById(R.id.fw_btn_upload);
+        fw_edit_content = view.findViewById(R.id.fw_edit_content);
 
         fw_btn_gallery.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -106,38 +122,53 @@ public class Fragment_Write extends Fragment {
 
                 Retrofit retrofit = NetworkClient.getRetrofitClient(getContext());
                 RequestBody fileBody = RequestBody.create(MediaType.parse("image/*"), photoFile);
-                MultipartBody.Part part = MultipartBody.Part.createFormData("photo",
-                        photoFile.getName(), fileBody);
+                MultipartBody.Part part = MultipartBody.Part.createFormData("photo",photoFile.getName(), fileBody);
                 RequestBody textBody = RequestBody.create(MediaType.parse("text/plain"), content);
-
-                PostApi postApi = retrofit.create(PostApi.class);
 
                 SharedPreferences sp = getActivity().getSharedPreferences(Util.PREFERENCE_NAME, MODE_PRIVATE);
                 String token = sp.getString("token", null);
 
-                Call<UserRes> call = postApi.createPost("Bearer " + token, part, textBody);
+                createPost(getContext(),token,part,textBody);
 
-                call.enqueue(new Callback<UserRes>() {
-                    @Override
-                    public void onResponse(Call<UserRes> call, Response<UserRes> response) {
-                        Log.i("AAA", response.toString());
-                        if(response.isSuccessful()){
-                            if(response.body().isSuccess()){
-                                Toast.makeText(getContext(), "업로드성공", Toast.LENGTH_SHORT).show();
-                                fw_edit_content.setText("");
-
-                            }
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<UserRes> call, Throwable t) {
-                        Log.i("AAA", t.toString());
-                    }
-                });
+//                Call<UserRes> call = postApi.createPost(token, part, textBody);
+//
+//                call.enqueue(new Callback<UserRes>() {
+//                    @Override
+//                    public void onResponse(Call<UserRes> call, Response<UserRes> response) {
+//                        Log.i("AAA", response.toString());
+//                        if(response.isSuccessful()){
+//                            if(response.body().isSuccess()){
+//                                Toast.makeText(getContext(), "업로드성공", Toast.LENGTH_SHORT).show();
+//                                fw_edit_content.setText("");
+//
+//                                ((HomeActivity)getActivity()).replaceFragment(Fragment_Home.newInstance());
+//                            }
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onFailure(Call<UserRes> call, Throwable t) {
+//                        Log.i("aaa", t.toString());
+//                    }
+//                });
             }
         });
+        return view;
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        if (token == null) {
+            Toast.makeText(getContext(), "로그인을 해주세요", Toast.LENGTH_SHORT).show();
+            Intent i = new Intent(getContext(), MainActivity.class);
+            startActivity(i);
+            getActivity().finish();
+        }
+    }
+
+
 
     private void displayFileChoose() {
         Intent i = new Intent();
@@ -188,11 +219,12 @@ public class Fragment_Write extends Fragment {
             Log.i("AAA", imgPath.toString());
             fw_img_img.setImageURI(imgPath);
 
-            // 실제 경로를 몰라도, 파일의 내용을 읽어와서, 임시파일 만들어서 서버로 보낸다.
-            String id = DocumentsContract.getDocumentId(imgPath);
+//            // 실제 경로를 몰라도, 파일의 내용을 읽어와서, 임시파일 만들어서 서버로 보낸다.
+//            String id = DocumentsContract.getDocumentId(imgPath);
+            String fileName = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
             try {
-                InputStream inputStream = getActivity().getContentResolver().openInputStream(imgPath);
-                photoFile = new File(getActivity().getCacheDir().getAbsolutePath()+"/"+id+".jpg");
+                InputStream inputStream = (getActivity()).getContentResolver().openInputStream(imgPath);
+                photoFile = new File(getActivity().getCacheDir().getAbsolutePath()+"/"+fileName+".jpg");
                 writeFile(inputStream, photoFile);
 //                String filePath = photoFile.getAbsolutePath();
             } catch (FileNotFoundException e) {
@@ -227,7 +259,6 @@ public class Fragment_Write extends Fragment {
     }
 
     public static Bitmap rotateBitmap(Bitmap bitmap, int orientation) {
-
         Matrix matrix = new Matrix();
         switch (orientation) {
             case ExifInterface.ORIENTATION_NORMAL:
@@ -268,5 +299,64 @@ public class Fragment_Write extends Fragment {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public void createPost(Context context, String token, MultipartBody.Part photo, RequestBody content) {
+        Handler mHandler = new Handler(Looper.getMainLooper());
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                progressDialog = new ProgressDialog(context);
+                progressDialog.setTitle("포스팅");
+                progressDialog.setMessage("작성중");
+                progressDialog.setIndeterminate(true);
+                progressDialog.setCancelable(true);
+                progressDialog.show();
+
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            PostApi postApi = retrofit.create(PostApi.class);
+                            Call<UserRes> call = postApi.createPost(token, photo, content);
+
+                            call.enqueue(new Callback<UserRes>() {
+                                @Override
+                                public void onResponse(Call<UserRes> call, Response<UserRes> response) {
+                                    Log.i("AAA", response.toString());
+                                    if(response.isSuccessful()){
+                                        if(response.body().isSuccess()){
+//                                            Toast.makeText(getContext(), "업로드성공", Toast.LENGTH_SHORT).show();
+                                            fw_edit_content.setText("");
+
+                                            ((HomeActivity)getActivity()).replaceFragment(Fragment_Home.newInstance());
+                                        }
+                                    }
+                                }
+
+                                @Override
+                                public void onFailure(Call<UserRes> call, Throwable t) {
+                                    Log.i("aaa", t.toString());
+                                }
+                            });
+                        } catch (Exception e) {
+
+                        }
+                        progressDialog.dismiss();
+                        Looper.prepare();
+
+                        Toast.makeText(context, "작성 성공했습니다.", Toast.LENGTH_SHORT).show();
+
+
+                        Looper.loop();
+
+
+                    }
+
+                    private void sleep(int i) {
+                    }
+                }).start();
+            }
+        }, 0);
     }
 }

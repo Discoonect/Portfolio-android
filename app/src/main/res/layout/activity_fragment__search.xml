@@ -26,11 +26,11 @@
             android:layout_weight="20"
             android:background="#FFFFFF"
             android:ems="10"
-            android:hint="키워드 또는 아이디 검색"
+            android:hint="키워드 또는 @아이디 검색"
             android:inputType="textPersonName" />
 
         <ImageButton
-            android:id="@+id/fs_btn_search"
+            android:id="@+id/fs_img_search"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
